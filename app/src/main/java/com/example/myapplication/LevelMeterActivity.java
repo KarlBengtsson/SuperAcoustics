@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -81,7 +82,8 @@ public class LevelMeterActivity extends Activity implements
         micInput = new MicrophoneInput(this);
 
         // Read the layout and construct.
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.level_meter_activity);
+        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Ask for permission to use "dangerous" phone hardware
@@ -186,7 +188,7 @@ public class LevelMeterActivity extends Activity implements
                 MODE_PRIVATE);
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
-                MediaRecorder.AudioSource.UNPROCESSED);
+                MediaRecorder.AudioSource.VOICE_RECOGNITION);
     }
 
     /**
