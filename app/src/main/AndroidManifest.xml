@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LevelMeterActivity">
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +27,12 @@
         </activity>
 
         <activity
-            android:name=".Settings">
+            android:name=".LevelMeterActivity">
+        </activity>
+        <activity
+            android:name=".Settings"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
         </activity>
     </application>
 

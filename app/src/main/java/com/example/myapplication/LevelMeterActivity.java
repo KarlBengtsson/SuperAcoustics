@@ -17,6 +17,7 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,7 +77,8 @@ public class LevelMeterActivity extends Activity implements
         micInput = new MicrophoneInput(this);
 
         // Read the layout and construct.
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.level_meter_activity);
+        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Get a handle that will be used in async thread post to update the
         // display.
