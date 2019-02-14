@@ -14,11 +14,16 @@
 
 package com.example.myapplication;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -78,6 +83,10 @@ public class LevelMeterActivity extends Activity implements
         // Read the layout and construct.
         setContentView(R.layout.activity_main);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // Ask for permission to use "dangerous" phone hardware
+
+        onCheckPerm();
         // Get a handle that will be used in async thread post to update the
         // display.
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
@@ -177,8 +186,15 @@ public class LevelMeterActivity extends Activity implements
                 MODE_PRIVATE);
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
-                MediaRecorder.AudioSource.VOICE_RECOGNITION);
+                MediaRecorder.AudioSource.UNPROCESSED);
     }
+
+    /**
+     * Method for saving the mGain for later use
+     */
+/*    private void savePreferencemGain(int integer) {
+        SharedPreferences preferences = getSharedPreferences("LevelMeter", MODE_PRIVATE);
+    }*/
 
     /**
      *  This method gets called by the micInput object owned by this activity.
@@ -222,6 +238,30 @@ public class LevelMeterActivity extends Activity implements
             mDrawingCollided++;
             Log.v(TAG, "Level bar update collision, i.e. update took longer " +
                     "than 20ms. Collision count" + Double.toString(mDrawingCollided));
+        }
+    }
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    private void onCheckPerm() {
+        // The request code used in ActivityCompat.requestPermissions()
+        // and returned in the Activity's onRequestPermissionsResult()
+        int PERMISSION_ALL = 3;
+        String[] PERMISSIONS = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO,
+        };
+
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
     }
 }
