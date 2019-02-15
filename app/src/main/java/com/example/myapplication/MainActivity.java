@@ -13,22 +13,23 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     private Button dbMeter;
-    private double mGainDif;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        dbMeter = (Button) findViewById(R.id.dbmeter);
+        dbMeter = (Button) findViewById(R.id.dbmeterButton);
+
         onCheckPerm();
+
     }
 
     public void CalibrateSPL (View view) {
         Intent intent = new Intent(this, LevelMeterActivity.class);
-        intent.putExtra("mGainDif", mGainDif );
-        startActivityForResult(intent, 1);
+        startActivity(intent);
     }
+
     public static boolean hasPermissions(Context context, String... permissions) {
         if (context != null && permissions != null) {
             for (String permission : permissions) {

@@ -40,7 +40,7 @@ import java.text.DecimalFormat;
  */
 public class LevelMeterActivity extends Activity implements
         MicrophoneInputListener {
-    Bundle bundle = getIntent().getExtras();
+
     MicrophoneInput micInput;  // The micInput object provides real time audio.
     TextView mdBTextView;
     TextView mdBFractionTextView;
@@ -69,6 +69,7 @@ public class LevelMeterActivity extends Activity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate() called");
 
         // Here the micInput object is created for audio capture.
         // It is set up to call this object to handle real time audio frames of
@@ -83,13 +84,13 @@ public class LevelMeterActivity extends Activity implements
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Ask for permission to use "dangerous" phone hardware
 
-
         // Get a handle that will be used in async thread post to update the
         // display.
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         mGainTextView = (TextView)findViewById(R.id.gain);
+
         // Toggle Button handler.
 
         final ToggleButton onOffButton=(ToggleButton)findViewById(
@@ -171,10 +172,6 @@ public class LevelMeterActivity extends Activity implements
             mDifferenceFromNominal -= gainIncrement;
             DecimalFormat df = new DecimalFormat("##.# dB");
             mGainTextView.setText(df.format(mDifferenceFromNominal));
-            Intent intent = new Intent();
-            intent.putExtra("mGainDif", mDifferenceFromNominal);
-            setResult(RESULT_OK, intent);
-            finish();
         }
     }
 
@@ -189,7 +186,12 @@ public class LevelMeterActivity extends Activity implements
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
     }
 
-
+    /**
+     * Method for saving the mGain for later use
+     */
+/*    private void savePreferencemGain(int integer) {
+        SharedPreferences preferences = getSharedPreferences("LevelMeter", MODE_PRIVATE);
+    }*/
 
     /**
      *  This method gets called by the micInput object owned by this activity.
@@ -235,5 +237,52 @@ public class LevelMeterActivity extends Activity implements
                     "than 20ms. Collision count" + Double.toString(mDrawingCollided));
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.d(TAG, "onSaveInstanceState() called");
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "RestoreInstanceState() called");
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() called");
+    }
+
+    @Override
+    //Called when returning to Main Activity from Result Activity
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
+    }
+
 
 }
