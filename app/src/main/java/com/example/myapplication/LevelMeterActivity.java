@@ -14,17 +14,12 @@
 
 package com.example.myapplication;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,7 +40,7 @@ import java.text.DecimalFormat;
  */
 public class LevelMeterActivity extends Activity implements
         MicrophoneInputListener {
-
+    Bundle bundle = getIntent().getExtras();
     MicrophoneInput micInput;  // The micInput object provides real time audio.
     TextView mdBTextView;
     TextView mdBFractionTextView;
@@ -58,7 +53,7 @@ public class LevelMeterActivity extends Activity implements
     // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
     double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
     // For displaying error in calibration.
-    double mDifferenceFromNominal = 0.0;
+    double mDifferenceFromNominal = bundle.getDouble("mGainDif");
     double mRmsSmoothed;  // Temporally filtered version of RMS.
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
     private int mSampleRate;  // The audio sampling rate to use.
@@ -88,14 +83,13 @@ public class LevelMeterActivity extends Activity implements
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Ask for permission to use "dangerous" phone hardware
 
-        onCheckPerm();
+
         // Get a handle that will be used in async thread post to update the
         // display.
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         mGainTextView = (TextView)findViewById(R.id.gain);
-
         // Toggle Button handler.
 
         final ToggleButton onOffButton=(ToggleButton)findViewById(
@@ -177,6 +171,10 @@ public class LevelMeterActivity extends Activity implements
             mDifferenceFromNominal -= gainIncrement;
             DecimalFormat df = new DecimalFormat("##.# dB");
             mGainTextView.setText(df.format(mDifferenceFromNominal));
+            Intent intent = new Intent();
+            intent.putExtra("mGainDif", mDifferenceFromNominal);
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
@@ -191,12 +189,7 @@ public class LevelMeterActivity extends Activity implements
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
     }
 
-    /**
-     * Method for saving the mGain for later use
-     */
-/*    private void savePreferencemGain(int integer) {
-        SharedPreferences preferences = getSharedPreferences("LevelMeter", MODE_PRIVATE);
-    }*/
+
 
     /**
      *  This method gets called by the micInput object owned by this activity.
@@ -242,28 +235,5 @@ public class LevelMeterActivity extends Activity implements
                     "than 20ms. Collision count" + Double.toString(mDrawingCollided));
         }
     }
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    private void onCheckPerm() {
-        // The request code used in ActivityCompat.requestPermissions()
-        // and returned in the Activity's onRequestPermissionsResult()
-        int PERMISSION_ALL = 3;
-        String[] PERMISSIONS = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO,
-        };
 
-        if (!hasPermissions(this, PERMISSIONS)) {
-            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-        }
-    }
 }
