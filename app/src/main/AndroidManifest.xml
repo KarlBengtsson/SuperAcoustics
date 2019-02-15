@@ -31,6 +31,8 @@
 
         <activity
             android:name=".LevelMeterActivity">
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
         </activity>
         <activity
             android:name=".Settings"

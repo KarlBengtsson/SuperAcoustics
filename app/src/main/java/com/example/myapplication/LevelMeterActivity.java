@@ -82,7 +82,6 @@ public class LevelMeterActivity extends Activity implements
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         readPreferences();
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Ask for permission to use "dangerous" phone hardware
 
         // Get a handle that will be used in async thread post to update the

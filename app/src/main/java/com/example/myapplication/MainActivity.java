@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String EXTRA_MESSAGE = "Calibration";
     private Button dbMeter;
     private Button measure1;
     private TextView calTextView;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        Log.d(TAG, "OnCreate() called");
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         readPreferences();
         dbMeter = (Button) findViewById(R.id.dbmeterButton);
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void MeasureSPL (View view) {
         Intent intent = new Intent(this, MeasureSPL.class);
+        intent.putExtra( EXTRA_MESSAGE, mDifferenceFromNominal );
         startActivity(intent);
     }
 

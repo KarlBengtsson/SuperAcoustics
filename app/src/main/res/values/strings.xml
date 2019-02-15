@@ -3,7 +3,7 @@
     <string name="toast_message">On or Off</string>
     <string name="settings_ok">ok</string>
     <string name="adjust_sensitivity">Calibrate sensitivity</string>
-    <string name="adjust_sensitivity_instructions">To calibrate sensitivity you will need a steady sound source and a calibrated SPL meter. Turn on the sound source and the reference meter. Adjust the sensitivity until the two dB readings match.</string>
+    <string name="adjust_sensitivity_instructions">To calibrate sensitivity you will need a steady sound source and a calibrated SPL meter. Turn on the sound source and the reference meter. Adjust the sensitivity until the two dB readings match. When satisfied, press SET CALIBRATION to save.</string>
     <string name="minus_5_db">-5\ndB</string>
     <string name="minus_1_db">-1\ndB</string>
     <string name="plus_1_db">+1\ndB</string>

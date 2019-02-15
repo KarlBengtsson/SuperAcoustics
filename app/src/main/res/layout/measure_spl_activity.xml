@@ -57,6 +57,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:checked="false"
         android:text="On" />
 
     <TextView
@@ -98,7 +99,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start_measure" />
@@ -110,7 +111,7 @@
             android:text="@string/measure_info_text" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/finishButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/finish_button" />
