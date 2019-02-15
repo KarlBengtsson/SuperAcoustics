@@ -134,4 +134,10 @@
         android:layout_width="fill_parent"
         android:layout_height="48dp" ></view>
 
+    <Button
+        android:id="@+id/setCalibrationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/setCalibrationButton" />
+
 </LinearLayout>
