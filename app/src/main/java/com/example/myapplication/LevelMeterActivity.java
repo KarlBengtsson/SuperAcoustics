@@ -14,17 +14,12 @@
 
 package com.example.myapplication;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -57,8 +52,8 @@ public class LevelMeterActivity extends Activity implements
     // should be set such that 90 dB SPL at 1000 Hz yields RMS of 2500 for
     // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
     double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
-    // For displaying error in calibration.
     double mDifferenceFromNominal = 0.0;
+    // For displaying error in calibration.
     double mRmsSmoothed;  // Temporally filtered version of RMS.
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
     private int mSampleRate;  // The audio sampling rate to use.
@@ -84,6 +79,9 @@ public class LevelMeterActivity extends Activity implements
 
         // Read the layout and construct.
         setContentView(R.layout.level_meter_activity);
+        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        readPreferences();
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Ask for permission to use "dangerous" phone hardware
 
@@ -93,7 +91,7 @@ public class LevelMeterActivity extends Activity implements
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         mGainTextView = (TextView)findViewById(R.id.gain);
-
+        mGainTextView.setText(Double.toString(mDifferenceFromNominal));
         // Toggle Button handler.
 
         final ToggleButton onOffButton=(ToggleButton)findViewById(
@@ -157,6 +155,20 @@ public class LevelMeterActivity extends Activity implements
                     }
                 };
         settingsButton.setOnClickListener(settingsBtnListener);
+
+        Button setCalButton=(Button)findViewById(R.id.setCalibrationButton);
+        Button.OnClickListener setCalBtnListener =
+                new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // Dismiss this dialog.
+                        LevelMeterActivity.this.setPreferences();
+                        finish();
+
+                    }
+                };
+        setCalButton.setOnClickListener(setCalBtnListener);
     }
 
     /**
@@ -187,14 +199,9 @@ public class LevelMeterActivity extends Activity implements
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
+        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
     }
 
-    /**
-     * Method for saving the mGain for later use
-     */
-/*    private void savePreferencemGain(int integer) {
-        SharedPreferences preferences = getSharedPreferences("LevelMeter", MODE_PRIVATE);
-    }*/
 
     /**
      *  This method gets called by the micInput object owned by this activity.
@@ -286,6 +293,15 @@ public class LevelMeterActivity extends Activity implements
         super.onDestroy();
         Log.d(TAG, "onDestroy() called");
     }
+    private void setPreferences() {
+        SharedPreferences preferences = getSharedPreferences("LevelMeter",
+                MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putInt("mGainDif", (int) mDifferenceFromNominal);
+        editor.commit();
+    }
+
 
 
 }
