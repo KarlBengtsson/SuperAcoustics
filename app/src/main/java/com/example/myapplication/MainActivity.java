@@ -13,6 +13,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     private Button dbMeter;
+    private Button measure1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,13 +21,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         dbMeter = (Button) findViewById(R.id.dbmeterButton);
-
+        measure1 = (Button) findViewById(R.id.measureButton1);
         onCheckPerm();
 
     }
 
     public void CalibrateSPL (View view) {
         Intent intent = new Intent(this, LevelMeterActivity.class);
+        startActivity(intent);
+    }
+
+    public void MeasureSPL (View view) {
+        Intent intent = new Intent(this, MeasureSPL.class);
         startActivity(intent);
     }
 

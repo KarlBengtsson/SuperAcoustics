@@ -35,6 +35,11 @@
         <activity
             android:name=".Settings"
             android:screenOrientation="portrait"
+            android:parentActivityName=".LevelMeterActivity">
+        </activity>
+        <activity
+            android:name=".MeasureSPL"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
         </activity>
     </application>

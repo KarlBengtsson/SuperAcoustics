@@ -14,12 +14,17 @@
 
 package com.example.myapplication;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -53,7 +58,7 @@ public class LevelMeterActivity extends Activity implements
     // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
     double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
     // For displaying error in calibration.
-    double mDifferenceFromNominal = bundle.getDouble("mGainDif");
+    double mDifferenceFromNominal = 0.0;
     double mRmsSmoothed;  // Temporally filtered version of RMS.
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
     private int mSampleRate;  // The audio sampling rate to use.
@@ -79,8 +84,6 @@ public class LevelMeterActivity extends Activity implements
 
         // Read the layout and construct.
         setContentView(R.layout.level_meter_activity);
-        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Ask for permission to use "dangerous" phone hardware
 
