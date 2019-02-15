@@ -71,12 +71,12 @@
         android:id="@+id/bar_level_drawable_view"
         class="com.example.myapplication.BarLevelDrawable"
         android:layout_width="fill_parent"
-        android:layout_height="48dp"></view>
+        android:layout_height="35dp"></view>
 
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="38dp">
+        android:layout_height="23dp">
 
         <TextView
             android:id="@+id/gain_error_text"
