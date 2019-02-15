@@ -65,10 +65,13 @@ public class MeasureSPL extends AppCompatActivity implements
         setContentView(R.layout.measure_spl_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        //Retrieves the value set by the calibration
         Intent intent = getIntent();
         calibration = intent.getDoubleExtra( MainActivity.EXTRA_MESSAGE, 0 );
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(calibration));
+
+        
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
