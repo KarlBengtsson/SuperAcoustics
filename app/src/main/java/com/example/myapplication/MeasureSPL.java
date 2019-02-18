@@ -16,13 +16,22 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 
 public class MeasureSPL extends AppCompatActivity implements
@@ -34,8 +43,18 @@ public class MeasureSPL extends AppCompatActivity implements
     BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
     private double calibration;
+    private int Room;
+    private int one_decimal;
+    private double rms;
+    private double rmsdB;
     private boolean start = false;
     private Button startButton;
+
+
+    // For saving and loading .txt file
+
+    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Spartest";
+
 
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
     // The Google ASR input requirements state that audio input sensitivity
@@ -65,9 +84,13 @@ public class MeasureSPL extends AppCompatActivity implements
         setContentView(R.layout.measure_spl_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        // Read the previous preferences
+        readPreferences();
+
         //Retrieves the value set by the calibration
         Intent intent = getIntent();
         calibration = intent.getDoubleExtra( MainActivity.EXTRA_MESSAGE, 0 );
+        Room = intent.getIntExtra(MainActivity.ROOM_MESSAGE, 3);
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(calibration));
 
@@ -81,6 +104,10 @@ public class MeasureSPL extends AppCompatActivity implements
         // PCM samples. The incoming frames will be handled by the
         // processAudioFrame method below.
         micInput = new MicrophoneInput(this);
+
+        // Defining a new File for saving later on
+        File dir = new File(path);
+        dir.mkdirs();
 
         //StartButton handler
         startButton = (Button) findViewById(R.id.startButton);
@@ -107,6 +134,11 @@ public class MeasureSPL extends AppCompatActivity implements
                         } else {
                             startButton.setEnabled(false);
                             micInput.stop();
+                            setPreferences();
+                            File file = new File(path + "TestFileRoom"+Integer.toString(Room)+".txt");
+                            String [] saveText = String.valueOf((rmsdB+20-mDifferenceFromNominal)).split(System.getProperty("line.separator"));
+                            Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
+                            Save(file,saveText);
                         }
                     }
                 };
@@ -127,7 +159,7 @@ public class MeasureSPL extends AppCompatActivity implements
         if (!mDrawing) {
             mDrawing = true;
             // Compute the RMS value. (Note that this does not remove DC).
-            double rms = 0;
+            rms = 0;
             for (int i = 0; i < audioFrame.length; i++) {
                 rms += audioFrame[i]*audioFrame[i];
             }
@@ -135,7 +167,7 @@ public class MeasureSPL extends AppCompatActivity implements
 
             // Compute a smoothed version for less flickering of the display.
             mRmsSmoothed = mRmsSmoothed * mAlpha + (1 - mAlpha) * rms;
-            final double rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed);
+            rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed);
 
             // Set up a method that runs on the UI thread to update of the LED bar
             // and numerical display.
@@ -147,10 +179,10 @@ public class MeasureSPL extends AppCompatActivity implements
                     mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
 
                     DecimalFormat df = new DecimalFormat("##");
-                    mdBTextView.setText(df.format(20 + rmsdB));
+                    mdBTextView.setText(df.format(20 + rmsdB - mDifferenceFromNominal));
 
                     DecimalFormat df_fraction = new DecimalFormat("#");
-                    int one_decimal = (int) (Math.round(Math.abs(rmsdB * 10))) % 10;
+                    one_decimal = (int) (Math.round(Math.abs(rmsdB * 10))) % 10;
                     mdBFractionTextView.setText(Integer.toString(one_decimal));
                     mDrawing = false;
                 }
@@ -171,9 +203,126 @@ public class MeasureSPL extends AppCompatActivity implements
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
-        //mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
     }
 
+    private void setPreferences() {
+        SharedPreferences preferences = getSharedPreferences("LevelMeter",
+                MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putInt("mGainDif", (int) mDifferenceFromNominal);
+        if (Room == 1) {
+            editor.putInt("mRoom1" ,(int) (20 + rmsdB - mDifferenceFromNominal));
+        }
+        else
+        {
+            editor.putInt("mRoom2" ,(int) (20 + rmsdB - mDifferenceFromNominal));
+        }
+        editor.commit();
+    }
+    private void saveToTxtFile() {
+
+        //Does nothing yet.
+    }
+
+
+    public static void Save(File file, String[] data)
+    {
+        FileOutputStream fos = null;
+        try
+        {
+            fos = new FileOutputStream(file);
+        }
+        catch (FileNotFoundException e) {e.printStackTrace();}
+        try
+        {
+            try
+            {
+                for (int i = 0; i<data.length; i++)
+                {
+                    fos.write(data[i].getBytes());
+                    if (i < data.length-1)
+                    {
+                        fos.write("\n".getBytes());
+                    }
+                }
+            }
+            catch (IOException e) {e.printStackTrace();}
+        }
+        finally
+        {
+            try
+            {
+                fos.close();
+            }
+            catch (IOException e) {e.printStackTrace();}
+        }
+    }
+
+
+    public static String[] Load(File file)
+    {
+        FileInputStream fis = null;
+        try
+        {
+            fis = new FileInputStream(file);
+        }
+        catch (FileNotFoundException e) {e.printStackTrace();}
+        InputStreamReader isr = new InputStreamReader(fis);
+        BufferedReader br = new BufferedReader(isr);
+
+        String test;
+        int anzahl=0;
+        try
+        {
+            while ((test=br.readLine()) != null)
+            {
+                anzahl++;
+            }
+        }
+        catch (IOException e) {e.printStackTrace();}
+
+        try
+        {
+            fis.getChannel().position(0);
+        }
+        catch (IOException e) {e.printStackTrace();}
+
+        String[] array = new String[anzahl];
+
+        String line;
+        int i = 0;
+        try
+        {
+            while((line=br.readLine())!=null)
+            {
+                array[i] = line;
+                i++;
+            }
+        }
+        catch (IOException e) {e.printStackTrace();}
+        return array;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Methods providing information about what happens when going back & forth between activities.
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);

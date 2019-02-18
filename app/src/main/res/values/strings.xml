@@ -24,6 +24,10 @@
     <string name="setCalibrationButton">Set Calibration</string>
     <string name="reverbButton">Measure RT</string>
     <string name="measureTextRT">TextView</string>
+    <string name="resultTextSpl1">Not measured</string>
+    <string name="resultTextSpl2">Not measured</string>
+    <string name="resultTextCal">0.0</string>
+    <string name="resultTextRT">Not measured</string>
     <string-array name="sample_rate_array">
         <item>8000</item>
         <item>16000</item>
