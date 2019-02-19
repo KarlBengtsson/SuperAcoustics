@@ -33,6 +33,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
 
 public class MeasureSPL extends AppCompatActivity implements
         MicrophoneInputListener{
@@ -48,9 +51,16 @@ public class MeasureSPL extends AppCompatActivity implements
     private int one_decimal;
     private double rms;
     private double rmsdB;
-    private boolean start = false;
-    private Button startButton;
-
+    private ArrayList splRoom1 = new ArrayList<Integer>();
+    private ArrayList splRoom2 = new ArrayList<Integer>();
+    private ArrayList DBmeasure = new ArrayList<Integer>();
+    //private boolean start = false;
+    private Button startButton, stopButton;
+    private boolean Room1 = false;
+    private int counter = 0;
+    private long tStart;
+    private long tStop;
+    private int counter1, average1, average2;
 
     // For saving and loading .txt file
 
@@ -73,7 +83,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private volatile boolean mDrawing;
     private volatile int mDrawingCollided;
 
-    private static final String TAG = "Measure SPL";
+    private static final String TAG = "MeasureSPL";
 
     /** Called when the activity is first created. */
     @Override
@@ -91,7 +101,7 @@ public class MeasureSPL extends AppCompatActivity implements
         //Retrieves the value set by the calibration
         Intent intent = getIntent();
         calibration = intent.getDoubleExtra( MainActivity.EXTRA_MESSAGE, 0 );
-        Room = intent.getIntExtra(MainActivity.ROOM_MESSAGE, 3);
+       // Room = intent.getIntExtra(MainActivity.ROOM_MESSAGE, 3);
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(calibration));
 
@@ -114,13 +124,17 @@ public class MeasureSPL extends AppCompatActivity implements
         //StartButton handler
         startButton = (Button) findViewById(R.id.startButton);
         startButton.setEnabled(false);
-
+        //StopButton handler
+        stopButton = (Button) findViewById(R.id.stopButton);
+        stopButton.setEnabled(false);
+        //Textview to display measured SPL
+        measuredSPL = (TextView) findViewById(R.id.measuredSPL);
 
         // Toggle Button handler.
         final ToggleButton onOffButton=(ToggleButton)findViewById(
                 R.id.on_off_toggle_button);
         onOffButton.setChecked(false);
-        start = onOffButton.isChecked();
+        //start = onOffButton.isChecked();
 
         ToggleButton.OnClickListener tbListener =
                 new ToggleButton.OnClickListener() {
@@ -132,22 +146,85 @@ public class MeasureSPL extends AppCompatActivity implements
                             micInput.setSampleRate(mSampleRate);
                             micInput.setAudioSource(mAudioSource);
                             micInput.start();
-
                         } else {
                             startButton.setEnabled(false);
                             micInput.stop();
-                            setPreferences();
-                            File file = new File(path + "TestFileRoom"+Integer.toString(Room)+".txt");
+                            splRoom1 = stopMeasure(splRoom1, counter1);
+                            /* setPreferences();
+                            File file = new File(path + "/TestFileRoom"+Integer.toString(Room)+".txt");
                             String [] saveText = String.valueOf((rmsdB+20-mDifferenceFromNominal)).split(System.getProperty("line.separator"));
                             Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
-                            Save(file,saveText);
+                            Save(file,saveText); */
                         }
                     }
                 };
         onOffButton.setOnClickListener(tbListener);
+            startButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    stopButton.setEnabled(true);
+                        counter1 = startMeasure();
+                }
+            });
+
+        stopButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                stopButton.setEnabled(false);
+                if (Room == 1) {
+                    splRoom1 = stopMeasure(splRoom1, counter1);
+                    //calculate average SPL
+                    int total = 0;
+                    for(int i = 0; i < splRoom1.size(); i++) {
+                        int a = (int) splRoom1.get(i);
+                        total += a;
+                    }
+                    average1 = total / splRoom1.size();
+                    measuredSPL.setText(Integer.toString(average1));
+                    Room1 = true;
+                }
+                else {
+                    splRoom2 = stopMeasure(splRoom2, counter1);
+                    //calculate average SPL
+                    int total = 0;
+                    for(int i = 0; i < splRoom2.size(); i++) {
+                        int a = (int) splRoom2.get(i);
+                        total += a;
+                    }
+                    average2 = total / splRoom2.size();
+                    measuredSPL.setText(Integer.toString(average2));
+                }
+            }
+        });
+
+        Button finishMeasure=(Button)findViewById(R.id.finishButton);
+        Button.OnClickListener setFinishBtnListener =
+                new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // Dismiss this dialog.
+                        MeasureSPL.this.setPreferences();
+                        finish();
+
+                    }
+                };
+        finishMeasure.setOnClickListener(setFinishBtnListener);
 
 
+    }
 
+    private int startMeasure() {
+        int counter1 = counter;
+        return counter1;
+    }
+
+    private ArrayList stopMeasure(ArrayList list, int counter1) {
+        int stop = DBmeasure.size() - counter1;
+        for (int i = 0; i < stop; i++) {
+            list.add(i, DBmeasure.get(counter1 + i));
+        }
+        return list;
     }
 
     /**
@@ -170,6 +247,12 @@ public class MeasureSPL extends AppCompatActivity implements
             // Compute a smoothed version for less flickering of the display.
             mRmsSmoothed = mRmsSmoothed * mAlpha + (1 - mAlpha) * rms;
             rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed);
+            int a = (int) (rmsdB + 20 - mDifferenceFromNominal);
+            tStop = System.currentTimeMillis();
+            //long diff = tStop - tStart;
+            DBmeasure.add(a);
+            counter++;
+
 
             // Set up a method that runs on the UI thread to update of the LED bar
             // and numerical display.
@@ -178,7 +261,7 @@ public class MeasureSPL extends AppCompatActivity implements
                 public void run() {
                     // The bar has an input range of [0.0 ; 1.0] and 10 segments.
                     // Each LED corresponds to 6 dB.
-                    mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
+                    //mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
 
                     DecimalFormat df = new DecimalFormat("##");
                     mdBTextView.setText(df.format(20 + rmsdB - mDifferenceFromNominal));
@@ -206,6 +289,7 @@ public class MeasureSPL extends AppCompatActivity implements
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
         mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        Room = preferences.getInt("ROOM" , 0);
     }
 
     private void setPreferences() {
@@ -215,11 +299,10 @@ public class MeasureSPL extends AppCompatActivity implements
 
         editor.putInt("mGainDif", (int) mDifferenceFromNominal);
         if (Room == 1) {
-            editor.putInt("mRoom1" ,(int) (20 + rmsdB - mDifferenceFromNominal));
+            editor.putInt("mRoom1" , average1);
         }
-        else
-        {
-            editor.putInt("mRoom2" ,(int) (20 + rmsdB - mDifferenceFromNominal));
+        else {
+            editor.putInt("mRoom2" , average2 );
         }
         editor.commit();
     }
@@ -310,20 +393,6 @@ public class MeasureSPL extends AppCompatActivity implements
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Methods providing information about what happens when going back & forth between activities.
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -343,6 +412,12 @@ public class MeasureSPL extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart() called");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart() called");
     }
 
     @Override

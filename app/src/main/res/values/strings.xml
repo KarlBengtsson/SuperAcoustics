@@ -17,7 +17,7 @@
     <string name="result_button">View Results</string>
     <string name="measure_spl_instructions" >"To measure sound pressure level, you will need a steady sound source and a calibrated SPL, the calibration needs to be done prior to the measurement. Turn on the sound source and press OFF to monitor SPL. Press the START button to start your measurement. "</string>
     <string name="start_measure">START</string>
-    <string name="measure_info_text">The measurement will automatically finish after 10 seconds, if you wish to conduct a new measurement and discard the completed one, press the START Button again, otherwise press the FINISH button.</string>
+    <string name="measure_info_text">Measure for approximately 10 seconds, press STOP to complete the measurement. If you wish to conduct a new measurement and discard the completed one, press the START Button again, otherwise press the FINISH button.</string>
     <string name="measured_spl">Average measured SPL (dB)</string>
     <string name="SPL">0.0</string>
     <string name="finish_button">FINISH</string>
@@ -28,6 +28,7 @@
     <string name="resultTextSpl2">Not measured</string>
     <string name="resultTextCal">0.0</string>
     <string name="resultTextRT">Not measured</string>
+    <string name="stop_measure">STOP</string>
     <string-array name="sample_rate_array">
         <item>8000</item>
         <item>16000</item>

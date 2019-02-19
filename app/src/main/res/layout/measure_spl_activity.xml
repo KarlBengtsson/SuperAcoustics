@@ -99,11 +99,23 @@
         android:layout_height="264dp"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/startButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start_measure" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_measure" />
+
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stop_measure" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView"

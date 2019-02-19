@@ -52,14 +52,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void MeasureSPL1 (View view) {
         Intent intent = new Intent(this, MeasureSPL.class);
-        intent.putExtra(ROOM_MESSAGE, 1);
         intent.putExtra(EXTRA_MESSAGE, mDifferenceFromNominal );
+        SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("ROOM" , 1);
+        editor.commit();
         startActivity(intent);
     }
     public void MeasureSPL2 (View view) {
         Intent intent = new Intent(this, MeasureSPL.class);
-        intent.putExtra(ROOM_MESSAGE, 2);
         intent.putExtra(EXTRA_MESSAGE, mDifferenceFromNominal );
+        SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("ROOM" , 2);
+        editor.commit();
         startActivity(intent);
     }
 
@@ -106,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
         calTextView = (TextView) findViewById(R.id.calibrateText);
         calTextView.setText(Double.toString(mDifferenceFromNominal));
         measureText1 = (TextView) findViewById(R.id.measureText1);
-        measureText1.setText(Integer.toString(splRoom1));
+        measureText1.setText("0");
         measureText2 = (TextView) findViewById(R.id.measureText2);
-        measureText2.setText(Integer.toString(splRoom2));
+        measureText2.setText("0");
     }
 
     @Override
@@ -126,6 +132,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        readPreferences();
+        measureText1.setText(Integer.toString(splRoom1));
+        measureText2.setText(Integer.toString(splRoom2));
+        Log.d(TAG, "onRestart() called");
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart() called");
@@ -137,9 +152,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         readPreferences();
         calTextView.setText(Double.toString(mDifferenceFromNominal));
-        measureText1.setText(Integer.toString(splRoom1));
-        measureText2.setText(Integer.toString(splRoom2));
-
         Log.d(TAG, "onResume() called");
 
     }
