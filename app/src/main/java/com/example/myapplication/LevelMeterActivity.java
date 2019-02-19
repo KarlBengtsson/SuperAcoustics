@@ -296,6 +296,7 @@ public class LevelMeterActivity extends Activity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        micInput.stop();
         Log.d(TAG, "onDestroy() called");
     }
     private void setPreferences() {

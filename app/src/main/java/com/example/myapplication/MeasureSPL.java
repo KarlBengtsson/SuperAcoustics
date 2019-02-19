@@ -55,7 +55,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private ArrayList splRoom2 = new ArrayList<Integer>();
     private ArrayList DBmeasure = new ArrayList<Integer>();
     //private boolean start = false;
-    private Button startButton, stopButton;
+    private Button startButton, stopButton, finishMeasure;
     private boolean Room1 = false;
     private int counter = 0;
     private long tStart;
@@ -83,7 +83,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private volatile boolean mDrawing;
     private volatile int mDrawingCollided;
 
-    private static final String TAG = "Measure SPL";
+    private static final String TAG = "MeasureSPLEVEL";
 
     /** Called when the activity is first created. */
     @Override
@@ -141,12 +141,14 @@ public class MeasureSPL extends AppCompatActivity implements
                     public void onClick(View v) {
                         if (onOffButton.isChecked()) {
                             startButton.setEnabled(true);
+                            finishMeasure.setEnabled(false);
                             readPreferences();
                             micInput.setSampleRate(mSampleRate);
                             micInput.setAudioSource(mAudioSource);
                             micInput.start();
                         } else {
                             startButton.setEnabled(false);
+                            finishMeasure.setEnabled(true);
                             micInput.stop();
                             splRoom1 = stopMeasure(splRoom1, counter1);
                             /* setPreferences();
@@ -196,7 +198,7 @@ public class MeasureSPL extends AppCompatActivity implements
             }
         });
 
-        Button finishMeasure=(Button)findViewById(R.id.finishButton);
+        finishMeasure=(Button)findViewById(R.id.finishButton);
         Button.OnClickListener setFinishBtnListener =
                 new Button.OnClickListener() {
 
@@ -305,7 +307,7 @@ public class MeasureSPL extends AppCompatActivity implements
             editor.putInt("mRoom2" , average2 );
             editor.putInt("ROOM",2);
         }
-        editor.commit();
+        editor.apply();
     }
     private void saveToTxtFile() {
 
@@ -443,6 +445,7 @@ public class MeasureSPL extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        micInput.stop();
         Log.d(TAG, "onDestroy() called");
     }
 }
