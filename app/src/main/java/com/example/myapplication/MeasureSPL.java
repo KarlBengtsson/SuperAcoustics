@@ -31,6 +31,7 @@ public class MeasureSPL extends AppCompatActivity implements
     MicrophoneInput micInput;
     TextView mdBTextView;
     TextView mdBFractionTextView;
+    TextView measuredSPL;
     BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
     private double calibration;
@@ -71,10 +72,11 @@ public class MeasureSPL extends AppCompatActivity implements
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(calibration));
 
-        
+
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
+        measuredSPL = (TextView) findViewById(R.id.measuredSPL);
 
         // Here the micInput object is created for audio capture.
         // It is set up to call this object to handle real time audio frames of
