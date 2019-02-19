@@ -44,6 +44,11 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity
+            android:name=".ViewResult"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

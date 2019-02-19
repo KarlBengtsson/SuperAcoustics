@@ -17,11 +17,16 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "Calibration";
+    public static final String ROOM_MESSAGE = "Room";
     private Button dbMeter;
     private Button measure1;
     private TextView calTextView;
+    private TextView measureText1;
+    private TextView measureText2;
     private static final String TAG = "MainActivity";
     double mDifferenceFromNominal = 0.0;
+    int splRoom1 = 0;
+    int splRoom2 = 0;
     int mAudioSource = 0;
     int mSampleRate = 0;
 
@@ -34,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
         readPreferences();
         dbMeter = (Button) findViewById(R.id.dbmeterButton);
         measure1 = (Button) findViewById(R.id.measureButton1);
-        calTextView = (TextView) findViewById(R.id.calibrateText);
-        calTextView.setText(Double.toString(mDifferenceFromNominal));
+        initTextViews();
         onCheckPerm();
 
     }
@@ -46,9 +50,21 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void MeasureSPL (View view) {
+    public void MeasureSPL1 (View view) {
         Intent intent = new Intent(this, MeasureSPL.class);
-        intent.putExtra( EXTRA_MESSAGE, mDifferenceFromNominal );
+        intent.putExtra(ROOM_MESSAGE, 1);
+        intent.putExtra(EXTRA_MESSAGE, mDifferenceFromNominal );
+        startActivity(intent);
+    }
+    public void MeasureSPL2 (View view) {
+        Intent intent = new Intent(this, MeasureSPL.class);
+        intent.putExtra(ROOM_MESSAGE, 2);
+        intent.putExtra(EXTRA_MESSAGE, mDifferenceFromNominal );
+        startActivity(intent);
+    }
+
+    public void ViewResult (View view) {
+        Intent intent = new Intent(this,ViewResult.class);
         startActivity(intent);
     }
 
@@ -83,6 +99,16 @@ public class MainActivity extends AppCompatActivity {
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
         mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        splRoom1 = preferences.getInt("mRoom1", 0);
+        splRoom2 = preferences.getInt("mRoom2", 0);
+    }
+    private void initTextViews() {
+        calTextView = (TextView) findViewById(R.id.calibrateText);
+        calTextView.setText(Double.toString(mDifferenceFromNominal));
+        measureText1 = (TextView) findViewById(R.id.measureText1);
+        measureText1.setText(Integer.toString(splRoom1));
+        measureText2 = (TextView) findViewById(R.id.measureText2);
+        measureText2.setText(Integer.toString(splRoom2));
     }
 
     @Override
@@ -111,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         readPreferences();
         calTextView.setText(Double.toString(mDifferenceFromNominal));
+        measureText1.setText(Integer.toString(splRoom1));
+        measureText2.setText(Integer.toString(splRoom2));
+
         Log.d(TAG, "onResume() called");
 
     }

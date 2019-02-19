@@ -82,7 +82,6 @@ public class LevelMeterActivity extends Activity implements
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         readPreferences();
 
-        // Ask for permission to use "dangerous" phone hardware
 
         // Get a handle that will be used in async thread post to update the
         // display.
@@ -112,27 +111,8 @@ public class LevelMeterActivity extends Activity implements
                 };
         onOffButton.setOnClickListener(tbListener);
 
-        // Level adjustment buttons.
-
-        // Minus 5 dB button event handler.
-        Button minus5dbButton = (Button)findViewById(R.id.minus_5_db_button);
-        DbClickListener minus5dBButtonListener = new DbClickListener(-5.0);
-        minus5dbButton.setOnClickListener(minus5dBButtonListener);
-
-        // Minus 1 dB button event handler.
-        Button minus1dbButton = (Button)findViewById(R.id.minus_1_db_button);
-        DbClickListener minus1dBButtonListener = new DbClickListener(-1.0);
-        minus1dbButton.setOnClickListener(minus1dBButtonListener);
-
-        // Plus 1 dB button event handler.
-        Button plus1dbButton = (Button)findViewById(R.id.plus_1_db_button);
-        DbClickListener plus1dBButtonListener = new DbClickListener(1.0);
-        plus1dbButton.setOnClickListener(plus1dBButtonListener);
-
-        // Plus 5 dB button event handler.
-        Button plus5dbButton = (Button)findViewById(R.id.plus_5_db_button);
-        DbClickListener plus5dBButtonListener = new DbClickListener(5.0);
-        plus5dbButton.setOnClickListener(plus5dBButtonListener);
+        // Call for the method to activate the calibration buttons
+        onClickLevelAdjustment();
 
 
         // Settings button, launches the settings dialog.
@@ -232,7 +212,7 @@ public class LevelMeterActivity extends Activity implements
                     mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
 
                     DecimalFormat df = new DecimalFormat("##");
-                    mdBTextView.setText(df.format(20 + rmsdB));
+                    mdBTextView.setText(df.format(20 + rmsdB - mDifferenceFromNominal));
 
                     DecimalFormat df_fraction = new DecimalFormat("#");
                     int one_decimal = (int) (Math.round(Math.abs(rmsdB * 10))) % 10;
@@ -246,6 +226,32 @@ public class LevelMeterActivity extends Activity implements
                     "than 20ms. Collision count" + Double.toString(mDrawingCollided));
         }
     }
+
+    private void onClickLevelAdjustment() {
+        // Level adjustment buttons.
+
+        // Minus 5 dB button event handler.
+        Button minus5dbButton = (Button)findViewById(R.id.minus_5_db_button);
+        DbClickListener minus5dBButtonListener = new DbClickListener(-5.0);
+        minus5dbButton.setOnClickListener(minus5dBButtonListener);
+
+        // Minus 1 dB button event handler.
+        Button minus1dbButton = (Button)findViewById(R.id.minus_1_db_button);
+        DbClickListener minus1dBButtonListener = new DbClickListener(-1.0);
+        minus1dbButton.setOnClickListener(minus1dBButtonListener);
+
+        // Plus 1 dB button event handler.
+        Button plus1dbButton = (Button)findViewById(R.id.plus_1_db_button);
+        DbClickListener plus1dBButtonListener = new DbClickListener(1.0);
+        plus1dbButton.setOnClickListener(plus1dBButtonListener);
+
+        // Plus 5 dB button event handler.
+        Button plus5dbButton = (Button)findViewById(R.id.plus_5_db_button);
+        DbClickListener plus5dBButtonListener = new DbClickListener(5.0);
+        plus5dbButton.setOnClickListener(plus5dBButtonListener);
+    }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
