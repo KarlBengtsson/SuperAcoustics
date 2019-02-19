@@ -55,6 +55,7 @@ public class MeasureSPL extends AppCompatActivity implements
     // For saving and loading .txt file
 
     public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Spartest";
+    public String [] saveText;
 
 
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
@@ -91,7 +92,6 @@ public class MeasureSPL extends AppCompatActivity implements
         //Retrieves the value set by the calibration
         Intent intent = getIntent();
         calibration = intent.getDoubleExtra( MainActivity.EXTRA_MESSAGE, 0 );
-        Room = intent.getIntExtra(MainActivity.ROOM_MESSAGE, 3);
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(calibration));
 
@@ -132,19 +132,26 @@ public class MeasureSPL extends AppCompatActivity implements
                             micInput.setSampleRate(mSampleRate);
                             micInput.setAudioSource(mAudioSource);
                             micInput.start();
-
-                        } else {
+                        }
+                        else {
                             startButton.setEnabled(false);
                             micInput.stop();
                             setPreferences();
-                            File file = new File(path + "TestFileRoom"+Integer.toString(Room)+".txt");
-                            String [] saveText = String.valueOf((rmsdB+20-mDifferenceFromNominal)).split(System.getProperty("line.separator"));
-                            Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
-                            Save(file,saveText);
+
                         }
                     }
                 };
         onOffButton.setOnClickListener(tbListener);
+        startButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                File file = new File(path + "/TestFileRoom"+Integer.toString(Room)+".txt");
+                String [] saveText = new String[0];
+                saveText = String.valueOf((rmsdB+20-mDifferenceFromNominal)).split(System.getProperty("line.separator"));
+                Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
+                Save(file,saveText);
+            }
+        });
 
 
 
@@ -206,6 +213,7 @@ public class MeasureSPL extends AppCompatActivity implements
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
         mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        Room = preferences.getInt("ROOM",0);
     }
 
     private void setPreferences() {
@@ -216,12 +224,14 @@ public class MeasureSPL extends AppCompatActivity implements
         editor.putInt("mGainDif", (int) mDifferenceFromNominal);
         if (Room == 1) {
             editor.putInt("mRoom1" ,(int) (20 + rmsdB - mDifferenceFromNominal));
+            editor.putInt("ROOM",1);
         }
         else
         {
             editor.putInt("mRoom2" ,(int) (20 + rmsdB - mDifferenceFromNominal));
+            editor.putInt("ROOM",2);
         }
-        editor.commit();
+        editor.apply();
     }
     private void saveToTxtFile() {
 
