@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         Log.d(TAG, "OnCreate() called");
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        SharedPreferences preferences = getSharedPreferences("LevelMeter",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("mRoom1",0);
+        editor.putInt("mRoom2",0);
+        editor.apply();
         readPreferences();
         dbMeter = (Button) findViewById(R.id.dbmeterButton);
         measure1 = (Button) findViewById(R.id.measureButton1);
