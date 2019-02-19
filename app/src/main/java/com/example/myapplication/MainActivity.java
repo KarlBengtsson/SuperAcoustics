@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     double mDifferenceFromNominal = 0.0;
     int splRoom1 = 0;
     int splRoom2 = 0;
+    int Room = 0;
     int mAudioSource = 0;
     int mSampleRate = 0;
 
@@ -107,14 +108,15 @@ public class MainActivity extends AppCompatActivity {
         mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
         splRoom1 = preferences.getInt("mRoom1", 0);
         splRoom2 = preferences.getInt("mRoom2", 0);
+        Room = preferences.getInt("ROOM",0);
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);
         calTextView.setText(Double.toString(mDifferenceFromNominal));
         measureText1 = (TextView) findViewById(R.id.measureText1);
-        measureText1.setText("0");
+        measureText1.setText("Not measured");
         measureText2 = (TextView) findViewById(R.id.measureText2);
-        measureText2.setText("0");
+        measureText2.setText("Not measured");
     }
 
     @Override
@@ -132,15 +134,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        readPreferences();
-        measureText1.setText(Integer.toString(splRoom1));
-        measureText2.setText(Integer.toString(splRoom2));
-        Log.d(TAG, "onRestart() called");
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart() called");
@@ -154,6 +147,18 @@ public class MainActivity extends AppCompatActivity {
         calTextView.setText(Double.toString(mDifferenceFromNominal));
         Log.d(TAG, "onResume() called");
 
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        readPreferences();
+        if (Room==1){
+            measureText1.setText(Integer.toString(splRoom1));
+        }
+        else {
+            measureText2.setText(Integer.toString(splRoom2));
+        }
+        Log.d(TAG, "onRestart() called");
     }
 
     @Override

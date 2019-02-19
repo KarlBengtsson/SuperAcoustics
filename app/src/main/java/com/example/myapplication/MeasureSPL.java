@@ -83,7 +83,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private volatile boolean mDrawing;
     private volatile int mDrawingCollided;
 
-    private static final String TAG = "MeasureSPL";
+    private static final String TAG = "Measure SPL";
 
     /** Called when the activity is first created. */
     @Override
@@ -101,7 +101,6 @@ public class MeasureSPL extends AppCompatActivity implements
         //Retrieves the value set by the calibration
         Intent intent = getIntent();
         calibration = intent.getDoubleExtra( MainActivity.EXTRA_MESSAGE, 0 );
-       // Room = intent.getIntExtra(MainActivity.ROOM_MESSAGE, 3);
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(calibration));
 
@@ -300,9 +299,11 @@ public class MeasureSPL extends AppCompatActivity implements
         editor.putInt("mGainDif", (int) mDifferenceFromNominal);
         if (Room == 1) {
             editor.putInt("mRoom1" , average1);
+            editor.putInt("ROOM",1);
         }
         else {
             editor.putInt("mRoom2" , average2 );
+            editor.putInt("ROOM",2);
         }
         editor.commit();
     }
