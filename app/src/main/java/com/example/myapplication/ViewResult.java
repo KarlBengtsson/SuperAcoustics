@@ -36,6 +36,8 @@ public class ViewResult extends AppCompatActivity {
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
     private int mSampleRate;  // The audio sampling rate to use.
     private int mAudioSource;  // The audio source to use.
+    private int result1;
+    private int result2;
 
 
     @Override
@@ -46,13 +48,30 @@ public class ViewResult extends AppCompatActivity {
         resultSPL1 = (TextView)findViewById(R.id.resultTextSpl1);
         resultSPL2 = (TextView)findViewById(R.id.resultTextSpl2);
         resultCal = (TextView)findViewById(R.id.resultTextCal);
-        readFileFromTxtRoom1();
-        readFileFromTxtRoom2();
         readPreferences();
 
     }
 
-    public void readFileFromTxtRoom1() {
+
+
+    private void readPreferences() {
+        SharedPreferences preferences = getSharedPreferences("LevelMeter",
+                MODE_PRIVATE);
+        mSampleRate = preferences.getInt("SampleRate", 8000);
+        mAudioSource = preferences.getInt("AudioSource",
+                MediaRecorder.AudioSource.VOICE_RECOGNITION);
+        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        result1 = preferences.getInt("mRoom1",0);
+        result2 = preferences.getInt("mRoom2",0);
+        resultSPL1.setText(Integer.toString(result1) + " dB");
+        resultSPL2.setText(Integer.toString(result2) + " dB");
+        resultCal.setText(Double.toString(mDifferenceFromNominal) + " dB");
+    }
+
+
+
+
+/*    public void readFileFromTxtRoom1() {
         File file = new File(path + "TestFileRoom1.txt");
         String[] loadText = Load(file);
         String finalString = "";
@@ -71,22 +90,7 @@ public class ViewResult extends AppCompatActivity {
             finalString += loadText[i] + System.getProperty("line.separator");
         }
         resultSPL2.setText(finalString + " dB");
-    }
-
-    private void readPreferences() {
-        SharedPreferences preferences = getSharedPreferences("LevelMeter",
-                MODE_PRIVATE);
-        mSampleRate = preferences.getInt("SampleRate", 8000);
-        mAudioSource = preferences.getInt("AudioSource",
-                MediaRecorder.AudioSource.VOICE_RECOGNITION);
-        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
-        resultCal.setText(Double.toString(mDifferenceFromNominal) + " dB");
-    }
-
-
-
-
-
+    }*/
 
     public static void Save(File file, String[] data)
     {
