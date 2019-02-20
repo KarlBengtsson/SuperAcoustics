@@ -34,8 +34,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
 
 public class MeasureSPL extends AppCompatActivity implements
         MicrophoneInputListener{
@@ -54,12 +52,8 @@ public class MeasureSPL extends AppCompatActivity implements
     private ArrayList splRoom1 = new ArrayList<Integer>();
     private ArrayList splRoom2 = new ArrayList<Integer>();
     private ArrayList DBmeasure = new ArrayList<Integer>();
-    //private boolean start = false;
     private Button startButton, stopButton, finishMeasure;
-    private boolean Room1 = false;
     private int counter = 0;
-    private long tStart;
-    private long tStop;
     private int counter1, average1, average2;
 
     // For saving and loading .txt file
@@ -97,8 +91,14 @@ public class MeasureSPL extends AppCompatActivity implements
 
         // Read the previous preferences
         readPreferences();
+        //mGain *= Math.pow(10, mDifferenceFromNominal / 20.0);
         mGain = Math.pow(10, mDifferenceFromNominal / 20.0);
 
+        //Retrieves the value set by the calibration
+        /*Intent intent = getIntent();
+        calibration = intent.getDoubleExtra( MainActivity.EXTRA_MESSAGE, 0 );*/
+        mGainTextView = (TextView)findViewById(R.id.gain);
+        mGainTextView.setText(Double.toString(mDifferenceFromNominal));
 
 
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
@@ -138,7 +138,7 @@ public class MeasureSPL extends AppCompatActivity implements
                         if (onOffButton.isChecked()) {
                             startButton.setEnabled(true);
                             finishMeasure.setEnabled(false);
-                            readPreferences();
+                            //readPreferences();
                             micInput.setSampleRate(mSampleRate);
                             micInput.setAudioSource(mAudioSource);
                             micInput.start();
@@ -160,6 +160,7 @@ public class MeasureSPL extends AppCompatActivity implements
                 @Override
                 public void onClick(View v) {
                     stopButton.setEnabled(true);
+                    startButton.setEnabled(false);
                         counter1 = startMeasure();
                 }
             });
@@ -168,6 +169,7 @@ public class MeasureSPL extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 stopButton.setEnabled(false);
+                startButton.setEnabled(true);
                 if (Room == 1) {
                     splRoom1 = stopMeasure(splRoom1, counter1);
                     //calculate average SPL
@@ -178,7 +180,6 @@ public class MeasureSPL extends AppCompatActivity implements
                     }
                     average1 = total / splRoom1.size();
                     measuredSPL.setText(Integer.toString(average1));
-                    Room1 = true;
                 }
                 else {
                     splRoom2 = stopMeasure(splRoom2, counter1);
@@ -241,12 +242,13 @@ public class MeasureSPL extends AppCompatActivity implements
             }
             rms = Math.sqrt(rms/audioFrame.length);
 
+
             // Compute a smoothed version for less flickering of the display.
             mRmsSmoothed = mRmsSmoothed * mAlpha + (1 - mAlpha) * rms;
-            rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed);
+            rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed) - mDifferenceFromNominal ;
+
+            //Create Arraylist of dBmeasurements to calculate average SPL
             int a = (int) (rmsdB + 20 );
-            tStop = System.currentTimeMillis();
-            //long diff = tStop - tStart;
             DBmeasure.add(a);
             counter++;
 
