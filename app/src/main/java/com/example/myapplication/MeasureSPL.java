@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class MeasureSPL extends AppCompatActivity implements
         MicrophoneInputListener{
 
     MicrophoneInput micInput;
+    TextView seconds;
     TextView mdBTextView;
     TextView mdBFractionTextView;
     TextView measuredSPL;
@@ -101,6 +103,7 @@ public class MeasureSPL extends AppCompatActivity implements
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         measuredSPL = (TextView) findViewById(R.id.measuredSPL);
+        seconds = (TextView) findViewById(R.id.textseconds);
 
         // Here the micInput object is created for audio capture.
         // It is set up to call this object to handle real time audio frames of
@@ -157,7 +160,20 @@ public class MeasureSPL extends AppCompatActivity implements
                 public void onClick(View v) {
                     stopButton.setEnabled(true);
                     startButton.setEnabled(false);
-                        counter1 = startMeasure();
+                    counter1 = startMeasure();
+
+                    new CountDownTimer(10000, 1000) {
+                        int time=10;
+                        public void onTick(long millisUntilFinished) {
+                            seconds.setText(checkDigit(time));
+                            time--;
+                        }
+
+                        public void onFinish() {
+                            seconds.setText("0");
+                        }
+
+                    }.start();
                 }
             });
 
@@ -166,6 +182,7 @@ public class MeasureSPL extends AppCompatActivity implements
             public void onClick(View v) {
                 stopButton.setEnabled(false);
                 startButton.setEnabled(true);
+                seconds.setText("10");
                 if (Room == 1) {
                     splRoom1 = stopMeasure(splRoom1, counter1);
                     //calculate average SPL
@@ -206,6 +223,10 @@ public class MeasureSPL extends AppCompatActivity implements
         finishMeasure.setOnClickListener(setFinishBtnListener);
 
 
+    }
+
+    public String checkDigit(int number) {
+        return number <= 9 ? "0" + number : String.valueOf(number);
     }
 
     private int startMeasure() {
