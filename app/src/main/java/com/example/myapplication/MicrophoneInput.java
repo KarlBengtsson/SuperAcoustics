@@ -44,7 +44,7 @@ import android.util.Log;
  */
 public class MicrophoneInput implements Runnable{
     int mSampleRate = 8000;
-    int mAudioSource = MediaRecorder.AudioSource.VOICE_COMMUNICATION;
+    int mAudioSource = MediaRecorder.AudioSource.VOICE_RECOGNITION;
     final int mChannelConfig = AudioFormat.CHANNEL_IN_STEREO;
     final int mAudioFormat = AudioFormat.ENCODING_PCM_16BIT;
 

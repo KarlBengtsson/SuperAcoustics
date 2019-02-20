@@ -53,6 +53,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private ArrayList splRoom1 = new ArrayList<Integer>();
     private ArrayList splRoom2 = new ArrayList<Integer>();
     private ArrayList DBmeasure = new ArrayList<Integer>();
+    private ArrayList signal = new ArrayList<Integer>();
     private Button startButton, stopButton, finishMeasure;
     private int counter = 0;
     private int counter1, average1, average2;
@@ -146,11 +147,6 @@ public class MeasureSPL extends AppCompatActivity implements
                             finishMeasure.setEnabled(true);
                             micInput.stop();
                             splRoom1 = stopMeasure(splRoom1, counter1);
-                            /* setPreferences();
-                            File file = new File(path + "/TestFileRoom"+Integer.toString(Room)+".txt");
-                            String [] saveText = String.valueOf((rmsdB+20-mDifferenceFromNominal)).split(System.getProperty("line.separator"));
-                            Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
-                            Save(file,saveText); */
                         }
                     }
                 };
@@ -184,6 +180,7 @@ public class MeasureSPL extends AppCompatActivity implements
                 startButton.setEnabled(true);
                 seconds.setText("10");
                 if (Room == 1) {
+                    File file = new File(path + "/TestFileRoom"+Integer.toString(Room)+".txt");
                     splRoom1 = stopMeasure(splRoom1, counter1);
                     //calculate average SPL
                     int total = 0;
@@ -191,10 +188,15 @@ public class MeasureSPL extends AppCompatActivity implements
                         int a = (int) splRoom1.get(i);
                         total += a;
                     }
+                    String [] saveText = String.valueOf(signal).split(" ");
+                    Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
+                    Save(file,saveText);
+                    signal.clear();
                     average1 = total / splRoom1.size();
                     measuredSPL.setText(Integer.toString(average1));
                 }
                 else {
+                    File file = new File(path + "/TestFileRoom"+Integer.toString(Room)+".txt");
                     splRoom2 = stopMeasure(splRoom2, counter1);
                     //calculate average SPL
                     int total = 0;
@@ -202,6 +204,10 @@ public class MeasureSPL extends AppCompatActivity implements
                         int a = (int) splRoom2.get(i);
                         total += a;
                     }
+                    String [] saveText = String.valueOf(signal).split(" ");
+                    Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
+                    Save(file,saveText);
+                    signal.clear();
                     average2 = total / splRoom2.size();
                     measuredSPL.setText(Integer.toString(average2));
                 }
@@ -255,6 +261,7 @@ public class MeasureSPL extends AppCompatActivity implements
             // Compute the RMS value. (Note that this does not remove DC).
             rms = 0;
             for (int i = 0; i < audioFrame.length; i++) {
+                signal.add(audioFrame[i]);
                 rms += audioFrame[i]*audioFrame[i];
             }
             rms = Math.sqrt(rms/audioFrame.length);
@@ -330,7 +337,7 @@ public class MeasureSPL extends AppCompatActivity implements
     }
 
 
-    public static void Save(File file, String[] data)
+    public static void Save(File file, String [] data)
     {
         FileOutputStream fos = null;
         try
