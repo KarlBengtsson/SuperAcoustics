@@ -81,6 +81,7 @@ public class LevelMeterActivity extends Activity implements
         setContentView(R.layout.level_meter_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         readPreferences();
+        LevelMeterActivity.this.mGain = Math.pow(10, mDifferenceFromNominal / 20.0);
 
 
         // Get a handle that will be used in async thread post to update the
@@ -163,7 +164,7 @@ public class LevelMeterActivity extends Activity implements
         @Override
         public void onClick(View v) {
             LevelMeterActivity.this.mGain *= Math.pow(10, gainIncrement / 20.0);
-            mDifferenceFromNominal -= gainIncrement;
+            mDifferenceFromNominal += gainIncrement;
             DecimalFormat df = new DecimalFormat("##.# dB");
             mGainTextView.setText(df.format(mDifferenceFromNominal));
         }
@@ -212,7 +213,7 @@ public class LevelMeterActivity extends Activity implements
                     //mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
 
                     DecimalFormat df = new DecimalFormat("##");
-                    mdBTextView.setText(df.format(20 + rmsdB - mDifferenceFromNominal));
+                    mdBTextView.setText(df.format(20 + rmsdB));
 
                     DecimalFormat df_fraction = new DecimalFormat("#");
                     int one_decimal = (int) (Math.round(Math.abs(rmsdB * 10))) % 10;
@@ -303,7 +304,6 @@ public class LevelMeterActivity extends Activity implements
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-
         editor.putInt("mGainDif", (int) mDifferenceFromNominal);
         editor.commit();
     }

@@ -97,12 +97,8 @@ public class MeasureSPL extends AppCompatActivity implements
 
         // Read the previous preferences
         readPreferences();
+        mGain = Math.pow(10, mDifferenceFromNominal / 20.0);
 
-        //Retrieves the value set by the calibration
-        Intent intent = getIntent();
-        calibration = intent.getDoubleExtra( MainActivity.EXTRA_MESSAGE, 0 );
-        mGainTextView = (TextView)findViewById(R.id.gain);
-        mGainTextView.setText(Double.toString(calibration));
 
 
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
@@ -248,7 +244,7 @@ public class MeasureSPL extends AppCompatActivity implements
             // Compute a smoothed version for less flickering of the display.
             mRmsSmoothed = mRmsSmoothed * mAlpha + (1 - mAlpha) * rms;
             rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed);
-            int a = (int) (rmsdB + 20 - mDifferenceFromNominal);
+            int a = (int) (rmsdB + 20 );
             tStop = System.currentTimeMillis();
             //long diff = tStop - tStart;
             DBmeasure.add(a);
@@ -265,7 +261,7 @@ public class MeasureSPL extends AppCompatActivity implements
                     //mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
 
                     DecimalFormat df = new DecimalFormat("##");
-                    mdBTextView.setText(df.format(20 + rmsdB - mDifferenceFromNominal));
+                    mdBTextView.setText(df.format(20 + rmsdB));
 
                     DecimalFormat df_fraction = new DecimalFormat("#");
                     one_decimal = (int) (Math.round(Math.abs(rmsdB * 10))) % 10;
