@@ -44,7 +44,6 @@ public class MeasureSPL extends AppCompatActivity implements
     TextView measuredSPL;
     BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
-    private double calibration;
     private int Room;
     private int one_decimal;
     private double rms;
@@ -91,12 +90,9 @@ public class MeasureSPL extends AppCompatActivity implements
 
         // Read the previous preferences
         readPreferences();
-        //mGain *= Math.pow(10, mDifferenceFromNominal / 20.0);
-        mGain = Math.pow(10, mDifferenceFromNominal / 20.0);
+        mGain *= Math.pow(10, mDifferenceFromNominal / 20.0);
 
         //Retrieves the value set by the calibration
-        /*Intent intent = getIntent();
-        calibration = intent.getDoubleExtra( MainActivity.EXTRA_MESSAGE, 0 );*/
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(mDifferenceFromNominal));
 
@@ -138,7 +134,7 @@ public class MeasureSPL extends AppCompatActivity implements
                         if (onOffButton.isChecked()) {
                             startButton.setEnabled(true);
                             finishMeasure.setEnabled(false);
-                            //readPreferences();
+                            readPreferences();
                             micInput.setSampleRate(mSampleRate);
                             micInput.setAudioSource(mAudioSource);
                             micInput.start();
@@ -245,7 +241,7 @@ public class MeasureSPL extends AppCompatActivity implements
 
             // Compute a smoothed version for less flickering of the display.
             mRmsSmoothed = mRmsSmoothed * mAlpha + (1 - mAlpha) * rms;
-            rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed) - mDifferenceFromNominal ;
+            rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed) ;
 
             //Create Arraylist of dBmeasurements to calculate average SPL
             int a = (int) (rmsdB + 20 );

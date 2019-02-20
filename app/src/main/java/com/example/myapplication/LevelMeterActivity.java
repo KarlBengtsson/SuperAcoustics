@@ -81,7 +81,7 @@ public class LevelMeterActivity extends Activity implements
         setContentView(R.layout.level_meter_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         readPreferences();
-        LevelMeterActivity.this.mGain = Math.pow(10, mDifferenceFromNominal / 20.0);
+        LevelMeterActivity.this.mGain *= Math.pow(10, mDifferenceFromNominal / 20.0);
 
 
         // Get a handle that will be used in async thread post to update the
