@@ -11,7 +11,6 @@ package com.example.myapplication;
  *  called and destroyed when stop() is called.
 */
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
@@ -54,9 +53,12 @@ public class MeasureSPL extends AppCompatActivity implements
     private ArrayList splRoom2 = new ArrayList<Integer>();
     private ArrayList DBmeasure = new ArrayList<Integer>();
     private ArrayList signal = new ArrayList<Integer>();
+    private ArrayList signal1 = new ArrayList<Integer>();
     private Button startButton, stopButton, finishMeasure;
     private int counter = 0;
-    private int counter1, average1, average2;
+    private int counter3 = 0;
+    private int counter4 = 0;
+    private int counter1, average1, average2, signalStart;
 
     // For saving and loading .txt file
 
@@ -148,7 +150,7 @@ public class MeasureSPL extends AppCompatActivity implements
                             micInput.stop();
                             splRoom1 = stopMeasure(splRoom1, counter1);
                         }
-                    }
+                      }
                 };
         onOffButton.setOnClickListener(tbListener);
             startButton.setOnClickListener(new View.OnClickListener(){
@@ -156,10 +158,13 @@ public class MeasureSPL extends AppCompatActivity implements
                 public void onClick(View v) {
                     stopButton.setEnabled(true);
                     startButton.setEnabled(false);
-                    counter1 = startMeasure();
+                    //counter1 = startMeasure();
+                    counter1 = counter;
+                    signalStart = counter3;
 
-                    new CountDownTimer(10000, 1000) {
-                        int time=10;
+
+                    new CountDownTimer(5000, 1000) {
+                        int time=5;
                         public void onTick(long millisUntilFinished) {
                             seconds.setText(checkDigit(time));
                             time--;
@@ -178,7 +183,7 @@ public class MeasureSPL extends AppCompatActivity implements
             public void onClick(View v) {
                 stopButton.setEnabled(false);
                 startButton.setEnabled(true);
-                seconds.setText("10");
+                seconds.setText("05");
                 if (Room == 1) {
                     File file = new File(path + "/TestFileRoom"+Integer.toString(Room)+".txt");
                     splRoom1 = stopMeasure(splRoom1, counter1);
@@ -188,10 +193,12 @@ public class MeasureSPL extends AppCompatActivity implements
                         int a = (int) splRoom1.get(i);
                         total += a;
                     }
-                    String [] saveText = String.valueOf(signal).split(" ");
+                    signal1 = stopSignal(signal1, signalStart);
+                    String [] saveText = String.valueOf(signal1).split(" ");
                     Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
-                    Save(file,saveText);
+                    Save(file, saveText);
                     signal.clear();
+
                     average1 = total / splRoom1.size();
                     measuredSPL.setText(Integer.toString(average1));
                 }
@@ -204,10 +211,12 @@ public class MeasureSPL extends AppCompatActivity implements
                         int a = (int) splRoom2.get(i);
                         total += a;
                     }
-                    String [] saveText = String.valueOf(signal).split(" ");
+                    signal1 = stopSignal(signal1, signalStart);
+                    String [] saveText = String.valueOf(signal1).split(" ");
                     Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
                     Save(file,saveText);
                     signal.clear();
+
                     average2 = total / splRoom2.size();
                     measuredSPL.setText(Integer.toString(average2));
                 }
@@ -231,6 +240,7 @@ public class MeasureSPL extends AppCompatActivity implements
 
     }
 
+
     public String checkDigit(int number) {
         return number <= 9 ? "0" + number : String.valueOf(number);
     }
@@ -248,6 +258,14 @@ public class MeasureSPL extends AppCompatActivity implements
         return list;
     }
 
+    private ArrayList stopSignal(ArrayList saveText, int signalStart) {
+        int stop = signal.size() - signalStart;
+        for (int i = 0; i < stop; i++) {
+            saveText.add(i, signal.get(signalStart + i));
+        }
+        return saveText;
+    }
+
     /**
      *  This method gets called by the micInput object owned by this activity.
      *  It first computes the RMS value and then it sets up a bit of
@@ -260,10 +278,11 @@ public class MeasureSPL extends AppCompatActivity implements
             mDrawing = true;
             // Compute the RMS value. (Note that this does not remove DC).
             rms = 0;
-            for (int i = 0; i < audioFrame.length; i++) {
-                signal.add(audioFrame[i]);
-                rms += audioFrame[i]*audioFrame[i];
-            }
+                for (int i = 0; i < audioFrame.length; i++) {
+                    signal.add(audioFrame[i]);
+                    rms += audioFrame[i] * audioFrame[i];
+                    counter3++;
+                }
             rms = Math.sqrt(rms/audioFrame.length);
 
 
