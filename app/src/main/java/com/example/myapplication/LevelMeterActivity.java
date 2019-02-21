@@ -128,7 +128,7 @@ public class LevelMeterActivity extends Activity implements
                                 R.id.on_off_toggle_button);
                         onOffButton.setChecked(false);
                         LevelMeterActivity.this.micInput.stop();
-
+                        LevelMeterActivity.this.setPreferences();
                         Intent settingsIntent = new Intent(LevelMeterActivity.this,
                                 Settings.class);
                         LevelMeterActivity.this.startActivity(settingsIntent);
@@ -271,7 +271,14 @@ public class LevelMeterActivity extends Activity implements
     @Override
     protected void onStart() {
         super.onStart();
+        readPreferences();
         Log.d(TAG, "onStart() called");
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        readPreferences();
+        Log.d(TAG, "onRestart() called");
     }
 
     @Override

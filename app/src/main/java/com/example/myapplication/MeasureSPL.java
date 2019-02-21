@@ -185,7 +185,7 @@ public class MeasureSPL extends AppCompatActivity implements
                 startButton.setEnabled(true);
                 seconds.setText("05");
                 if (Room == 1) {
-                    File file = new File(path + "/TestFileRoom"+Integer.toString(Room)+".txt");
+                    File file = new File(path + "/TestRoom"+Integer.toString(Room)+".txt");
                     splRoom1 = stopMeasure(splRoom1, counter1);
                     //calculate average SPL
                     int total = 0;
@@ -203,7 +203,7 @@ public class MeasureSPL extends AppCompatActivity implements
                     measuredSPL.setText(Integer.toString(average1));
                 }
                 else {
-                    File file = new File(path + "/TestFileRoom"+Integer.toString(Room)+".txt");
+                    File file = new File(path + "/TestRoom"+Integer.toString(Room)+".txt");
                     splRoom2 = stopMeasure(splRoom2, counter1);
                     //calculate average SPL
                     int total = 0;
