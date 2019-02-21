@@ -278,11 +278,10 @@ public class MeasureSPL extends AppCompatActivity implements
             mDrawing = true;
             // Compute the RMS value. (Note that this does not remove DC).
             rms = 0;
-                for (int i = 0; i < audioFrame.length; i++) {
-                    signal.add(audioFrame[i]);
-                    rms += audioFrame[i] * audioFrame[i];
-                    counter3++;
-                }
+            for (int i = 0; i < audioFrame.length; i++) {
+                signal.add(audioFrame[i]);
+                rms += audioFrame[i]*audioFrame[i];
+            }
             rms = Math.sqrt(rms/audioFrame.length);
 
 
