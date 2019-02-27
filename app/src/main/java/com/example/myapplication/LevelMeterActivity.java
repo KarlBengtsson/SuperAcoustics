@@ -223,8 +223,8 @@ public class LevelMeterActivity extends Activity implements
             });
         } else {
             mDrawingCollided++;
-            Log.v(TAG, "Level bar update collision, i.e. update took longer " +
-                    "than 20ms. Collision count" + Double.toString(mDrawingCollided));
+/*            Log.v(TAG, "Level bar update collision, i.e. update took longer " +
+                    "than 20ms. Collision count" + Double.toString(mDrawingCollided));*/
         }
     }
 
