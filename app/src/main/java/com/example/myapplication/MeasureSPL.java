@@ -11,6 +11,7 @@ package com.example.myapplication;
  *  called and destroyed when stop() is called.
 */
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
@@ -49,12 +50,12 @@ public class MeasureSPL extends AppCompatActivity implements
     private int one_decimal;
     private double rms;
     private double rmsdB;
-    private ArrayList splRoom1 = new ArrayList<Integer>();
-    private ArrayList splRoom2 = new ArrayList<Integer>();
-    private ArrayList DBmeasure = new ArrayList<Integer>();
-    private ArrayList signal = new ArrayList<Integer>();
-    private ArrayList signal1 = new ArrayList<Integer>();
-    private Button startButton, stopButton, finishMeasure;
+    private ArrayList<Integer> splRoom1 = new ArrayList<>();
+    private ArrayList<Integer> splRoom2 = new ArrayList<>();
+    private ArrayList<Integer> DBmeasure = new ArrayList<>();
+    private ArrayList<Integer> signal = new ArrayList<>();
+    private ArrayList<Integer> signal1 = new ArrayList<>();
+    private Button startButton, stopButton, finishMeasure, plotButton;
     private int counter = 0;
     private int counter3 = 0;
     private int counter4 = 0;
@@ -237,7 +238,24 @@ public class MeasureSPL extends AppCompatActivity implements
                 };
         finishMeasure.setOnClickListener(setFinishBtnListener);
 
+        plotButton=(Button)findViewById(R.id.plotButton);
+        Button.OnClickListener setPlotButtonListener =
+                new Button.OnClickListener() {
 
+                    @Override
+                    public void onClick(View v) {
+                        MeasureSPL.this.setPreferences();
+                        MeasureSPL.this.plot();
+                    }
+                };
+        plotButton.setOnClickListener(setPlotButtonListener);
+
+    }
+
+    public void plot () {
+        Intent plotIntent = new Intent(MeasureSPL.this, Plot.class);
+        plotIntent.putIntegerArrayListExtra("plotData", signal1);
+        startActivity(plotIntent);
     }
 
 
@@ -250,7 +268,7 @@ public class MeasureSPL extends AppCompatActivity implements
         return counter1;
     }
 
-    private ArrayList stopMeasure(ArrayList list, int counter1) {
+    private ArrayList<Integer> stopMeasure(ArrayList<Integer> list, int counter1) {
         int stop = DBmeasure.size() - counter1;
         for (int i = 0; i < stop; i++) {
             list.add(i, DBmeasure.get(counter1 + i));
@@ -258,7 +276,7 @@ public class MeasureSPL extends AppCompatActivity implements
         return list;
     }
 
-    private ArrayList stopSignal(ArrayList saveText, int signalStart) {
+    private ArrayList<Integer> stopSignal(ArrayList<Integer> saveText, int signalStart) {
         int stop = signal.size() - signalStart;
         for (int i = 0; i < stop; i++) {
             saveText.add(i, signal.get(signalStart + i));
@@ -279,7 +297,7 @@ public class MeasureSPL extends AppCompatActivity implements
             // Compute the RMS value. (Note that this does not remove DC).
             rms = 0;
             for (int i = 0; i < audioFrame.length; i++) {
-                signal.add(audioFrame[i]);
+                signal.add((int) audioFrame[i]);
                 rms += audioFrame[i]*audioFrame[i];
             }
             rms = Math.sqrt(rms/audioFrame.length);
@@ -315,8 +333,8 @@ public class MeasureSPL extends AppCompatActivity implements
             });
         } else {
             mDrawingCollided++;
-            Log.v(TAG, "Level bar update collision, i.e. update took longer " +
-                    "than 20ms. Collision count" + Double.toString(mDrawingCollided));
+            /*Log.v(TAG, "Level bar update collision, i.e. update took longer " +
+                    "than 20ms. Collision count" + Double.toString(mDrawingCollided));*/
         }
     }
 
@@ -348,10 +366,6 @@ public class MeasureSPL extends AppCompatActivity implements
             editor.putInt("ROOM",2);
         }
         editor.apply();
-    }
-    private void saveToTxtFile() {
-
-        //Does nothing yet.
     }
 
 

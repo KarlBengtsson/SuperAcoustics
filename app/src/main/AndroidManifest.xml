@@ -49,6 +49,11 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity
+            android:name=".Plot"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MeasureSPL">
+        </activity>
     </application>
 
 </manifest>
