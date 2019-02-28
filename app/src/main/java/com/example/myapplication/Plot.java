@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.jjoe64.graphview.GraphView;
@@ -15,28 +16,34 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class Plot  extends AppCompatActivity {
     private LineGraphSeries<DataPoint> series1;
+    private int mSignLength;
     private double mSampleRate;
     private int Room;
     private ArrayList<Integer> y;
+    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Spartest";
+    private String FILE_NAME = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plot_layout);
+        readPreferences();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            y = extras.getIntegerArrayList("plotData");
+            /*y = extras.getIntegerArrayList("plotData");*/
+            mSignLength = extras.getInt("SignalLength",0);
             //The key argument here must match that used in the other activity
         }
-        readPreferences();
-        grapher(y);
+        File dir = new File(path);
+        dir.mkdirs();
+        File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
+        String [] saveText = Load(file);
+        grapher(saveText);
 
 
 
@@ -45,17 +52,19 @@ public class Plot  extends AppCompatActivity {
 
 
 
-    public void grapher(ArrayList<Integer> yData) {
+    public void grapher(String[] yString) {
+
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        series1 = new LineGraphSeries<DataPoint>();
-        int dataLength = yData.size();
+        series1 = new LineGraphSeries<>();
         double x, t = 0;
-        for (int i = 0; i < dataLength; i++) {
+
+        for (int q = 0; q < mSignLength; q++) {
+            double Y = Double.parseDouble(yString[q]);
             t += 1;
-            double Y = yData.get(i).doubleValue();
             x = t/mSampleRate;
-            series1.appendData(new DataPoint(x,Y), true, dataLength);
+            series1.appendData(new DataPoint(x,Y), true, mSignLength);
         }
+
         graph.addSeries(series1);
 
 
@@ -79,6 +88,7 @@ public class Plot  extends AppCompatActivity {
                 MODE_PRIVATE);
         mSampleRate = preferences.getInt("SampleRate", 8000);
         Room = preferences.getInt("ROOM" , 0);
+        FILE_NAME = preferences.getString("filename", "");
     }
 
 /*    private void setPreferences() {
@@ -145,7 +155,7 @@ public class Plot  extends AppCompatActivity {
         BufferedReader br = new BufferedReader(isr);
 
         String test;
-        int anzahl=0;
+        int anzahl=1;
         try
         {
             while ((test=br.readLine()) != null)
@@ -169,7 +179,8 @@ public class Plot  extends AppCompatActivity {
         {
             while((line=br.readLine())!=null)
             {
-                array[i] = line;
+                String str = line;
+                array[i] = str.replace("[","").replace(",","").replace("]","");
                 i++;
             }
         }

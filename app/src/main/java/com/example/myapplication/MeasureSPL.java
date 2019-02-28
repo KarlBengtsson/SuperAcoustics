@@ -83,6 +83,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private volatile int mDrawingCollided;
 
     private static final String TAG = "MeasureSPLEVEL";
+    private String FILE_NAME = "TestRoom";
 
     /** Called when the activity is first created. */
     @Override
@@ -186,7 +187,7 @@ public class MeasureSPL extends AppCompatActivity implements
                 startButton.setEnabled(true);
                 seconds.setText("05");
                 if (Room == 1) {
-                    File file = new File(path + "/TestRoom"+Integer.toString(Room)+".txt");
+                    File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
                     splRoom1 = stopMeasure(splRoom1, counter1);
                     //calculate average SPL
                     int total = 0;
@@ -196,7 +197,7 @@ public class MeasureSPL extends AppCompatActivity implements
                     }
                     signal1 = stopSignal(signal1, signalStart);
                     String [] saveText = String.valueOf(signal1).split(" ");
-                    Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ FILE_NAME + Integer.toString(Room),Toast.LENGTH_LONG).show();
                     Save(file, saveText);
                     signal.clear();
 
@@ -204,7 +205,7 @@ public class MeasureSPL extends AppCompatActivity implements
                     measuredSPL.setText(Integer.toString(average1));
                 }
                 else {
-                    File file = new File(path + "/TestRoom"+Integer.toString(Room)+".txt");
+                    File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
                     splRoom2 = stopMeasure(splRoom2, counter1);
                     //calculate average SPL
                     int total = 0;
@@ -213,8 +214,8 @@ public class MeasureSPL extends AppCompatActivity implements
                         total += a;
                     }
                     signal1 = stopSignal(signal1, signalStart);
-                    String [] saveText = String.valueOf(signal1).split(" ");
-                    Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();
+                    String [] saveText = String.valueOf(signal1).split(",");
+                    Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ FILE_NAME + Integer.toString(Room),Toast.LENGTH_LONG).show();
                     Save(file,saveText);
                     signal.clear();
 
@@ -254,7 +255,8 @@ public class MeasureSPL extends AppCompatActivity implements
 
     public void plot () {
         Intent plotIntent = new Intent(MeasureSPL.this, Plot.class);
-        plotIntent.putIntegerArrayListExtra("plotData", signal1);
+        /*plotIntent.putIntegerArrayListExtra("plotData", signal1);*/
+        plotIntent.putExtra("SignalLength",signal1.size());
         startActivity(plotIntent);
     }
 
@@ -357,6 +359,7 @@ public class MeasureSPL extends AppCompatActivity implements
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.putInt("mGainDif", (int) mDifferenceFromNominal);
+        editor.putString("filename", FILE_NAME);
         if (Room == 1) {
             editor.putInt("mRoom1" , average1);
             editor.putInt("ROOM",1);
