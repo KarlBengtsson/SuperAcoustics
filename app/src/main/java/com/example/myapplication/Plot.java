@@ -26,7 +26,8 @@ public class Plot  extends AppCompatActivity {
     private ArrayList<Integer> y;
     public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Spartest";
     private String FILE_NAME = "";
-
+    double[] Y;
+    double[] x;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,10 @@ public class Plot  extends AppCompatActivity {
             mSignLength = extras.getInt("SignalLength",0);
             //The key argument here must match that used in the other activity
         }
+
+        Y = new double[mSignLength];
+        x = new double[mSignLength];
+
         File dir = new File(path);
         dir.mkdirs();
         File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
@@ -56,13 +61,12 @@ public class Plot  extends AppCompatActivity {
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
         series1 = new LineGraphSeries<>();
-        double x, t = 0;
-
+        double  t = 0;
         for (int q = 0; q < mSignLength; q++) {
-            double Y = Double.parseDouble(yString[q]);
+            Y[q] = Double.parseDouble(yString[q]);
             t += 1;
-            x = t/mSampleRate;
-            series1.appendData(new DataPoint(x,Y), true, mSignLength);
+            x[q] = t/mSampleRate;
+            series1.appendData(new DataPoint(x[q],Y[q]), true, mSignLength);
         }
 
         graph.addSeries(series1);
@@ -70,6 +74,51 @@ public class Plot  extends AppCompatActivity {
 
 
     }
+    public void fft_function(double[] t, double[] y) {
+        //Number of points in input data
+
+        double NFFT = y.length;
+
+        // Nyquist frequency
+
+
+        //Absolute value of the FRF
+        FFT fft = new FFT(mSignLength);
+        double [] window = fft.getWindow();
+        double[] FFTY = new double[y.length];
+        for (int i=0; i<y.length; i++)  {
+           FFTY[i] = Math.abs(fft(y[i]);
+        }
+
+
+        double NumUniquePts = Math.ceil((NFFT+1)/2);
+
+// fft symmetric, throw away second half
+        FFTY=FFTY[1:NumUniquePts];
+
+// Take magnitude of Y
+        double[] YY=Math.abs(FFTY);
+
+// Multiply by 2 to take into account the fact that we
+// threw out second half of FFTY above
+                YY=YY*2;
+
+// Account for endpoint uniqueness
+        YY(1)=YY(1)/2;
+
+// We know NFFT is even
+        Y(length(Y))=Y(length(Y))/2;
+
+// Scale the FFT so that it is not a function of the length of y.
+                Y=Y/length(y);
+
+//Frequencies
+                f=(0:NumUniquePts-1)*2*Fn/NFFT;
+
+
+    }
+
+
 
 
 
