@@ -63,7 +63,7 @@ public class MeasureSPL extends AppCompatActivity implements
 
     // For saving and loading .txt file
 
-    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Spartest";
+    public String path = "";
 
 
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
@@ -84,6 +84,7 @@ public class MeasureSPL extends AppCompatActivity implements
 
     private static final String TAG = "MeasureSPLEVEL";
     private String FILE_NAME = "TestRoom";
+    private String REPOSITORY_NAME;
 
     /** Called when the activity is first created. */
     @Override
@@ -351,6 +352,8 @@ public class MeasureSPL extends AppCompatActivity implements
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
         mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
         Room = preferences.getInt("ROOM" , 0);
+        REPOSITORY_NAME = preferences.getString("foldername", "");
+        path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
     }
 
     private void setPreferences() {

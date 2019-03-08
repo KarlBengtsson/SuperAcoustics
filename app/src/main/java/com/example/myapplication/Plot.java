@@ -24,10 +24,11 @@ public class Plot  extends AppCompatActivity {
     private double mSampleRate;
     private int Room;
     private ArrayList<Integer> y;
-    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Spartest";
     private String FILE_NAME = "";
     double[] Y;
     double[] x;
+    private String REPOSITORY_NAME;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class Plot  extends AppCompatActivity {
 
 
     }
-    public void fft_function(double[] t, double[] y) {
+/*    public void fft_function(double[] t, double[] y) {
         //Number of points in input data
 
         double NFFT = y.length;
@@ -116,7 +117,7 @@ public class Plot  extends AppCompatActivity {
                 f=(0:NumUniquePts-1)*2*Fn/NFFT;
 
 
-    }
+    }*/
 
 
 
@@ -138,6 +139,8 @@ public class Plot  extends AppCompatActivity {
         mSampleRate = preferences.getInt("SampleRate", 8000);
         Room = preferences.getInt("ROOM" , 0);
         FILE_NAME = preferences.getString("filename", "");
+        REPOSITORY_NAME = preferences.getString("foldername", "");
+        path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
     }
 
 /*    private void setPreferences() {
