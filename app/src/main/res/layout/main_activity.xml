@@ -97,7 +97,8 @@
                 android:id="@+id/measureTextRT"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:text="@string/measureTextRT" />
+                android:text="@string/measureTextRT"
+                tools:text=" " />
         </LinearLayout>
 
     </LinearLayout>

@@ -25,9 +25,13 @@ public class FileName extends Activity {
     int splRoom1 = 0;
     int splRoom2 = 0;
     int Room = 0;
+    int volume = 0;
+    int area = 0;
     int mAudioSource = 0;
     int mSampleRate = 0;
     private TextView nameTextView;
+    private TextView volumeTextView;
+    private TextView areaTextView;
     private Button okButton;
 
 
@@ -37,6 +41,8 @@ public class FileName extends Activity {
         setContentView(R.layout.file_name_activity);
         readPreferences();
         nameTextView = (TextView) findViewById(R.id.nameInput);
+        volumeTextView = (TextView) findViewById(R.id.volumeText);
+        areaTextView = (TextView) findViewById(R.id.areaText);
         okButton = (Button) findViewById(R.id.nameButton);
         Button.OnClickListener okListener =
                 new Button.OnClickListener() {
@@ -47,6 +53,8 @@ public class FileName extends Activity {
                         Intent intent;
                         intent = new Intent(FileName.this, MainActivity.class);
                         REPOSITORY_NAME = nameTextView.getText().toString();
+                        volume = Integer.valueOf(volumeTextView.getText().toString());
+                        area = Integer.valueOf(areaTextView.getText().toString());
 
                         FileName.this.setPreferences();
                         startActivity(intent);
@@ -66,6 +74,8 @@ public class FileName extends Activity {
         Room = preferences.getInt("ROOM", 0);
         FILE_NAME = preferences.getString("filename", "");
         REPOSITORY_NAME = preferences.getString("foldername", "");
+        volume = preferences.getInt("volume", 0);
+        area = preferences.getInt("area", 0);
     }
 
 
@@ -75,6 +85,8 @@ public class FileName extends Activity {
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("foldername", REPOSITORY_NAME);
+        editor.putInt("volume", volume);
+        editor.putInt("area", area);
         editor.apply();
     }
 

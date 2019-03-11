@@ -30,7 +30,6 @@
     <string name="resultTextRT">Not measured</string>
     <string name="stop_measure">STOP</string>
     <string name="plotButton">Plot</string>
-    <string name="editText">Type in the name of your first measurement</string>
     <string name="nameButton">OK</string>
     <string name="nameInput" />
     <string-array name="sample_rate_array">
@@ -39,4 +38,7 @@
         <item>22050</item>
         <item>44100</item>
     </string-array>
+    <string name="editText">Type in the name of the measurement</string>
+    <string name="volume">Volume of the receiving room in m^3</string>
+    <string name="area">Surface area of the wall in m^2</string>
 </resources>

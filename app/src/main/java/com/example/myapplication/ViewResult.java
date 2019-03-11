@@ -40,8 +40,8 @@ public class ViewResult extends AppCompatActivity {
     private int result2;
     private double reverb = 2;
     private double area;
-    private double sArea = 10;
-    private double volume = 25;
+    private double sArea;
+    private double volume;
 
 
     @Override
@@ -73,6 +73,9 @@ public class ViewResult extends AppCompatActivity {
         mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
         result1 = preferences.getInt("mRoom1",0);
         result2 = preferences.getInt("mRoom2",0);
+        volume = preferences.getInt("volume", 0);
+        sArea = preferences.getInt("area", 0);
+
         resultSPL1.setText(Integer.toString(result1) + " dB");
         resultSPL2.setText(Integer.toString(result2) + " dB");
 
