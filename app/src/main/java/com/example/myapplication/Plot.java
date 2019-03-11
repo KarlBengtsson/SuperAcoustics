@@ -27,6 +27,7 @@ public class Plot  extends AppCompatActivity {
     private String FILE_NAME = "";
     double[] Y;
     double[] x;
+    double yy;
     private String REPOSITORY_NAME;
     private String path;
 
@@ -37,7 +38,6 @@ public class Plot  extends AppCompatActivity {
         readPreferences();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            /*y = extras.getIntegerArrayList("plotData");*/
             mSignLength = extras.getInt("SignalLength",0);
             //The key argument here must match that used in the other activity
         }
@@ -45,8 +45,6 @@ public class Plot  extends AppCompatActivity {
         Y = new double[mSignLength];
         x = new double[mSignLength];
 
-        File dir = new File(path);
-        dir.mkdirs();
         File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
         String [] saveText = Load(file);
         grapher(saveText);
@@ -61,15 +59,36 @@ public class Plot  extends AppCompatActivity {
     public void grapher(String[] yString) {
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
+        // activate horizontal zooming and scrolling
+        graph.getViewport().setScalable(true);
+
+// activate horizontal scrolling
+        graph.getViewport().setScrollable(true);
+
+// activate horizontal and vertical zooming and scrolling
+        graph.getViewport().setScalableY(true);
+
+// activate vertical scrolling
+        graph.getViewport().setScrollableY(true);
+
+
         series1 = new LineGraphSeries<>();
         double  t = 0;
         for (int q = 0; q < mSignLength; q++) {
             Y[q] = Double.parseDouble(yString[q]);
+            yy += Y[q]*Y[q];
             t += 1;
             x[q] = t/mSampleRate;
-            series1.appendData(new DataPoint(x[q],Y[q]), true, mSignLength);
+        }
+        // compute normalized value
+        yy = Math.sqrt(yy);
+        for (int q = 0; q < mSignLength; q++) {
+        Y[q] = Y[q]/yy;
         }
 
+        for (int g = 0; g<mSignLength; g++) {
+            series1.appendData(new DataPoint(x[g], Y[g]), true, mSignLength);
+        }
         graph.addSeries(series1);
 
 

@@ -354,7 +354,14 @@ public class MeasureSPL extends AppCompatActivity implements
         Room = preferences.getInt("ROOM" , 0);
         REPOSITORY_NAME = preferences.getString("foldername", "");
         path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
-    }
+        if (Room == 1) {
+        average1 = preferences.getInt("mRoom1", 0);
+        }
+        else {
+        average2 = preferences.getInt("mRoom2", 0);
+        }
+
+        }
 
     private void setPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
@@ -368,7 +375,7 @@ public class MeasureSPL extends AppCompatActivity implements
             editor.putInt("ROOM",1);
         }
         else {
-            editor.putInt("mRoom2" , average2 );
+            editor.putInt("mRoom2" , average2);
             editor.putInt("ROOM",2);
         }
         editor.apply();

@@ -313,7 +313,7 @@ public class LevelMeterActivity extends Activity implements
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("SampleRate", mSampleRate);
         editor.putInt("mGainDif", (int) mDifferenceFromNominal);
-        editor.commit();
+        editor.apply();
     }
 
 
