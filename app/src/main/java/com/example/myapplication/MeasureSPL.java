@@ -193,8 +193,8 @@ public class MeasureSPL extends AppCompatActivity implements
                     //calculate average SPL
                     int total = 0;
                     for(int i = 0; i < splRoom1.size(); i++) {
-                        int a = (int) splRoom1.get(i);
-                        total += a;
+                        double a = (int) splRoom1.get(i);
+                        total +=  Math.pow(10,a/10);
                     }
                     signal1 = stopSignal(signal1, signalStart);
                     String [] saveText = String.valueOf(signal1).split(" ");
@@ -202,7 +202,7 @@ public class MeasureSPL extends AppCompatActivity implements
                     Save(file, saveText);
                     signal.clear();
 
-                    average1 = total / splRoom1.size();
+                    average1 = (int) (10*Math.log10(total / splRoom1.size()));
                     measuredSPL.setText(Integer.toString(average1));
                 }
                 else {
@@ -220,7 +220,7 @@ public class MeasureSPL extends AppCompatActivity implements
                     Save(file,saveText);
                     signal.clear();
 
-                    average2 = total / splRoom2.size();
+                    average2 = (int) (10*Math.log10(total / splRoom2.size()));
                     measuredSPL.setText(Integer.toString(average2));
                 }
             }

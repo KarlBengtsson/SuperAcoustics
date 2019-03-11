@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Plot  extends AppCompatActivity {
+    private static final Object Complex = new Complex();
     private LineGraphSeries<DataPoint> series1;
     private int mSignLength;
     private double mSampleRate;
@@ -47,7 +48,7 @@ public class Plot  extends AppCompatActivity {
 
         File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
         String [] saveText = Load(file);
-        grapher(saveText);
+        grapher_two(saveText);
 
 
 
@@ -94,49 +95,60 @@ public class Plot  extends AppCompatActivity {
 
 
     }
-/*    public void fft_function(double[] t, double[] y) {
-        //Number of points in input data
-
-        double NFFT = y.length;
-
-        // Nyquist frequency
 
 
-        //Absolute value of the FRF
-        FFT fft = new FFT(mSignLength);
-        double [] window = fft.getWindow();
-        double[] FFTY = new double[y.length];
-        for (int i=0; i<y.length; i++)  {
-           FFTY[i] = Math.abs(fft(y[i]);
+    public void grapher_two(String[] yString) {
+
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+        // activate horizontal zooming and scrolling
+        graph.getViewport().setScalable(true);
+
+// activate horizontal scrolling
+        graph.getViewport().setScrollable(true);
+
+// activate horizontal and vertical zooming and scrolling
+        graph.getViewport().setScalableY(true);
+
+// activate vertical scrolling
+        graph.getViewport().setScrollableY(true);
+
+
+        series1 = new LineGraphSeries<>();
+        double  t = 0;
+        for (int q = 0; q < mSignLength; q++) {
+            Y[q] = Double.parseDouble(yString[q]);
+            yy += Y[q]*Y[q];
+            t += 1;
+            x[q] = t/mSampleRate;
+        }
+        // compute normalized value
+        yy = Math.sqrt(yy);
+        for (int q = 0; q < mSignLength; q++) {
+            Y[q] = Y[q]/yy;
         }
 
+                double[] input = Y;
 
-        double NumUniquePts = Math.ceil((NFFT+1)/2);
+                Complex[] cinput = new Complex[input.length];
+                for (int i = 0; i < input.length; i++)
+                    cinput[i] = new Complex(input[i], 0.0);
 
-// fft symmetric, throw away second half
-        FFTY=FFTY[1:NumUniquePts];
+                FFT.fft(cinput);
 
-// Take magnitude of Y
-        double[] YY=Math.abs(FFTY);
-
-// Multiply by 2 to take into account the fact that we
-// threw out second half of FFTY above
-                YY=YY*2;
-
-// Account for endpoint uniqueness
-        YY(1)=YY(1)/2;
-
-// We know NFFT is even
-        Y(length(Y))=Y(length(Y))/2;
-
-// Scale the FFT so that it is not a function of the length of y.
-                Y=Y/length(y);
-
-//Frequencies
-                f=(0:NumUniquePts-1)*2*Fn/NFFT;
+                System.out.println("Results:");
+                for (Complex c : cinput) {
+                    System.out.println(c);
+                }
 
 
-    }*/
+        for (int g = 0; g<mSignLength; g++) {
+            series1.appendData(new DataPoint(x[g], Y[g]), true, mSignLength);
+        }
+        graph.addSeries(series1);
+
+
+
+    }
 
 
 
@@ -162,22 +174,6 @@ public class Plot  extends AppCompatActivity {
         path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
     }
 
-/*    private void setPreferences() {
-        SharedPreferences preferences = getSharedPreferences("LevelMeter",
-                MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-
-        editor.putInt("mGainDif", (int) mDifferenceFromNominal);
-        if (Room == 1) {
-            editor.putInt("mRoom1" , average1);
-            editor.putInt("ROOM",1);
-        }
-        else {
-            editor.putInt("mRoom2" , average2 );
-            editor.putInt("ROOM",2);
-        }
-        editor.apply();
-    }*/
 
 
     public static void Save(File file, String [] data)
@@ -259,3 +255,4 @@ public class Plot  extends AppCompatActivity {
         return array;
     }
 }
+

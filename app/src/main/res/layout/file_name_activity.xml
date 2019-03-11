@@ -9,14 +9,12 @@
         android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="22dp"
-        android:layout_marginTop="16dp"
         android:text="@string/editText"
         app:layout_constraintBottom_toTopOf="@+id/nameInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7"
-        app:layout_constraintVertical_bias="0.734"
         tools:text="@string/editText" />
 
     <EditText
@@ -120,10 +118,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:gravity="center"
         android:text="New Measurement"
         android:textSize="36sp"
-        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/nameText"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
