@@ -96,7 +96,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="350dp"
+        android:layout_width="353dp"
         android:layout_height="264dp"
         android:orientation="vertical">
 

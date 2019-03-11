@@ -487,6 +487,7 @@ public class MeasureSPL extends AppCompatActivity implements
     @Override
     protected void onRestart() {
         super.onRestart();
+        readPreferences();
         Log.d(TAG, "onRestart() called");
     }
 

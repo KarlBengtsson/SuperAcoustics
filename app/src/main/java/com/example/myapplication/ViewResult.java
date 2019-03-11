@@ -38,6 +38,10 @@ public class ViewResult extends AppCompatActivity {
     private int mAudioSource;  // The audio source to use.
     private int result1;
     private int result2;
+    private double reverb = 2;
+    private double area;
+    private double sArea = 10;
+    private double volume = 25;
 
 
     @Override
@@ -49,9 +53,15 @@ public class ViewResult extends AppCompatActivity {
         resultSPL2 = (TextView)findViewById(R.id.resultTextSpl2);
         resultCal = (TextView)findViewById(R.id.resultTextCal);
         readPreferences();
-
+        calcResult();
     }
 
+    private void calcResult() {
+        area = (0.163*volume)/reverb;
+        double X = 10*Math.log10(sArea/area);
+        double R = result1 - result2 + X;
+        resultCal.setText(Double.toString(R) + " dB");
+    }
 
 
     private void readPreferences() {
@@ -65,7 +75,7 @@ public class ViewResult extends AppCompatActivity {
         result2 = preferences.getInt("mRoom2",0);
         resultSPL1.setText(Integer.toString(result1) + " dB");
         resultSPL2.setText(Integer.toString(result2) + " dB");
-        resultCal.setText(Double.toString(mDifferenceFromNominal) + " dB");
+
     }
 
 

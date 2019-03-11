@@ -31,8 +31,8 @@
     <string name="stop_measure">STOP</string>
     <string name="plotButton">Plot</string>
     <string name="editText">Type in the name of your first measurement</string>
-    <string name="nameInput" />
     <string name="nameButton">OK</string>
+    <string name="nameInput" />
     <string-array name="sample_rate_array">
         <item>8000</item>
         <item>16000</item>

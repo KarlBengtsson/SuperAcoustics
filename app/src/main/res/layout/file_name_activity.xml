@@ -20,6 +20,21 @@
         app:layout_constraintVertical_bias="0.194"
         tools:text="@string/editText" />
 
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="372dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/nameInput"
+        app:layout_constraintEnd_toStartOf="@+id/nameButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/nameButton"
         android:layout_width="wrap_content"
@@ -34,23 +49,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/nameInput"
         tools:text="@string/nameButton" />
-
-    <EditText
-        android:id="@+id/nameInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="@string/nameInput"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nameButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/nameInput" />
 
 </android.support.constraint.ConstraintLayout>
