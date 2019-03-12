@@ -191,7 +191,7 @@ public class MeasureSPL extends AppCompatActivity implements
                     File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
                     splRoom1 = stopMeasure(splRoom1, counter1);
                     //calculate average SPL
-                    int total = 0;
+                    double total = 0;
                     for(int i = 0; i < splRoom1.size(); i++) {
                         double a = (int) splRoom1.get(i);
                         total +=  Math.pow(10,a/10);
@@ -209,7 +209,7 @@ public class MeasureSPL extends AppCompatActivity implements
                     File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
                     splRoom2 = stopMeasure(splRoom2, counter1);
                     //calculate average SPL
-                    int total = 0;
+                    double total = 0;
                     for(int i = 0; i < splRoom2.size(); i++) {
                         int a = (int) splRoom2.get(i);
                         total += a;

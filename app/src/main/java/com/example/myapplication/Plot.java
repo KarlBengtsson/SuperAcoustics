@@ -30,6 +30,7 @@ public class Plot  extends AppCompatActivity {
     double yy;
     private String REPOSITORY_NAME;
     private String path;
+    private int mCompLength;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,7 @@ public class Plot  extends AppCompatActivity {
 // activate vertical scrolling
         graph.getViewport().setScrollableY(true);
 
-        int numUniquePoints = (int) Math.ceil(((double) mSignLength+1)/2);
+
 
         series1 = new LineGraphSeries<>();
         double  t = 0;
@@ -123,7 +124,7 @@ public class Plot  extends AppCompatActivity {
         }
 
         // compute the nyquist frequency
-        double Fn = 1/(x[2]-x[1])/2;
+        int Fn = (int) (1/(x[2]-x[1])/2);
 
 
         // compute normalized value
@@ -134,22 +135,31 @@ public class Plot  extends AppCompatActivity {
 
                 double[] input = Y;
 
-                Complex[] cinput = new Complex[input.length];
-                for (int i = 0; i < input.length; i++)
+        mCompLength = highestPowerof2(mSignLength);
+                Complex[] cinput = new Complex[mCompLength];
+                for (int i = 0; i < mCompLength; i++) {
                     cinput[i] = new Complex(input[i], 0.0);
+                }
 
                 FFT.fft(cinput);
-
-                double[] YY = new double[mSignLength];
-                double[] XX = new double[mSignLength];
-                for (int l = 0 ; l < input.length; l++) {
-                    System.out.println(cinput[l]);
-                   YY[l] = Math.pow(cinput[l].im,2.0)+Math.pow(cinput[l].re,2.0);
+                int numUniquePoints = (int) Math.ceil(((double) mCompLength+1)/2);
+                // throw away second half and take the magnitude at the same time
+                double[] Cinput = new double[numUniquePoints];
+                for (int r = 0; r<numUniquePoints; r++) {
+                    Cinput[r] = cinput[r].magn*2/mCompLength;
                 }
-                XX = linspace(0.0,mSampleRate/2,mSignLength-1);
+                // account for endpoint uniqueness
+                Cinput[0]=Cinput[0]/2;
+                Cinput[Cinput.length-1]=Cinput[Cinput.length-1]/2;
 
-        for (int g = 0; g<mSignLength; g++) {
-            series1.appendData(new DataPoint(XX[g], YY[g]), true, mSignLength);
+                double[] YY = new double[mCompLength];
+                double[] XX;
+
+
+                XX = linspace(0.0,mSampleRate/2,mCompLength-1);
+
+        for (int g = 0; g<mCompLength; g++) {
+            series1.appendData(new DataPoint(XX[g], YY[g]), true, mCompLength);
         }
         graph.addSeries(series1);
 
@@ -267,5 +277,25 @@ public class Plot  extends AppCompatActivity {
         catch (IOException e) {e.printStackTrace();}
         return array;
     }
+
+    static int highestPowerof2(int n)
+    {
+        int res = 0;
+        for (int i = n; i >= 1; i--)
+        {
+            // If i is a power of 2
+            if ((i & (i - 1)) == 0)
+            {
+                res = i;
+                break;
+            }
+        }
+        return res;
+    }
+
+
 }
+
+
+
 
