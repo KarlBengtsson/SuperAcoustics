@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Plot  extends AppCompatActivity {
-    private static final Object Complex = new Complex();
     private LineGraphSeries<DataPoint> series1;
     private int mSignLength;
     private double mSampleRate;
@@ -57,7 +56,7 @@ public class Plot  extends AppCompatActivity {
 
 
 
-    public void grapher(String[] yString) {
+/*    public void grapher(String[] yString) {
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
         // activate horizontal zooming and scrolling
@@ -94,7 +93,7 @@ public class Plot  extends AppCompatActivity {
 
 
 
-    }
+    }*/
 
 
     public void grapher_two(String[] yString) {
@@ -112,6 +111,7 @@ public class Plot  extends AppCompatActivity {
 // activate vertical scrolling
         graph.getViewport().setScrollableY(true);
 
+        int numUniquePoints = (int) Math.ceil(((double) mSignLength+1)/2);
 
         series1 = new LineGraphSeries<>();
         double  t = 0;
@@ -121,6 +121,11 @@ public class Plot  extends AppCompatActivity {
             t += 1;
             x[q] = t/mSampleRate;
         }
+
+        // compute the nyquist frequency
+        double Fn = 1/(x[2]-x[1])/2;
+
+
         // compute normalized value
         yy = Math.sqrt(yy);
         for (int q = 0; q < mSignLength; q++) {
@@ -135,14 +140,16 @@ public class Plot  extends AppCompatActivity {
 
                 FFT.fft(cinput);
 
-                System.out.println("Results:");
-                for (Complex c : cinput) {
-                    System.out.println(c);
+                double[] YY = new double[mSignLength];
+                double[] XX = new double[mSignLength];
+                for (int l = 0 ; l < input.length; l++) {
+                    System.out.println(cinput[l]);
+                   YY[l] = Math.pow(cinput[l].im,2.0)+Math.pow(cinput[l].re,2.0);
                 }
-
+                XX = linspace(0.0,mSampleRate/2,mSignLength-1);
 
         for (int g = 0; g<mSignLength; g++) {
-            series1.appendData(new DataPoint(x[g], Y[g]), true, mSignLength);
+            series1.appendData(new DataPoint(XX[g], YY[g]), true, mSignLength);
         }
         graph.addSeries(series1);
 
@@ -150,7 +157,13 @@ public class Plot  extends AppCompatActivity {
 
     }
 
-
+    public static double[] linspace(double min, double max, int points) {
+        double[] d = new double[points];
+        for (int i = 0; i < points; i++){
+            d[i] = min + i * (max - min) / (points - 1);
+        }
+        return d;
+    }
 
 
 

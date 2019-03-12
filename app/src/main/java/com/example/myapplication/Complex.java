@@ -3,6 +3,7 @@ package com.example.myapplication;
 class Complex {
     public final double re;
     public final double im;
+    public final double magn;
 
     public Complex() {
         this(0, 0);
@@ -11,6 +12,7 @@ class Complex {
     public Complex(double r, double i) {
         re = r;
         im = i;
+        magn = Math.sqrt(Math.pow(r,2)+Math.pow(i,2));
     }
 
     public Complex add(Complex b) {
@@ -25,6 +27,7 @@ class Complex {
         return new Complex(this.re * b.re - this.im * b.im,
                 this.re * b.im + this.im * b.re);
     }
+
 
     @Override
     public String toString() {
