@@ -15,6 +15,8 @@ public class FileName extends Activity {
     public String path = "";
     private String FILE_NAME = "";
     private String REPOSITORY_NAME = "";
+    private String VOLUME_VALUE = "";
+    private String AREA_VALUE = "";
     private Button dbMeter;
     private Button measure1;
     private TextView calTextView;

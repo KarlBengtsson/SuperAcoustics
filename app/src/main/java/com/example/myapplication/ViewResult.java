@@ -38,7 +38,7 @@ public class ViewResult extends AppCompatActivity {
     private int mAudioSource;  // The audio source to use.
     private int result1;
     private int result2;
-    private double reverb = 2;
+    private double reverb = 1;
     private double area;
     private double sArea;
     private double volume;
