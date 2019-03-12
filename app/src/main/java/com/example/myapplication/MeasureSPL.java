@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -43,23 +44,28 @@ public class MeasureSPL extends AppCompatActivity implements
     TextView seconds;
     TextView mdBTextView;
     TextView mdBFractionTextView;
-    TextView measuredSPL;
+    TextView measuredSPL1;
+    TextView measuredSPL2;
+    TextView measuredSPL3;
+    TextView measuredSPL4;
     BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
     private int Room;
     private int one_decimal;
     private double rms;
     private double rmsdB;
-    private ArrayList<Integer> splRoom1 = new ArrayList<>();
+    private ArrayList<Integer> splRoom11 = new ArrayList<>(); private ArrayList<Integer> splRoom12 = new ArrayList<>();
+    private ArrayList<Integer> splRoom13 = new ArrayList<>(); private ArrayList<Integer> splRoom14 = new ArrayList<>();
     private ArrayList<Integer> splRoom2 = new ArrayList<>();
     private ArrayList<Integer> DBmeasure = new ArrayList<>();
     private ArrayList<Integer> signal = new ArrayList<>();
-    private ArrayList<Integer> signal1 = new ArrayList<>();
+    private ArrayList<Integer> signal1 = new ArrayList<>(); private ArrayList<Integer> signal2 = new ArrayList<>();
+    private ArrayList<Integer> signal3 = new ArrayList<>(); private ArrayList<Integer> signal4 = new ArrayList<>();
     private Button startButton, stopButton, finishMeasure, plotButton;
     private int counter = 0;
     private int counter3 = 0;
     private int counter4 = 0;
-    private int counter1, average1, average2, signalStart;
+    private int counter1, average1, average2, average11, average12, average13, average14, average21, average22, average23, average24, signalStart;
 
     // For saving and loading .txt file
 
@@ -108,7 +114,10 @@ public class MeasureSPL extends AppCompatActivity implements
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
-        measuredSPL = (TextView) findViewById(R.id.measuredSPL);
+        measuredSPL1 = (TextView) findViewById(R.id.measuredSPL1);
+        measuredSPL2 = (TextView) findViewById(R.id.measuredSPL2);
+        measuredSPL3 = (TextView) findViewById(R.id.measuredSPL3);
+        measuredSPL4 = (TextView) findViewById(R.id.measuredSPL4);
         seconds = (TextView) findViewById(R.id.textseconds);
 
         // Here the micInput object is created for audio capture.
@@ -128,7 +137,7 @@ public class MeasureSPL extends AppCompatActivity implements
         stopButton = (Button) findViewById(R.id.stopButton);
         stopButton.setEnabled(false);
         //Textview to display measured SPL
-        measuredSPL = (TextView) findViewById(R.id.measuredSPL);
+        //measuredSPL1 = (TextView) findViewById(R.id.measuredSPL1);
 
         // Toggle Button handler.
         final ToggleButton onOffButton=(ToggleButton)findViewById(
@@ -151,7 +160,7 @@ public class MeasureSPL extends AppCompatActivity implements
                             startButton.setEnabled(false);
                             finishMeasure.setEnabled(true);
                             micInput.stop();
-                            splRoom1 = stopMeasure(splRoom1, counter1);
+                            //splRoom1 = stopMeasure(splRoom1, counter1);
                         }
                       }
                 };
@@ -159,6 +168,7 @@ public class MeasureSPL extends AppCompatActivity implements
             startButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
+                    counter4 ++;
                     stopButton.setEnabled(true);
                     startButton.setEnabled(false);
                     //counter1 = startMeasure();
@@ -187,25 +197,84 @@ public class MeasureSPL extends AppCompatActivity implements
                 stopButton.setEnabled(false);
                 startButton.setEnabled(true);
                 seconds.setText("05");
-                if (Room == 1) {
-                    File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
-                    splRoom1 = stopMeasure(splRoom1, counter1);
-                    //calculate average SPL
-                    int total = 0;
-                    for(int i = 0; i < splRoom1.size(); i++) {
-                        double a = (int) splRoom1.get(i);
-                        total +=  Math.pow(10,a/10);
-                    }
-                    signal1 = stopSignal(signal1, signalStart);
-                    String [] saveText = String.valueOf(signal1).split(" ");
-                    Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ FILE_NAME + Integer.toString(Room),Toast.LENGTH_LONG).show();
-                    Save(file, saveText);
-                    signal.clear();
 
-                    average1 = (int) (10*Math.log10(total / splRoom1.size()));
-                    measuredSPL.setText(Integer.toString(average1));
-                }
-                else {
+               // if (Room == 1) {
+                    switch (counter4) {
+                        case 1:
+                            File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+Integer.toString(counter4)+".txt");
+                            splRoom11 = stopMeasure(splRoom11, counter1);
+                            //calculate average SPL
+                            int total = 0;
+                            for(int i = 0; i < splRoom11.size(); i++) {
+                                double a = (int) splRoom11.get(i);
+                                total +=  Math.pow(10,a/10);
+                            }
+                            signal1 = stopSignal(signal1, signalStart);
+                            String [] saveText = String.valueOf(signal1).split(" ");
+                            Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ FILE_NAME + Integer.toString(Room),Toast.LENGTH_LONG).show();
+                            Save(file, saveText);
+                            signal.clear();
+                            average11 = (int) (10*Math.log10(total / splRoom11.size()));
+                            measuredSPL1.setText(Integer.toString(average11));
+                            break;
+
+                        case 2:
+                            File file2 = new File(path + "/"+FILE_NAME+Integer.toString(Room)+Integer.toString(counter4)+".txt");
+                            splRoom12 = stopMeasure(splRoom12, counter1);
+                            //calculate average SPL
+                            int total2 = 0;
+                            for(int i = 0; i < splRoom12.size(); i++) {
+                                double a = (int) splRoom12.get(i);
+                                total2 +=  Math.pow(10,a/10);
+                            }
+                            signal2 = stopSignal(signal2, signalStart);
+                            String [] saveText2 = String.valueOf(signal2).split(" ");
+                            Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ FILE_NAME + Integer.toString(Room),Toast.LENGTH_LONG).show();
+                            Save(file2, saveText2);
+                            signal.clear();
+                            average12 = (int) (10*Math.log10(total2 / splRoom12.size()));
+                            measuredSPL2.setText(Integer.toString(average12));
+                            break;
+                        case 3:
+                            File file3 = new File(path + "/"+FILE_NAME+Integer.toString(Room)+Integer.toString(counter4)+".txt");
+                            splRoom13 = stopMeasure(splRoom13, counter1);
+                            //calculate average SPL
+                            int total3 = 0;
+                            for(int i = 0; i < splRoom13.size(); i++) {
+                                double a = (int) splRoom13.get(i);
+                                total3 +=  Math.pow(10,a/10);
+                            }
+                            signal3 = stopSignal(signal3, signalStart);
+                            String [] saveText3 = String.valueOf(signal3).split(" ");
+                            Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ FILE_NAME + Integer.toString(Room),Toast.LENGTH_LONG).show();
+                            Save(file3, saveText3);
+                            signal.clear();
+                            average13 = (int) (10*Math.log10(total3 / splRoom13.size()));
+                            measuredSPL3.setText(Integer.toString(average13));
+                            break;
+                        case 4:
+                            File file4 = new File(path + "/"+FILE_NAME+Integer.toString(Room)+Integer.toString(counter4)+".txt");
+                            splRoom14 = stopMeasure(splRoom14, counter1);
+                            //calculate average SPL
+                            int total4 = 0;
+                            for(int i = 0; i < splRoom14.size(); i++) {
+                                double a = (int) splRoom14.get(i);
+                                total4 +=  Math.pow(10,a/10);
+                            }
+                            signal4 = stopSignal(signal4, signalStart);
+                            String [] saveText4 = String.valueOf(signal4).split(" ");
+                            Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ FILE_NAME + Integer.toString(Room),Toast.LENGTH_LONG).show();
+                            Save(file4, saveText4);
+                            signal.clear();
+                            average14 = (int) (10*Math.log10(total4 / splRoom14.size()));
+                            measuredSPL4.setText(Integer.toString(average14));
+                            break;
+
+
+                    }
+
+               // }
+                /*else {
                     File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
                     splRoom2 = stopMeasure(splRoom2, counter1);
                     //calculate average SPL
@@ -220,9 +289,9 @@ public class MeasureSPL extends AppCompatActivity implements
                     Save(file,saveText);
                     signal.clear();
 
-                    average2 = (int) (10*Math.log10(total / splRoom2.size()));
-                    measuredSPL.setText(Integer.toString(average2));
-                }
+                    average21 = (int) (10*Math.log10(total / splRoom2.size()));
+                    measuredSPL1.setText(Integer.toString(average21));
+                }*/
             }
         });
 
@@ -233,6 +302,20 @@ public class MeasureSPL extends AppCompatActivity implements
                     @Override
                     public void onClick(View v) {
                         // Dismiss this dialog.
+                        if (counter4 < 4) {
+                            Toast.makeText(getApplicationContext(), "Make 4 measurements in each room before finishing", Toast.LENGTH_LONG).show();
+                        } else {
+                            switch (Room) {
+                                case 1:
+                                    average1 = (average11 + average12 + average13 + average14) / 4;
+                                    break;
+
+                                case 2:
+                                    average2 = (average11 + average12 + average13 + average14) / 4;
+                                    break;
+                            }
+                        }
+
                         MeasureSPL.this.setPreferences();
                         finish();
 
