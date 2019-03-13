@@ -157,26 +157,23 @@ public class Plot  extends AppCompatActivity {
         int Fn = (int) (1/(x[2]-x[1])/2);
 
 
-        // compute normalized value
-/*        yy = Math.sqrt(yy);
-        for (int q = 0; q < mCompLength; q++) {
-            Y[q] = Y[q]/yy;
-        }*/
 
-                double[] input = Y;
+                double[] input = new double[mCompLength];
+                double[] im = new double[mCompLength];
 
 
-                Complex[] cinput = new Complex[mCompLength];
                 for (int i = 0; i < mCompLength; i++) {
-                    cinput[i] = new Complex(input[i], 0.0);
+                    im[i]=0; input[i]=Y[i];
                 }
+                FFT fft = new FFT(mCompLength);
+                fft.fft(input,im);
 
-                FFT.fft(cinput);
+
                 int numUniquePoints = (int) Math.ceil(((double) mCompLength+1)/2);
                 // throw away second half and take the magnitude at the same time
                 double[] Cinput = new double[numUniquePoints];
                 for (int r = 0; r<numUniquePoints; r++) {
-                    Cinput[r] = Math.abs(cinput[r].magn)*2/mCompLength;
+                    Cinput[r] = Math.sqrt((Math.pow(input[r],2)+Math.pow(im[r],2)))*2/mCompLength;
                 }
                 // account for endpoint uniqueness
                 Cinput[0]=Cinput[0]/2;
