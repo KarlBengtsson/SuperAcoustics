@@ -158,10 +158,10 @@ public class Plot  extends AppCompatActivity {
 
 
         // compute normalized value
-        yy = Math.sqrt(yy);
+/*        yy = Math.sqrt(yy);
         for (int q = 0; q < mCompLength; q++) {
             Y[q] = Y[q]/yy;
-        }
+        }*/
 
                 double[] input = Y;
 
@@ -181,16 +181,17 @@ public class Plot  extends AppCompatActivity {
                 // account for endpoint uniqueness
                 Cinput[0]=Cinput[0]/2;
                 Cinput[Cinput.length-1]=Cinput[Cinput.length-1]/2;
-
+                System.out.println("Length:" + Cinput.length);
                 double[] XX;
 
 
 
-                XX = linspace(0.0,numUniquePoints,mCompLength);
+                XX = linspace(0.0,numUniquePoints,numUniquePoints);
 
                 // frequencies
                 for (int d = 0; d<numUniquePoints; d++){
-                    XX[d] = XX[d]*4*Fn/mCompLength;
+                    // strange that the factor 4 seemed to work
+                    XX[d] = XX[d]*2*Fn/mCompLength;
                 }
 
 
