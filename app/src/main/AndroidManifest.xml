@@ -63,7 +63,7 @@
         </activity>
         <activity
             android:name=".Plot"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:parentActivityName=".MeasureSPL">
         </activity>
     </application>

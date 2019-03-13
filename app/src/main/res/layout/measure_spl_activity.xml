@@ -150,11 +150,19 @@
                 android:text="@string/finish_button" />
 
             <Button
-                android:id="@+id/plotButton"
+                android:id="@+id/plotT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/plotT"
+                tools:text="@string/plotT" />
+
+            <Button
+                android:id="@+id/plotFFT"
                 android:layout_width="119dp"
                 android:layout_height="wrap_content"
-                android:text="Plot"
-                tools:text="@string/plotButton" />
+                android:text="@string/plotFFT"
+                tools:text="@string/plotFFT" />
         </LinearLayout>
 
         <TextView

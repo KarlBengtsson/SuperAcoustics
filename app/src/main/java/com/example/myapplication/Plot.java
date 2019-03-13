@@ -31,6 +31,8 @@ public class Plot  extends AppCompatActivity {
     private String REPOSITORY_NAME;
     private String path;
     private int mCompLength;
+    private int counter4;
+    private int plotType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +42,23 @@ public class Plot  extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mSignLength = extras.getInt("SignalLength",0);
+            plotType = extras.getInt("plotType",0);
             //The key argument here must match that used in the other activity
         }
 
         Y = new double[mSignLength];
         x = new double[mSignLength];
 
-        File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+".txt");
+        File file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+Integer.toString(counter4)+".txt");
         String [] saveText = Load(file);
-        grapher_two(saveText);
+        if (plotType == 1)
+        {
+            grapher(saveText);
+        }
+        else
+            {
+            grapher_two(saveText);
+        }
 
 
 
@@ -57,20 +67,26 @@ public class Plot  extends AppCompatActivity {
 
 
 
-/*    public void grapher(String[] yString) {
+    public void grapher(String[] yString) {
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
         // activate horizontal zooming and scrolling
         graph.getViewport().setScalable(true);
 
-// activate horizontal scrolling
+        // activate horizontal scrolling
         graph.getViewport().setScrollable(true);
 
-// activate horizontal and vertical zooming and scrolling
+        // activate horizontal and vertical zooming and scrolling
         graph.getViewport().setScalableY(true);
 
-// activate vertical scrolling
+        // activate vertical scrolling
         graph.getViewport().setScrollableY(true);
+
+        // change x-label and y-label
+        graph.getGridLabelRenderer().setHorizontalAxisTitle("Time [s]");
+        graph.getGridLabelRenderer().setVerticalAxisTitle("Amplitude [unit?]");
+        // set plot title
+        graph.setTitle("Time signal");
 
 
         series1 = new LineGraphSeries<>();
@@ -90,11 +106,14 @@ public class Plot  extends AppCompatActivity {
         for (int g = 0; g<mSignLength; g++) {
             series1.appendData(new DataPoint(x[g], Y[g]), true, mSignLength);
         }
+
+        // set maximum x-value for s
+        graph.getViewport().setMaxX(x[x.length-1]);
         graph.addSeries(series1);
 
 
 
-    }*/
+    }
 
 
     public void grapher_two(String[] yString) {
@@ -103,20 +122,31 @@ public class Plot  extends AppCompatActivity {
         // activate horizontal zooming and scrolling
         graph.getViewport().setScalable(true);
 
-// activate horizontal scrolling
+        // activate horizontal scrolling
         graph.getViewport().setScrollable(true);
 
-// activate horizontal and vertical zooming and scrolling
+        // activate horizontal and vertical zooming and scrolling
         graph.getViewport().setScalableY(true);
 
-// activate vertical scrolling
+        // activate vertical scrolling
         graph.getViewport().setScrollableY(true);
 
+
+        // change x-label and y-label
+        graph.getGridLabelRenderer().setHorizontalAxisTitle("Frequency [hz]");
+        graph.getGridLabelRenderer().setVerticalAxisTitle("Amplitude [unit?]");
+
+        // set plot title
+        graph.setTitle("FFT of time Signal");
+
+        // set maximum x-value for hz
+        graph.getViewport().setMaxX(mSampleRate/2);
 
 
         series1 = new LineGraphSeries<>();
         double  t = 0;
-        for (int q = 0; q < mSignLength; q++) {
+        mCompLength = highestPowerof2(mSignLength);
+        for (int q = 0; q < mCompLength; q++) {
             Y[q] = Double.parseDouble(yString[q]);
             yy += Y[q]*Y[q];
             t += 1;
@@ -129,13 +159,13 @@ public class Plot  extends AppCompatActivity {
 
         // compute normalized value
         yy = Math.sqrt(yy);
-        for (int q = 0; q < mSignLength; q++) {
+        for (int q = 0; q < mCompLength; q++) {
             Y[q] = Y[q]/yy;
         }
 
                 double[] input = Y;
 
-        mCompLength = highestPowerof2(mSignLength);
+
                 Complex[] cinput = new Complex[mCompLength];
                 for (int i = 0; i < mCompLength; i++) {
                     cinput[i] = new Complex(input[i], 0.0);
@@ -146,20 +176,26 @@ public class Plot  extends AppCompatActivity {
                 // throw away second half and take the magnitude at the same time
                 double[] Cinput = new double[numUniquePoints];
                 for (int r = 0; r<numUniquePoints; r++) {
-                    Cinput[r] = cinput[r].magn*2/mCompLength;
+                    Cinput[r] = Math.abs(cinput[r].magn)*2/mCompLength;
                 }
                 // account for endpoint uniqueness
                 Cinput[0]=Cinput[0]/2;
                 Cinput[Cinput.length-1]=Cinput[Cinput.length-1]/2;
 
-                double[] YY = new double[mCompLength];
                 double[] XX;
 
 
-                XX = linspace(0.0,mSampleRate/2,mCompLength-1);
 
-        for (int g = 0; g<mCompLength; g++) {
-            series1.appendData(new DataPoint(XX[g], YY[g]), true, mCompLength);
+                XX = linspace(0.0,numUniquePoints,mCompLength);
+
+                // frequencies
+                for (int d = 0; d<numUniquePoints; d++){
+                    XX[d] = XX[d]*4*Fn/mCompLength;
+                }
+
+
+        for (int g = 0; g<numUniquePoints; g++) {
+            series1.appendData(new DataPoint(XX[g], Cinput[g]), true, numUniquePoints);
         }
         graph.addSeries(series1);
 
@@ -192,6 +228,7 @@ public class Plot  extends AppCompatActivity {
                 MODE_PRIVATE);
         mSampleRate = preferences.getInt("SampleRate", 8000);
         Room = preferences.getInt("ROOM" , 0);
+        counter4 = preferences.getInt("mCount", 0);
         FILE_NAME = preferences.getString("filename", "");
         REPOSITORY_NAME = preferences.getString("foldername", "");
         path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;

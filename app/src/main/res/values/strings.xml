@@ -29,7 +29,7 @@
     <string name="resultTextCal">0.0</string>
     <string name="resultTextRT">Not measured</string>
     <string name="stop_measure">STOP</string>
-    <string name="plotButton">Plot</string>
+    <string name="plotT">Plot Timesignal</string>
     <string name="nameButton">OK</string>
     <string name="nameInput" />
     <string name="newButton">New Measurement</string>
@@ -43,4 +43,5 @@
     <string name="editText">Type in the name of the measurement</string>
     <string name="volume">Volume of the receiving room in m^3</string>
     <string name="area">Surface area of the wall in m^2</string>
+    <string name="plotFFT">Plot FFT</string>
 </resources>

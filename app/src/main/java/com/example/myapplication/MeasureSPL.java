@@ -61,7 +61,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private ArrayList<Integer> signal = new ArrayList<>();
     private ArrayList<Integer> signal1 = new ArrayList<>(); private ArrayList<Integer> signal2 = new ArrayList<>();
     private ArrayList<Integer> signal3 = new ArrayList<>(); private ArrayList<Integer> signal4 = new ArrayList<>();
-    private Button startButton, stopButton, finishMeasure, plotButton;
+    private Button startButton, stopButton, finishMeasure, plotT, plotFFT;
     private int counter = 0;
     private int counter3 = 0;
     private int counter4 = 0;
@@ -91,6 +91,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private static final String TAG = "MeasureSPLEVEL";
     private String FILE_NAME = "TestRoom";
     private String REPOSITORY_NAME;
+    private int tOrFFT;
 
     /** Called when the activity is first created. */
     @Override
@@ -323,17 +324,31 @@ public class MeasureSPL extends AppCompatActivity implements
                 };
         finishMeasure.setOnClickListener(setFinishBtnListener);
 
-        plotButton=(Button)findViewById(R.id.plotButton);
-        Button.OnClickListener setPlotButtonListener =
+        plotT=(Button)findViewById(R.id.plotT);
+        Button.OnClickListener setPlotTListener =
                 new Button.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
+                        tOrFFT = 1;
                         MeasureSPL.this.setPreferences();
                         MeasureSPL.this.plot();
                     }
                 };
-        plotButton.setOnClickListener(setPlotButtonListener);
+        plotT.setOnClickListener(setPlotTListener);
+
+        plotFFT=(Button)findViewById(R.id.plotFFT);
+        Button.OnClickListener setPlotFFTListener =
+                new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        tOrFFT = 2;
+                        MeasureSPL.this.setPreferences();
+                        MeasureSPL.this.plot();
+                    }
+                };
+        plotFFT.setOnClickListener(setPlotFFTListener);
 
     }
 
@@ -341,6 +356,7 @@ public class MeasureSPL extends AppCompatActivity implements
         Intent plotIntent = new Intent(MeasureSPL.this, Plot.class);
         /*plotIntent.putIntegerArrayListExtra("plotData", signal1);*/
         plotIntent.putExtra("SignalLength",signal1.size());
+        plotIntent.putExtra("plotType", tOrFFT);
         startActivity(plotIntent);
     }
 
@@ -453,6 +469,7 @@ public class MeasureSPL extends AppCompatActivity implements
 
         editor.putInt("mGainDif", (int) mDifferenceFromNominal);
         editor.putString("filename", FILE_NAME);
+        editor.putInt("mCount", counter4);
         if (Room == 1) {
             editor.putInt("mRoom1" , average1);
             editor.putInt("ROOM",1);
