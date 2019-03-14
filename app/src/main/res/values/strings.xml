@@ -41,7 +41,7 @@
         <item>48000</item>
     </string-array>
     <string name="editText">Type in the name of the measurement</string>
-    <string name="volume">Volume of the receiving room in m^3</string>
+    <string name="volume">Enter the dimensions of the receiving room.</string>
     <string name="area">Surface area of the wall in m^2</string>
     <string name="plotFFT">Plot FFT</string>
 </resources>

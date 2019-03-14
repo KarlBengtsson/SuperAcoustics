@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,16 +21,20 @@ public class MainActivity extends AppCompatActivity {
     public static final String ROOM_MESSAGE = "Room";
     private Button dbMeter;
     private Button measure1;
+    private Button reverb;
     private TextView calTextView;
     private TextView measureText1;
     private TextView measureText2;
+    private TextView measureRT;
     private static final String TAG = "MainActivity";
     double mDifferenceFromNominal = 0.0;
     int splRoom1 = 0;
     int splRoom2 = 0;
-    int Room = 0;
+    int Room = 0; int volume = 0; int area = 0; int length = 0; int width = 0; int height = 0;
+    String roomName;
     int mAudioSource = 0;
     int mSampleRate = 0;
+    private float [] reverbResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         readPreferences();
         dbMeter = (Button) findViewById(R.id.dbmeterButton);
         measure1 = (Button) findViewById(R.id.measureButton1);
+        reverb = (Button) findViewById(R.id.reverbButton);
         initTextViews();
         onCheckPerm();
 
@@ -80,6 +86,38 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void MeasureReverb (View view) {
+        Intent launchIntent = new Intent();
+        launchIntent.setAction("com.example.cuiyuzhao.acousticmeasurement.action.LAUNCH_IT");
+        startActivityForResult(launchIntent, 1);
+
+        //Set EP till 1 och MP til 4
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(data != null){
+                float [] result = data.getFloatArrayExtra("result");
+                for (int i = 0; i<result.length; i++) {
+                    reverbResult[i] = result[i];
+                }
+                //String result=data.getStringExtra("result");
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+            float total = 0;
+            for (float a:reverbResult) {
+                total += a;
+            }
+            measureRT.setText(reverbResult.toString());
+        }
+
+    }//onActivityResult
+
     public static boolean hasPermissions(Context context, String... permissions) {
         if (context != null && permissions != null) {
             for (String permission : permissions) {
@@ -107,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
+        roomName = preferences.getString("foldername", null);
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
@@ -114,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
         splRoom1 = preferences.getInt("mRoom1", 0);
         splRoom2 = preferences.getInt("mRoom2", 0);
         Room = preferences.getInt("ROOM",0);
+        volume = preferences.getInt("volume", 0);
+        area = preferences.getInt("area", 0);
+        length = preferences.getInt("length", 0);
+        width = preferences.getInt("width", 0);
+        height = preferences.getInt("height", 0);
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);
@@ -122,6 +166,9 @@ public class MainActivity extends AppCompatActivity {
         measureText1.setText("Not measured");
         measureText2 = (TextView) findViewById(R.id.measureText2);
         measureText2.setText("Not measured");
+        measureRT = (TextView) findViewById(R.id.measureTextRT);
+        measureRT.setText("Not measured");
+
     }
 
     @Override
