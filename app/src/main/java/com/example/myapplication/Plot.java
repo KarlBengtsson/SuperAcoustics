@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -208,8 +209,18 @@ public class Plot  extends AppCompatActivity {
         banddB = band.getdB(bands,mGain);
         System.out.println("Amplitude for frequencies:");
         for (int u=0 ; u<bands.length; u++){
-            System.out.println((int) freqs[u] +"Hz  "+(int) (20+banddB[u]) + "[dB]");
+            banddB[u] = banddB[u]+20;
+            System.out.println((int) freqs[u] +"Hz  "+(int) (banddB[u]) + "[dB]");
         }
+
+        File file = new File(path + "/"+"FrequencyData"+Integer.toString(Room)+Integer.toString(counter4)+".txt");
+        String[] saveText = new String[freqs.length];
+        for (int i = 0; i<freqs.length; i++) {
+          saveText[i] = Double.toString(freqs[i])+ " Hz    " + Double.toString(Math.round(banddB[i])) + " dB" + "\n";
+        }
+
+        Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ "FrequencyData" + Integer.toString(Room),Toast.LENGTH_LONG).show();
+        Save(file, saveText);
 
 
 
@@ -395,6 +406,8 @@ public class Plot  extends AppCompatActivity {
         super.onDestroy();
         Log.d(TAG, "onDestroy() called");
     }
+
+
 
 
 }
