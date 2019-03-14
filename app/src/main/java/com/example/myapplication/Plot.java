@@ -71,7 +71,7 @@ public class Plot  extends AppCompatActivity {
 
 
     public void grapher(String[] yString) {
-
+        double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
         GraphView graph = (GraphView) findViewById(R.id.graph);
         // activate horizontal zooming and scrolling
         graph.getViewport().setScalable(true);
@@ -120,7 +120,7 @@ public class Plot  extends AppCompatActivity {
 
 
     public void grapher_two(String[] yString) {
-
+        double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
         GraphView graph = (GraphView) findViewById(R.id.graph);
         // activate horizontal zooming and scrolling
         graph.getViewport().setScalable(true);
@@ -137,7 +137,7 @@ public class Plot  extends AppCompatActivity {
 
         // change x-label and y-label
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Frequency [hz]");
-        graph.getGridLabelRenderer().setVerticalAxisTitle("Amplitude [unit?]");
+        graph.getGridLabelRenderer().setVerticalAxisTitle("Amplitude [dB]");
 
         // set plot title
         graph.setTitle("FFT of time Signal");
@@ -192,18 +192,17 @@ public class Plot  extends AppCompatActivity {
                 for (int d = 0; d<numUniquePoints; d++){
                     XX[d] = XX[d]*2*Fn/mCompLength;
                 }
-
-
+        Banding band = new Banding((int) mSampleRate,numUniquePoints,mCompLength);
+        /*double [] CCinput = band.getdB(Cinput,mGain);*/
         for (int g = 0; g<numUniquePoints; g++) {
             series1.appendData(new DataPoint(XX[g], Cinput[g]), true, numUniquePoints);
         }
         graph.addSeries(series1);
-        Banding band = new Banding((int) mSampleRate,numUniquePoints,mCompLength);
+
         int nBands = band.getNBands((int) mSampleRate);
         double[] bands;
         double[] banddB;
         double[] freqs;
-        double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
         bands = band.bandAmp(Cinput, nBands);
         freqs = band.getFreqs(nBands);
         banddB = band.getdB(bands,mGain);
@@ -214,9 +213,9 @@ public class Plot  extends AppCompatActivity {
         }
 
         File file = new File(path + "/"+"FrequencyData"+Integer.toString(Room)+Integer.toString(counter4)+".txt");
-        String[] saveText = new String[freqs.length];
-        for (int i = 0; i<freqs.length; i++) {
-          saveText[i] = Double.toString(freqs[i])+ " Hz    " + Double.toString(Math.round(banddB[i])) + " dB" + "\n";
+        String[] saveText = new String[freqs.length-2];
+        for (int i = 0; i<freqs.length-2; i++) {
+          saveText[i] = Double.toString(freqs[i+2])+ " Hz    " + Double.toString(Math.round(banddB[i+2])) + " dB" + "\n";
         }
 
         Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ "FrequencyData" + Integer.toString(Room),Toast.LENGTH_LONG).show();
