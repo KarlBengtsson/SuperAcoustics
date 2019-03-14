@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -33,6 +34,7 @@ public class Plot  extends AppCompatActivity {
     private int mCompLength;
     private int counter4;
     private int plotType;
+    private static final String TAG = "Plot";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +150,7 @@ public class Plot  extends AppCompatActivity {
         mCompLength = highestPowerof2(mSignLength);
         for (int q = 0; q < mCompLength; q++) {
             Y[q] = Double.parseDouble(yString[q]);
-            yy += Y[q]*Y[q];
+            yy += Math.abs(Y[q])*Math.abs(Y[q]);
             t += 1;
             x[q] = t/mSampleRate;
         }
@@ -173,7 +175,7 @@ public class Plot  extends AppCompatActivity {
                 // throw away second half and take the magnitude at the same time
                 double[] Cinput = new double[numUniquePoints];
                 for (int r = 0; r<numUniquePoints; r++) {
-                    Cinput[r] = Math.sqrt((Math.pow(input[r],2)+Math.pow(im[r],2)))*2/mCompLength;
+                    Cinput[r] = Math.sqrt((Math.pow(input[r],2)+Math.pow(im[r],2))/mCompLength)*2;
                 }
                 // account for endpoint uniqueness
                 Cinput[0]=Cinput[0]/2;
@@ -183,11 +185,10 @@ public class Plot  extends AppCompatActivity {
 
 
 
-                XX = linspace(0.0,numUniquePoints,numUniquePoints);
+                XX = linspace(0.0,numUniquePoints-1,numUniquePoints);
 
                 // frequencies
                 for (int d = 0; d<numUniquePoints; d++){
-                    // strange that the factor 4 seemed to work
                     XX[d] = XX[d]*2*Fn/mCompLength;
                 }
 
@@ -196,6 +197,20 @@ public class Plot  extends AppCompatActivity {
             series1.appendData(new DataPoint(XX[g], Cinput[g]), true, numUniquePoints);
         }
         graph.addSeries(series1);
+        Banding band = new Banding((int) mSampleRate,numUniquePoints,mCompLength);
+        int nBands = band.getNBands((int) mSampleRate);
+        double[] bands;
+        double[] banddB;
+        double[] freqs;
+        double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
+        bands = band.bandAmp(Cinput, nBands);
+        freqs = band.getFreqs(nBands);
+        banddB = band.getdB(bands,mGain);
+        System.out.println("Amplitude for frequencies:");
+        for (int u=0 ; u<bands.length; u++){
+            System.out.println((int) freqs[u] +"Hz  "+(int) (20+banddB[u]) + "[dB]");
+        }
+
 
 
 
@@ -326,6 +341,59 @@ public class Plot  extends AppCompatActivity {
             }
         }
         return res;
+    }
+
+
+    // Methods providing information about what happens when going back & forth between activities.
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.d(TAG, "onSaveInstanceState() called");
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "RestoreInstanceState() called");
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() called");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart() called");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
     }
 
 

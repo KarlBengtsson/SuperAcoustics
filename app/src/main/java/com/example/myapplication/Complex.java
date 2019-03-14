@@ -1,9 +1,9 @@
 package com.example.myapplication;
 
 class Complex {
-    public final double re;
-    public final double im;
-    public final double magn;
+    private final double re;
+    private final double im;
+    private final double magn;
 
     public Complex() {
         this(0, 0);

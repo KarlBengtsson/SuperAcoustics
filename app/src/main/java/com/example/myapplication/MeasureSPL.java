@@ -151,6 +151,8 @@ public class MeasureSPL extends AppCompatActivity implements
                     @Override
                     public void onClick(View v) {
                         if (onOffButton.isChecked()) {
+                            plotFFT.setEnabled(false);
+                            plotT.setEnabled(false);
                             startButton.setEnabled(true);
                             finishMeasure.setEnabled(false);
                             readPreferences();
@@ -160,6 +162,8 @@ public class MeasureSPL extends AppCompatActivity implements
                         } else {
                             startButton.setEnabled(false);
                             finishMeasure.setEnabled(true);
+                            plotFFT.setEnabled(true);
+                            plotT.setEnabled(true);
                             micInput.stop();
                             //splRoom1 = stopMeasure(splRoom1, counter1);
                         }
@@ -197,6 +201,8 @@ public class MeasureSPL extends AppCompatActivity implements
             public void onClick(View v) {
                 stopButton.setEnabled(false);
                 startButton.setEnabled(true);
+                plotFFT.setEnabled(true);
+                plotT.setEnabled(true);
                 seconds.setText("05");
 
                // if (Room == 1) {
@@ -325,6 +331,7 @@ public class MeasureSPL extends AppCompatActivity implements
         finishMeasure.setOnClickListener(setFinishBtnListener);
 
         plotT=(Button)findViewById(R.id.plotT);
+        plotT.setEnabled(false);
         Button.OnClickListener setPlotTListener =
                 new Button.OnClickListener() {
 
@@ -338,6 +345,7 @@ public class MeasureSPL extends AppCompatActivity implements
         plotT.setOnClickListener(setPlotTListener);
 
         plotFFT=(Button)findViewById(R.id.plotFFT);
+        plotFFT.setEnabled(false);
         Button.OnClickListener setPlotFFTListener =
                 new Button.OnClickListener() {
 
