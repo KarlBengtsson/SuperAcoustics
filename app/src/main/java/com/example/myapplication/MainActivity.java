@@ -97,14 +97,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            if(data != null){
-                float [] result = data.getFloatArrayExtra("result");
-                for (int i = 0; i<result.length; i++) {
-                    reverbResult[i] = result[i];
-                }
-                //String result=data.getStringExtra("result");
+            if(resultCode == Activity.RESULT_OK){
+                reverbResult = data.getFloatArrayExtra("result");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
@@ -113,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
             for (float a:reverbResult) {
                 total += a;
             }
-            measureRT.setText(reverbResult.toString());
+            double avg = total/6;
+            avg = (double)Math.round(avg * 10000d) / 10000d;
+
+            measureRT.setText(String.valueOf(avg));
         }
 
     }//onActivityResult
