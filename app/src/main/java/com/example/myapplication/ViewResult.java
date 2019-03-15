@@ -24,6 +24,7 @@ public class ViewResult extends AppCompatActivity {
     private TextView resultSPL1;
     private TextView resultSPL2;
     private TextView resultCal;
+    private TextView resultreverb;
 
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
     // The Google ASR input requirements state that audio input sensitivity
@@ -38,7 +39,7 @@ public class ViewResult extends AppCompatActivity {
     private int mAudioSource;  // The audio source to use.
     private int result1;
     private int result2;
-    private double reverb = 1;
+    private float reverb;
     private double area;
     private double sArea;
     private double volume;
@@ -52,6 +53,7 @@ public class ViewResult extends AppCompatActivity {
         resultSPL1 = (TextView)findViewById(R.id.resultTextSpl1);
         resultSPL2 = (TextView)findViewById(R.id.resultTextSpl2);
         resultCal = (TextView)findViewById(R.id.resultTextCal);
+        resultreverb = (TextView)findViewById(R.id.resultTextRT);
         readPreferences();
         calcResult();
     }
@@ -60,9 +62,9 @@ public class ViewResult extends AppCompatActivity {
         area = (0.163*volume)/reverb;
         double X = 10*Math.log10(sArea/area);
         double R = result1 - result2 + X;
+        R = Math.round(R * 10000d) / 10000d;
         resultCal.setText(Double.toString(R) + " dB");
     }
-
 
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
@@ -75,13 +77,12 @@ public class ViewResult extends AppCompatActivity {
         result2 = preferences.getInt("mRoom2",0);
         volume = preferences.getInt("volume", 0);
         sArea = preferences.getInt("area", 0);
+        reverb = preferences.getFloat("reverb", 0);
 
         resultSPL1.setText(Integer.toString(result1) + " dB");
         resultSPL2.setText(Integer.toString(result2) + " dB");
-
+        resultreverb.setText(Float.toString(reverb) + " seconds");
     }
-
-
 
 
 /*    public void readFileFromTxtRoom1() {

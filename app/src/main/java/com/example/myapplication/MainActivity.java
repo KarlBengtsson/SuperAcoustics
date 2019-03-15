@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     int mAudioSource = 0;
     int mSampleRate = 0;
     private float [] reverbResult;
+    private float avg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,10 +110,11 @@ public class MainActivity extends AppCompatActivity {
             for (float a:reverbResult) {
                 total += a;
             }
-            double avg = total/6;
-            avg = (double)Math.round(avg * 10000d) / 10000d;
+            avg = total/6;
+            avg = (float)(Math.round(avg * 10000d) / 10000d);
 
             measureRT.setText(String.valueOf(avg));
+            setPreferences();
         }
 
     }//onActivityResult
@@ -141,6 +143,15 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
     }
+
+    private void setPreferences() {
+        SharedPreferences preferences = getSharedPreferences("LevelMeter",
+                MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putFloat("reverb" , avg);
+        editor.apply();
+    }
+
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
