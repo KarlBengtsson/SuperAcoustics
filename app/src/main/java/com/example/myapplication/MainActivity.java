@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("mRoom1",0);
         editor.putInt("mRoom2",0);
+        editor.putFloat("reverb", 0);
         editor.apply();
         readPreferences();
         dbMeter = (Button) findViewById(R.id.dbmeterButton);

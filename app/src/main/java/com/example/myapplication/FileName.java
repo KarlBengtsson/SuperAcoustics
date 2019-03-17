@@ -40,6 +40,8 @@ public class FileName extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.file_name_activity);
+        SharedPreferences preferences = getSharedPreferences("LevelMeter",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
         readPreferences();
         nameTextView = (TextView) findViewById(R.id.nameInput);
         lengthTextView = (TextView) findViewById(R.id.lengthText);
