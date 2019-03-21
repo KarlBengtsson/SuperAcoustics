@@ -22,10 +22,6 @@
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
@@ -41,9 +37,13 @@
         </activity>
 
         <activity
-            android:name=".LevelMeterActivity"
+            android:name=".LevelMeterActivity2"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Settings"

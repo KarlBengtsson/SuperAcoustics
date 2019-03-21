@@ -99,15 +99,19 @@ public class MicrophoneInput implements Runnable{
 
         try {
             recorder = new AudioRecord(
-                    mAudioSource,
-                    mSampleRate,
-                    mChannelConfig,
-                    mAudioFormat,
-                    buffer1000msSize);
+                    mAudioSource, // 6
+                    mSampleRate,  // 8000
+                    mChannelConfig, // 16
+                    mAudioFormat, // 2
+                    buffer1000msSize); //8000 mycket bättre med högre samplerate!!!
+
             recorder.startRecording();
 
             while (mRunning) {
                 int numSamples = recorder.read(buffer20ms, 0, buffer20ms.length);
+
+                // recorder.read(rawData, 0, BLOCK_SIZE_FFT);
+
                 mTotalSamples += numSamples;
                 mListener.processAudioFrame(buffer20ms);
             }
