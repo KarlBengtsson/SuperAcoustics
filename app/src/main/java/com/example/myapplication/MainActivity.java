@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private float [] reverbResult;
     private float avg;
 
+    //Todo Measure background noise and explore new way to measure Reverberation time.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

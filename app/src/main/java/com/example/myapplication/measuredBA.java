@@ -31,9 +31,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+//Todo study and understand this implementation of FFT
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 /**
@@ -76,9 +78,12 @@ public class measuredBA extends AppCompatActivity {
     private static final String TAG = "LevelMeterActivity";
     private AudioRecord recorder;
     private int Room;
+    private FileOutputStream fos;
+    private FileOutputStream fosC;
 
     private final static int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-    private final static int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_STEREO;
+    private final static int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
+    //private final static int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_STEREO;
     private final static int RECORDER_SAMPLERATE = 44100;
     private final static int BYTES_PER_ELEMENT = 2;
     private final static int BLOCK_SIZE = AudioRecord.getMinBufferSize(
@@ -426,6 +431,9 @@ public class measuredBA extends AppCompatActivity {
         }
     }
 
+    //Todo Implement function to calculate avg SPL as in MeasureSPL class. Save to file. Plot data and FFT.
+    //Todo calculate SPL in different frequency bands
+
     private void startRecording(final float gain, final int finalCountTimeDisplay, final int finalCountTimeLog) {
 
         recorder = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,
@@ -442,30 +450,44 @@ public class measuredBA extends AppCompatActivity {
             @Override
             public void run() {
 
+                // Raw data array (tot: BLOCK_SIZE_FFT * 2 bytes)
                 short rawData[] = new short[BLOCK_SIZE_FFT];
 
-
+                // Non-weighted mag arrays (BLOCK_SIZE_FFT / 2 because it is the number of
+                // useful bands
                 final float dbFft[] = new float[BLOCK_SIZE_FFT / 2];
 
-
+                // Weighted mag arrays
                 final float dbFftA[] = new float[BLOCK_SIZE_FFT / 2];
 
                 float normalizedRawData;
 
-
+                // La fft lavora con double e con numeri complessi (re + im in
+                // sequenza)
                 double[] audioDataForFFT = new double[BLOCK_SIZE_FFT * 2];
 
-
+                // Audibility threshold (20 * 10 ^ (- 6))
                 float amplitudeRef = 0.00002f;
 
-
+                // third octaves
                 final float[] dbBand = new float[THIRD_OCTAVE.length];
 
                 final float[] linearBand = new float[THIRD_OCTAVE.length];
                 final float[] linearBandCount = new float[THIRD_OCTAVE.length];
 
+                // Variables for calculation of Time Display averages
                 int indexTimeDisplay = 1;
                 double linearATimeDisplay = 0;
+
+
+                // Variables for calculation of Time Log averages
+                int indexTimeLog = 0;
+                double linearTimeLog = 0;
+                double linearATimeLog = 0;
+                final float[] linearBandTimeLog = new float[THIRD_OCTAVE.length];
+
+                final float linearFftTimeDisplay[] = new float[BLOCK_SIZE_FFT / 2];
+                final float linearFftATimeDisplay[] = new float[BLOCK_SIZE_FFT / 2];
 
                 int initial_delay = 0;
 
@@ -474,6 +496,8 @@ public class measuredBA extends AppCompatActivity {
 
                     recorder.read(rawData, 0, BLOCK_SIZE_FFT);
 
+                    // inserted an initial delay because upon activation there were very high levels of running leq
+                    // (> 100 dB) and low lows (10 dB) due perhaps to the initial activation of the device
                     initial_delay++;
 
                     if (initial_delay > 20) {
@@ -484,23 +508,32 @@ public class measuredBA extends AppCompatActivity {
                             normalizedRawData = (float) rawData[i]
                                     / (float) Short.MAX_VALUE;
 
+                            // filter = ((double) (fastA * normalizedRawData))
+                            // + (fastB * filter);
                             filter = normalizedRawData;
 
+                            // Finestra di Hannings
                             double x = (2 * Math.PI * i) / (BLOCK_SIZE_FFT - 1);
                             double winValue = (1 - Math.cos(x)) * 0.5d;
 
+                            // Real part
                             audioDataForFFT[j] = filter * winValue;
 
+                            // Imaginary part
                             audioDataForFFT[j + 1] = 0.0;
                         }
 
                         // FFT
                         fft.complexForward(audioDataForFFT);
 
-                        // Magsum non pesati
+                        // Magsum non weighted
                         double linearFftGlobal = 0;
 
+                        // Magsum weighted
                         double linearFftAGlobal = 0;
+
+                        // index for third octave
+                        int k = 0;
 
                         for (int ki = 0; ki < THIRD_OCTAVE.length; ki++) {
                             linearBandCount[ki] = 0;
@@ -508,8 +541,7 @@ public class measuredBA extends AppCompatActivity {
                             dbBand[ki] = 0;
                         }
 
-                        // Leggo fino a BLOCK_SIZE_FFT/2 perchè in tot ho BLOCK_SIZE_FFT/2
-                        // bande utili
+                        // In total there are BLOCK_SIZE / 2 useful bands
                         for (int i = 0, j = 0; i < BLOCK_SIZE_FFT / 2; i++, j += 2) {
 
                             double re = audioDataForFFT[j];
@@ -518,6 +550,10 @@ public class measuredBA extends AppCompatActivity {
                             // Magnitudo
                             double mag = Math.sqrt((re * re) + (im * im));
 
+                            // Weighted A
+                            // to understand: for i = 0 there is an invalid value (perhaps less infinite), but does it make sense?
+                            // this is then found in the graph:
+                            // for i = 0 the unweighted has a value, while the weight does not have it ...
                             double weightFormula = weightedA[i];
 
                             dbFft[i] = (float) (10 * Math.log10(mag * mag
@@ -699,6 +735,7 @@ public class measuredBA extends AppCompatActivity {
 
                         linearATimeDisplay += linearFftAGlobal;
 
+                        //Loop again or set result to dBTextView
                         if (indexTimeDisplay < finalCountTimeDisplay) {
                             indexTimeDisplay++;
                         } else {
@@ -724,6 +761,55 @@ public class measuredBA extends AppCompatActivity {
 
                         }
 
+                        // write log file
+                        // Average calculation for time log
+                        linearTimeLog += linearFftGlobal;
+                        linearATimeLog += linearFftAGlobal;
+                        for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                            linearBandTimeLog[i] += linearBand[i];
+                        }
+                        if (indexTimeLog < finalCountTimeLog) {
+                            indexTimeLog++;
+                        } else {
+                            final double dbTimeLog = 10 * Math.log10(linearTimeLog / finalCountTimeLog);
+                            final double dbATimeLog = 10 * Math.log10(linearATimeLog / finalCountTimeLog);
+
+                            final double[] dbBandTimeLog = new double[THIRD_OCTAVE.length];
+                            for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                                dbBandTimeLog[i] = 10 * Math.log10(linearBandTimeLog[i] / finalCountTimeLog);
+                                linearBandTimeLog[i] = 0;
+                            }
+                            // part for bands without values
+                            dbBandTimeLog[1] = dbBandTimeLog[0];
+                            dbBandTimeLog[3] = dbBandTimeLog[2];
+                            dbBandTimeLog[4] = dbBandTimeLog[5];
+                            dbBandTimeLog[6] = dbBandTimeLog[7];
+
+                            indexTimeLog = 1;
+                            linearTimeLog = 0;
+                            linearATimeLog = 0;
+
+                            // Write file
+                            /*if (buttonLog.getText().toString().equals(buttonLogTextStop)) {
+                                DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                String strDate = sdf.format(new Date());
+                                try {
+//                                    fos.write(String.format("%s\t%.1f\t%.1f", strDate, dbTimeLog, dbATimeLog).getBytes());
+                                    fos.write((strDate + "\t" + dBformat(dbATimeLog)).getBytes());
+                                    if (spectrumLog.equals("1")) {
+                                        for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                                            fos.write(("\t" + dBformat(dbBandTimeLog[i])).getBytes());
+                                        }
+                                    }
+                                    fos.write(("\n").getBytes());
+
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }*/
+
+                        }
+
                     }
                 } // while
             }
@@ -740,8 +826,8 @@ public class measuredBA extends AppCompatActivity {
                 recordingThread.join();
                 //fos.close();
             } catch (Exception e) {
-                Log.d("nostro log",
-                        "Il Thread principale non può attendere la chiusura del thread secondario dell'audio");
+                Log.d("our log",
+                        "The main thread cannot wait for the secondary audio thread to close");
             }
             recorder.stop();
             recorder.release();
@@ -749,19 +835,6 @@ public class measuredBA extends AppCompatActivity {
             recordingThread = null;
         }
     }
-
-    //------------------------------------------------------------------------------------------
-
-
-    @Override
-    //Called when returning to Main Activity from Result Activity
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
-
-
-    //------------------------------------------------------------------------------------------
 
     /**
      * Method to read the sample rate and audio source preferences.
@@ -799,6 +872,56 @@ public class measuredBA extends AppCompatActivity {
         }
         editor.apply();
     }
+
+    //------------------------------------------------------------------------------------------
+
+    /*private void startRecordingLogFile() {
+        // start the recording log file
+        DateFormat df = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss");
+        String filename = String.format("%s.OpeNoise.txt", df.format(new Date()));
+        File path = new File(Environment.getExternalStorageDirectory() + File.separator + "openoise");
+
+        if (!path.exists()) {
+            Log.d("mio", "il path non esiste. Creato? : " + path.mkdirs());
+        }
+        try {
+            File file = new File(path, filename);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            fos = new FileOutputStream(file);
+            fos.write(("DataTime                     \tdB(A)").getBytes());
+            if (spectrumLog.equals("1")) {
+                for (int i = 0; i < THIRD_OCTAVE_LABEL.length; i++) {
+                    fos.write(("\t" + THIRD_OCTAVE_LABEL[i]).getBytes());
+                }
+            }
+            fos.write(("\n").getBytes());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void stopRecordingLogFile() {
+        // stop the recording log file
+        try {
+            fos.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }*/
+
+    //------------------------------------------------------------------------------------------
+
+    @Override
+    //Called when returning to Main Activity from Result Activity
+    protected void onResume() {
+        readPreferences();
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+    //------------------------------------------------------------------------------------------
 
 
     @Override
@@ -844,6 +967,13 @@ public class measuredBA extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy() called");
+    }
+
+    @Override
+    public void onBackPressed() {
+        stopRecording();
+        finish();
+        super.onBackPressed();
     }
 
 
