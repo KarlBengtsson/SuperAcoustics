@@ -21,14 +21,18 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
@@ -40,29 +44,38 @@ import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 public class measuredBA extends AppCompatActivity {
         //implements MicrophoneInputListener {
 
+    //-------------------------------- Calibrate -----------------------------------------------------
     TextView mdBTextView;
     TextView mdBFractionTextView;
     BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
 
+    //-------------------------------- Measure SPL -----------------------------------------------
+    TextView seconds;
+    TextView measuredSPL1;
+    TextView measuredSPL2;
+    TextView measuredSPL3;
+    TextView measuredSPL4;
+    private ArrayList<Integer> signal1 = new ArrayList<>(); //används i plot functionen
+    private Button startButton, stopButton, finishMeasure, plotT, plotFFT;
+    private int counter4 = 0;
+    private int average1, average2, average11, average12, average13, average14;
+    public String path = "";
+    private String FILE_NAME = "TestRoom";
+    private String REPOSITORY_NAME;
+    private int tOrFFT;
+
+    //--------------------------------------------------------------------------------------------
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
-    double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
-    double mDifferenceFromNominal = 0.0;
     // For displaying error in calibration.
-    double mRmsSmoothed;  // Temporally filtered version of RMS.
-    double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
     private int mSampleRate;  // The audio sampling rate to use.
-    private int mAudioSource;  // The audio source to use.
     // Variables to monitor UI update and check for slow updates.
     private volatile boolean mDrawing;
     private volatile int mDrawingCollided;
 
     private static final String TAG = "LevelMeterActivity";
-
-    //----------------------------------------------------------------------------------------
-
     private AudioRecord recorder;
-
+    private int Room;
 
     private final static int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
     private final static int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_STEREO;
@@ -97,19 +110,13 @@ public class measuredBA extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() called");
+        readPreferences();
 
-        // Here the micInput object is created for audio capture.
-        // It is set up to call this object to handle real time audio frames of
-        // PCM samples. The incoming frames will be handled by the
-        // processAudioFrame method below.
-     //   micInput = new MicrophoneInput(this);
+        if (Room == 0) {
 
         // Read the layout and construct.
         setContentView(R.layout.level_meter_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        readPreferences();
-        measuredBA.this.mGain *= Math.pow(10, mDifferenceFromNominal / 20.0);
-
 
         // Get a handle that will be used in async thread post to update the
         // display.
@@ -117,7 +124,7 @@ public class measuredBA extends AppCompatActivity {
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         mGainTextView = (TextView)findViewById(R.id.gain);
-        mGainTextView.setText(Double.toString(mDifferenceFromNominal));
+        mGainTextView.setText(Double.toString(gain));
         // Toggle Button handler.
 
         //final int finalCountTimeDisplay = (int) (timeDisplay * NUMBER_OF_FFT_PER_SECOND);
@@ -146,9 +153,8 @@ public class measuredBA extends AppCompatActivity {
         // Call for the method to activate the calibration buttons
         onClickLevelAdjustment();
 
-
+        //Todo: Behöver vi ha settings? Ska inte samplerate alltid vara 44100?????
         // Settings button, launches the settings dialog.
-
         Button settingsButton=(Button)findViewById(R.id.settingsButton);
         Button.OnClickListener settingsBtnListener =
                 new Button.OnClickListener() {
@@ -173,84 +179,231 @@ public class measuredBA extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        // Dismiss this dialog.
                         measuredBA.this.setPreferences();
+                        stopRecording();
                         finish();
 
                     }
                 };
         setCalButton.setOnClickListener(setCalBtnListener);
+        //-----------------------------------------------------------------------------------------
+        } else {
+            // Read the layout and construct.
+            setContentView(R.layout.measure_spl_activity);
+            setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+            // Read the previous preferences
+
+            //Retrieves the value set by the calibration
+            mGainTextView = (TextView)findViewById(R.id.gain);
+            mGainTextView.setText(Float.toString(gain));
+
+            mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
+            mdBTextView = (TextView)findViewById(R.id.dBTextView);
+            mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
+            measuredSPL1 = (TextView) findViewById(R.id.measuredSPL1);
+            measuredSPL2 = (TextView) findViewById(R.id.measuredSPL2);
+            measuredSPL3 = (TextView) findViewById(R.id.measuredSPL3);
+            measuredSPL4 = (TextView) findViewById(R.id.measuredSPL4);
+            seconds = (TextView) findViewById(R.id.textseconds);
+
+            // Defining a new File for saving later on
+            //File dir = new File(path);
+            //dir.mkdirs();
+
+            //StartButton handler
+            startButton = (Button) findViewById(R.id.startButton);
+            startButton.setEnabled(false);
+            //StopButton handler
+            stopButton = (Button) findViewById(R.id.stopButton);
+            stopButton.setEnabled(false);
+
+            // Toggle Button handler.
+            final ToggleButton onOffButton=(ToggleButton)findViewById(
+                    R.id.on_off_toggle_button);
+            onOffButton.setChecked(false);
+
+            final int finalCountTimeDisplay = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+
+            final int finalCountTimeLog = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+
+            ToggleButton.OnClickListener tbListener =
+                    new ToggleButton.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (onOffButton.isChecked()) {
+                                //plotFFT.setEnabled(false);
+                                //plotT.setEnabled(false);
+                                startButton.setEnabled(true);
+                                finishMeasure.setEnabled(false);
+                                readPreferences();
+                                precalculateWeightedA();
+                                startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
+                            } else {
+                                startButton.setEnabled(false);
+                                finishMeasure.setEnabled(true);
+                                //plotFFT.setEnabled(true);
+                                //plotT.setEnabled(true);
+                                stopRecording();
+                                //splRoom1 = stopMeasure(splRoom1, counter1);
+                            }
+                        }
+                    };
+            onOffButton.setOnClickListener(tbListener);
+            startButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    counter4 ++;
+                    stopButton.setEnabled(true);
+                    startButton.setEnabled(false);
+
+
+                    new CountDownTimer(5000, 1000) {
+                        int time=5;
+                        public void onTick(long millisUntilFinished) {
+                            seconds.setText(checkDigit(time));
+                            time--;
+                        }
+
+                        public void onFinish() {
+                            seconds.setText("0");
+                        }
+
+                    }.start();
+                }
+            });
+
+            stopButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    stopButton.setEnabled(false);
+                    startButton.setEnabled(true);
+                    plotFFT.setEnabled(true);
+                    plotT.setEnabled(true);
+                    seconds.setText("05");
+
+                    // if (Room == 1) {
+                }
+            });
+
+            finishMeasure=(Button)findViewById(R.id.finishButton);
+            Button.OnClickListener setFinishBtnListener =
+                    new Button.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            // Dismiss this dialog.
+                            if (counter4 < 4) {
+                                Toast.makeText(getApplicationContext(), "Make 4 measurements in each room before finishing", Toast.LENGTH_LONG).show();
+                            } else {
+                                switch (Room) {
+                                    case 1:
+                                        average1 = (average11 + average12 + average13 + average14) / 4;
+                                        break;
+
+                                    case 2:
+                                        average2 = (average11 + average12 + average13 + average14) / 4;
+                                        break;
+                                }
+                            }
+
+                            measuredBA.this.setPreferences();
+                            finish();
+
+                        }
+                    };
+            finishMeasure.setOnClickListener(setFinishBtnListener);
+
+            /*plotT=(Button)findViewById(R.id.plotT);
+            plotT.setEnabled(false);
+            Button.OnClickListener setPlotTListener =
+                    new Button.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            tOrFFT = 1;
+                            measuredBA.this.setPreferences();
+                            measuredBA.this.plot();
+                        }
+                    };
+            plotT.setOnClickListener(setPlotTListener);
+
+            plotFFT=(Button)findViewById(R.id.plotFFT);
+            plotFFT.setEnabled(false);
+            Button.OnClickListener setPlotFFTListener =
+                    new Button.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            tOrFFT = 2;
+                            measuredBA.this.setPreferences();
+                            measuredBA.this.plot();
+                        }
+                    };
+            plotFFT.setOnClickListener(setPlotFFTListener);*/
+
+        }
+
     }
 
+    public void plot () {
+        Intent plotIntent = new Intent(measuredBA.this, Plot.class);
+        //plotIntent.putIntegerArrayListExtra("plotData", signal1);
+        plotIntent.putExtra("SignalLength",signal1.size());
+        plotIntent.putExtra("plotType", tOrFFT);
+        startActivity(plotIntent);
+    }
+
+    public String checkDigit(int number) {
+        return number <= 9 ? "0" + number : String.valueOf(number);
+    }
 
     /**
      * Inner class to handle press of gain adjustment buttons.
      */
     private class DbClickListener implements Button.OnClickListener {
-        private double gainIncrement;
+        private float gainIncrement;
 
-        public DbClickListener(double gainIncrement) {
+        public DbClickListener(float gainIncrement) {
             this.gainIncrement = gainIncrement;
         }
 
         @Override
         public void onClick(View v) {
-            measuredBA.this.mGain *= Math.pow(10, gainIncrement / 20.0);
-            mDifferenceFromNominal += gainIncrement;
+            gain += gainIncrement;
             DecimalFormat df = new DecimalFormat("##.# dB");
-            mGainTextView.setText(df.format(mDifferenceFromNominal));
+            mGainTextView.setText(df.format(gain));
         }
     }
 
-
     /**
-     *  This method gets called by the micInput object owned by this activity.
-     *  It first computes the RMS value and then it sets up a bit of
-     *  code/closure that runs on the UI thread that does the actual drawing.
+     * Handler for adjusting the calibration
      */
-    /*@Override
-    public void processAudioFrame(short[] audioFrame) {
-        if (!mDrawing) {
-            mDrawing = true;
-            // Compute the RMS value. (Note that this does not remove DC).
-            double rms = 0;
-            for (int i = 0; i < audioFrame.length; i++) {
-                rms += audioFrame[i]*audioFrame[i];
-            }
-            rms = Math.sqrt(rms/audioFrame.length);
 
-            // Compute a smoothed version for less flickering of the display.
-            mRmsSmoothed = mRmsSmoothed * mAlpha + (1 - mAlpha) * rms;
-            final double rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed);
+    private void onClickLevelAdjustment() {
+        // Level adjustment buttons.
 
-            // Set up a method that runs on the UI thread to update of the LED bar
-            // and numerical display.
-            mBarLevel.post(new Runnable() {
-                @Override
-                public void run() {
-                    // The bar has an input range of [0.0 ; 1.0] and 10 segments.
-                    // Each LED corresponds to 6 dB.
-                    //mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
+        // Minus 5 dB button event handler.
+        Button minus5dbButton = (Button)findViewById(R.id.minus_5_db_button);
+        DbClickListener minus5dBButtonListener = new DbClickListener((float) -5.0);
+        minus5dbButton.setOnClickListener(minus5dBButtonListener);
 
-                    DecimalFormat df = new DecimalFormat("##");
-                    mdBTextView.setText(df.format(20 + rmsdB));
+        // Minus 1 dB button event handler.
+        Button minus1dbButton = (Button)findViewById(R.id.minus_1_db_button);
+        DbClickListener minus1dBButtonListener = new DbClickListener((float) -1.0);
+        minus1dbButton.setOnClickListener(minus1dBButtonListener);
 
-                    DecimalFormat df_fraction = new DecimalFormat("#");
-                    int one_decimal = (int) (Math.round(Math.abs(rmsdB * 10))) % 10;
-                    mdBFractionTextView.setText(Integer.toString(one_decimal));
-                    mDrawing = false;
-                }
-            });
-        } else {
-            mDrawingCollided++;
-*//*            Log.v(TAG, "Level bar update collision, i.e. update took longer " +
-                    "than 20ms. Collision count" + Double.toString(mDrawingCollided));*//*
-        }
-    }*/
+        // Plus 1 dB button event handler.
+        Button plus1dbButton = (Button)findViewById(R.id.plus_1_db_button);
+        DbClickListener plus1dBButtonListener = new DbClickListener((float) 1.0);
+        plus1dbButton.setOnClickListener(plus1dBButtonListener);
 
+        // Plus 5 dB button event handler.
+        Button plus5dbButton = (Button)findViewById(R.id.plus_5_db_button);
+        DbClickListener plus5dBButtonListener = new DbClickListener((float) 5.0);
+        plus5dbButton.setOnClickListener(plus5dBButtonListener);
+    }
 
-
-    //------------------------------------------------------------------------------------------
 
     private void precalculateWeightedA() {
         for (int i = 0; i < BLOCK_SIZE_FFT; i++) {
@@ -599,6 +752,17 @@ public class measuredBA extends AppCompatActivity {
 
     //------------------------------------------------------------------------------------------
 
+
+    @Override
+    //Called when returning to Main Activity from Result Activity
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+
+    //------------------------------------------------------------------------------------------
+
     /**
      * Method to read the sample rate and audio source preferences.
      */
@@ -606,49 +770,47 @@ public class measuredBA extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
         mSampleRate = preferences.getInt("SampleRate", 8000);
-        mAudioSource = preferences.getInt("AudioSource",
-                MediaRecorder.AudioSource.VOICE_RECOGNITION);
-        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        gain = preferences.getFloat("mGainDif", 0);
+        Room = preferences.getInt("ROOM" , 0);
+        REPOSITORY_NAME = preferences.getString("foldername", "");
+        path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
+        if (Room == 1) {
+            average1 = preferences.getInt("mRoom1", 0);
+        }
+        else {
+            average2 = preferences.getInt("mRoom2", 0);
+        }
     }
 
-    private void onClickLevelAdjustment() {
-        // Level adjustment buttons.
-
-        // Minus 5 dB button event handler.
-        Button minus5dbButton = (Button)findViewById(R.id.minus_5_db_button);
-        DbClickListener minus5dBButtonListener = new DbClickListener(-5.0);
-        minus5dbButton.setOnClickListener(minus5dBButtonListener);
-
-        // Minus 1 dB button event handler.
-        Button minus1dbButton = (Button)findViewById(R.id.minus_1_db_button);
-        DbClickListener minus1dBButtonListener = new DbClickListener(-1.0);
-        minus1dbButton.setOnClickListener(minus1dBButtonListener);
-
-        // Plus 1 dB button event handler.
-        Button plus1dbButton = (Button)findViewById(R.id.plus_1_db_button);
-        DbClickListener plus1dBButtonListener = new DbClickListener(1.0);
-        plus1dbButton.setOnClickListener(plus1dBButtonListener);
-
-        // Plus 5 dB button event handler.
-        Button plus5dbButton = (Button)findViewById(R.id.plus_5_db_button);
-        DbClickListener plus5dBButtonListener = new DbClickListener(5.0);
-        plus5dbButton.setOnClickListener(plus5dBButtonListener);
+    private void setPreferences() {
+        SharedPreferences preferences = getSharedPreferences("LevelMeter",
+                MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("SampleRate", mSampleRate);
+        editor.putFloat("mGainDif", gain);
+        editor.putInt("mCount", counter4);
+        if (Room == 1) {
+            editor.putInt("mRoom1" , average1);
+            editor.putInt("ROOM",1);
+        }
+        else {
+            editor.putInt("mRoom2" , average2);
+            editor.putInt("ROOM",2);
+        }
+        editor.apply();
     }
-
 
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         Log.d(TAG, "onSaveInstanceState() called");
-
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.d(TAG, "RestoreInstanceState() called");
-
     }
 
     @Override
@@ -657,6 +819,7 @@ public class measuredBA extends AppCompatActivity {
         readPreferences();
         Log.d(TAG, "onStart() called");
     }
+
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -665,16 +828,9 @@ public class measuredBA extends AppCompatActivity {
     }
 
     @Override
-    //Called when returning to Main Activity from Result Activity
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
+        stopRecording();
         Log.d(TAG, "onPause() called");
     }
 
@@ -687,18 +843,9 @@ public class measuredBA extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //micInput.stop();
         Log.d(TAG, "onDestroy() called");
     }
-    private void setPreferences() {
-        SharedPreferences preferences = getSharedPreferences("LevelMeter",
-                MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("SampleRate", mSampleRate);
-        editor.putInt("mGainDif", (int) mDifferenceFromNominal);
-        editor.apply();
-    }
-
 
 
 }
+

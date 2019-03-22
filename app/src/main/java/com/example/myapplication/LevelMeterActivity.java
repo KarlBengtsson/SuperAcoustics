@@ -52,7 +52,7 @@ public class LevelMeterActivity extends Activity implements
     // should be set such that 90 dB SPL at 1000 Hz yields RMS of 2500 for
     // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
     double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
-    double mDifferenceFromNominal = 0.0;
+    float mDifferenceFromNominal = 0;
     // For displaying error in calibration.
     double mRmsSmoothed;  // Temporally filtered version of RMS.
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
@@ -90,6 +90,8 @@ public class LevelMeterActivity extends Activity implements
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         mGainTextView = (TextView)findViewById(R.id.gain);
+        TextView text = (TextView)findViewById(R.id.textView4);
+        text.setText("dB");
         mGainTextView.setText(Double.toString(mDifferenceFromNominal));
         // Toggle Button handler.
 
@@ -115,9 +117,7 @@ public class LevelMeterActivity extends Activity implements
         // Call for the method to activate the calibration buttons
         onClickLevelAdjustment();
 
-
         // Settings button, launches the settings dialog.
-
         Button settingsButton=(Button)findViewById(R.id.settingsButton);
         Button.OnClickListener settingsBtnListener =
                 new Button.OnClickListener() {
@@ -179,7 +179,7 @@ public class LevelMeterActivity extends Activity implements
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
-        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        mDifferenceFromNominal = preferences.getFloat("mGainDif", 0);
     }
 
 
@@ -311,8 +311,8 @@ public class LevelMeterActivity extends Activity implements
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("SampleRate", mSampleRate);
-        editor.putInt("mGainDif", (int) mDifferenceFromNominal);
+        //editor.putInt("SampleRate", mSampleRate);
+        //editor.putFloat("mGainDif", mDifferenceFromNominal);
         editor.apply();
     }
 

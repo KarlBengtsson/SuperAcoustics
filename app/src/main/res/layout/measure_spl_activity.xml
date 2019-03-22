@@ -46,9 +46,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="dB"
+            android:text="dB(A)"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="80dp"
+            android:textSize="50dp"
             android:typeface="monospace" />
 
     </LinearLayout>

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView measureText2;
     private TextView measureRT;
     private static final String TAG = "MainActivity";
-    double mDifferenceFromNominal = 0.0;
+    float gain = 0;
     int splRoom1 = 0;
     int splRoom2 = 0;
     int Room = 0; int volume = 0; int area = 0; int length = 0; int width = 0; int height = 0;
@@ -55,19 +55,27 @@ public class MainActivity extends AppCompatActivity {
         reverb = (Button) findViewById(R.id.reverbButton);
         initTextViews();
         onCheckPerm();
-
     }
 
+    public void measuredB (View view) {
+        Intent intent = new Intent(this, LevelMeterActivity.class);
+        startActivity(intent);
+    }
 
     public void CalibrateSPL (View view) {
         //Intent intent = new Intent(this, LevelMeterActivity.class);
         Intent intent = new Intent(this, measuredBA.class);
+        intent.putExtra(EXTRA_MESSAGE, gain );
+        SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("ROOM" , 0);
+        editor.commit();
         startActivity(intent);
     }
 
     public void MeasureSPL1 (View view) {
-        Intent intent = new Intent(this, MeasureSPL.class);
-        intent.putExtra(EXTRA_MESSAGE, mDifferenceFromNominal );
+        Intent intent = new Intent(this, measuredBA.class);
+        intent.putExtra(EXTRA_MESSAGE, gain );
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("ROOM" , 1);
@@ -75,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void MeasureSPL2 (View view) {
-        Intent intent = new Intent(this, MeasureSPL.class);
-        intent.putExtra(EXTRA_MESSAGE, mDifferenceFromNominal );
+        Intent intent = new Intent(this, measuredBA.class);
+        intent.putExtra(EXTRA_MESSAGE, gain );
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("ROOM" , 2);
@@ -161,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
-        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        gain = preferences.getFloat("mGainDif", 0);
         splRoom1 = preferences.getInt("mRoom1", 0);
         splRoom2 = preferences.getInt("mRoom2", 0);
         Room = preferences.getInt("ROOM",0);
@@ -173,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);
-        calTextView.setText(Double.toString(mDifferenceFromNominal));
+        calTextView.setText(Float.toString(gain));
         measureText1 = (TextView) findViewById(R.id.measureText1);
         measureText1.setText("Not measured");
         measureText2 = (TextView) findViewById(R.id.measureText2);
@@ -208,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         readPreferences();
-        calTextView.setText(Double.toString(mDifferenceFromNominal));
+        calTextView.setText(Float.toString(gain));
         Log.d(TAG, "onResume() called");
 
     }

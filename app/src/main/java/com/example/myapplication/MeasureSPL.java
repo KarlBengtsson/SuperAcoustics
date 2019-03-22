@@ -22,7 +22,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -69,7 +68,7 @@ public class MeasureSPL extends AppCompatActivity implements
 
     // For saving and loading .txt file
 
-    public String path = "";
+
 
 
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
@@ -77,7 +76,7 @@ public class MeasureSPL extends AppCompatActivity implements
     // should be set such that 90 dB SPL at 1000 Hz yields RMS of 2500 for
     // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
     double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
-    double mDifferenceFromNominal = 0.0;
+    float gain = 0;
     // For displaying error in calibration.
     double mRmsSmoothed;  // Temporally filtered version of RMS.
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
@@ -88,6 +87,7 @@ public class MeasureSPL extends AppCompatActivity implements
     private volatile boolean mDrawing;
     private volatile int mDrawingCollided;
 
+    public String path = "";
     private static final String TAG = "MeasureSPLEVEL";
     private String FILE_NAME = "TestRoom";
     private String REPOSITORY_NAME;
@@ -105,11 +105,11 @@ public class MeasureSPL extends AppCompatActivity implements
 
         // Read the previous preferences
         readPreferences();
-        mGain *= Math.pow(10, mDifferenceFromNominal / 20.0);
+        mGain *= Math.pow(10, gain / 20.0);
 
         //Retrieves the value set by the calibration
         mGainTextView = (TextView)findViewById(R.id.gain);
-        mGainTextView.setText(Double.toString(mDifferenceFromNominal));
+        mGainTextView.setText(Float.toString(gain));
 
 
         mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
@@ -457,7 +457,7 @@ public class MeasureSPL extends AppCompatActivity implements
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
-        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        gain = preferences.getFloat("mGainDif", 0);
         Room = preferences.getInt("ROOM" , 0);
         REPOSITORY_NAME = preferences.getString("foldername", "");
         path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
@@ -475,7 +475,7 @@ public class MeasureSPL extends AppCompatActivity implements
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
-        editor.putInt("mGainDif", (int) mDifferenceFromNominal);
+        editor.putFloat("mGainDif", gain);
         editor.putString("filename", FILE_NAME);
         editor.putInt("mCount", counter4);
         if (Room == 1) {

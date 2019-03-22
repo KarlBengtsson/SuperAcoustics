@@ -31,7 +31,7 @@ public class ViewResult extends AppCompatActivity {
     // should be set such that 90 dB SPL at 1000 Hz yields RMS of 2500 for
     // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
     double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
-    double mDifferenceFromNominal = 0.0;
+    float gain = 0;
     // For displaying error in calibration.
     double mRmsSmoothed;  // Temporally filtered version of RMS.
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
@@ -72,7 +72,7 @@ public class ViewResult extends AppCompatActivity {
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
-        mDifferenceFromNominal = preferences.getInt("mGainDif", 0);
+        gain = preferences.getFloat("mGainDif", 0);
         result1 = preferences.getInt("mRoom1",0);
         result2 = preferences.getInt("mRoom2",0);
         volume = preferences.getInt("volume", 0);
