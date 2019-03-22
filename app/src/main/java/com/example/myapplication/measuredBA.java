@@ -14,6 +14,7 @@
 
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.AudioFormat;
@@ -29,24 +30,22 @@ import android.widget.ToggleButton;
 
 import java.text.DecimalFormat;
 
+import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
+
 /**
  * Detta är ett försök till att mäta dBA istället för db. görs på samma sätt som i
  * openoise-meter appen
  *
  */
-public class LevelMeterActivity2 extends AppCompatActivity {
+public class measuredBA extends AppCompatActivity {
         //implements MicrophoneInputListener {
 
-    MicrophoneInput micInput;  // The micInput object provides real time audio.
     TextView mdBTextView;
     TextView mdBFractionTextView;
     BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
 
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
-    // The Google ASR input requirements state that audio input sensitivity
-    // should be set such that 90 dB SPL at 1000 Hz yields RMS of 2500 for
-    // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
     double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
     double mDifferenceFromNominal = 0.0;
     // For displaying error in calibration.
@@ -54,7 +53,6 @@ public class LevelMeterActivity2 extends AppCompatActivity {
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
     private int mSampleRate;  // The audio sampling rate to use.
     private int mAudioSource;  // The audio source to use.
-
     // Variables to monitor UI update and check for slow updates.
     private volatile boolean mDrawing;
     private volatile int mDrawingCollided;
@@ -64,7 +62,7 @@ public class LevelMeterActivity2 extends AppCompatActivity {
     //----------------------------------------------------------------------------------------
 
     private AudioRecord recorder;
-    private boolean isRecording;
+
 
     private final static int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
     private final static int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_STEREO;
@@ -82,6 +80,8 @@ public class LevelMeterActivity2 extends AppCompatActivity {
 
     private double[] weightedA = new double[BLOCK_SIZE_FFT];
     private Thread recordingThread = null;
+    private boolean isRecording = false;
+    private DoubleFFT_1D fft = null;
 
     private float [] THIRD_OCTAVE = {16, 20, 25, 31.5f, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500,
             630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000};
@@ -108,7 +108,7 @@ public class LevelMeterActivity2 extends AppCompatActivity {
         setContentView(R.layout.level_meter_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         readPreferences();
-        LevelMeterActivity2.this.mGain *= Math.pow(10, mDifferenceFromNominal / 20.0);
+        measuredBA.this.mGain *= Math.pow(10, mDifferenceFromNominal / 20.0);
 
 
         // Get a handle that will be used in async thread post to update the
@@ -149,7 +149,7 @@ public class LevelMeterActivity2 extends AppCompatActivity {
 
         // Settings button, launches the settings dialog.
 
-        /*Button settingsButton=(Button)findViewById(R.id.settingsButton);
+        Button settingsButton=(Button)findViewById(R.id.settingsButton);
         Button.OnClickListener settingsBtnListener =
                 new Button.OnClickListener() {
 
@@ -158,14 +158,14 @@ public class LevelMeterActivity2 extends AppCompatActivity {
                         final ToggleButton onOffButton=(ToggleButton)findViewById(
                                 R.id.on_off_toggle_button);
                         onOffButton.setChecked(false);
-                        LevelMeterActivity2.this.micInput.stop();
-                        LevelMeterActivity2.this.setPreferences();
-                        Intent settingsIntent = new Intent(LevelMeterActivity2.this,
+                        //LevelMeterActivity2.this.micInput.stop();
+                        measuredBA.this.setPreferences();
+                        Intent settingsIntent = new Intent(measuredBA.this,
                                 Settings.class);
-                        LevelMeterActivity2.this.startActivity(settingsIntent);
+                        measuredBA.this.startActivity(settingsIntent);
                     }
                 };
-        settingsButton.setOnClickListener(settingsBtnListener);*/
+        settingsButton.setOnClickListener(settingsBtnListener);
 
         Button setCalButton=(Button)findViewById(R.id.setCalibrationButton);
         Button.OnClickListener setCalBtnListener =
@@ -174,7 +174,7 @@ public class LevelMeterActivity2 extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         // Dismiss this dialog.
-                        LevelMeterActivity2.this.setPreferences();
+                        measuredBA.this.setPreferences();
                         finish();
 
                     }
@@ -195,7 +195,7 @@ public class LevelMeterActivity2 extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            LevelMeterActivity2.this.mGain *= Math.pow(10, gainIncrement / 20.0);
+            measuredBA.this.mGain *= Math.pow(10, gainIncrement / 20.0);
             mDifferenceFromNominal += gainIncrement;
             DecimalFormat df = new DecimalFormat("##.# dB");
             mGainTextView.setText(df.format(mDifferenceFromNominal));
@@ -283,7 +283,7 @@ public class LevelMeterActivity2 extends AppCompatActivity {
         recorder.startRecording();
         isRecording = true;
 
-        //fft = new DoubleFFT_1D(BLOCK_SIZE_FFT);
+        fft = new DoubleFFT_1D(BLOCK_SIZE_FFT);
 
         recordingThread = new Thread(new Runnable() {
             @Override
@@ -342,7 +342,7 @@ public class LevelMeterActivity2 extends AppCompatActivity {
                         }
 
                         // FFT
-                        //fft.complexForward(audioDataForFFT);
+                        fft.complexForward(audioDataForFFT);
 
                         // Magsum non pesati
                         double linearFftGlobal = 0;
@@ -687,7 +687,7 @@ public class LevelMeterActivity2 extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        micInput.stop();
+        //micInput.stop();
         Log.d(TAG, "onDestroy() called");
     }
     private void setPreferences() {

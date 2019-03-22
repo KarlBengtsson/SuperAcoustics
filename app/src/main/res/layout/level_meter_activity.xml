@@ -18,7 +18,7 @@
             android:gravity="right"
             android:text="0"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="80dp"
+            android:textSize="60dp"
             android:typeface="monospace" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:gravity="center_horizontal"
             android:text="."
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="80dp"
+            android:textSize="60dp"
             android:typeface="monospace" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="80dp"
+            android:textSize="60dp"
             android:typeface="monospace" />
 
         <TextView
@@ -45,9 +45,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="dB"
+            android:text="dB(A)"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="80dp"
+            android:textSize="60dp"
             android:typeface="monospace" />
 
     </LinearLayout>

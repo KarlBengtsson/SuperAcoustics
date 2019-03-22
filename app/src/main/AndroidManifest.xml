@@ -34,17 +34,26 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:parentActivityName=".FileName">
-        </activity>
-
-        <activity
-            android:name=".LevelMeterActivity2"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".measuredBA"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
+
+        <activity
+            android:name=".LevelMeterActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
+
         <activity
             android:name=".Settings"
             android:screenOrientation="portrait"

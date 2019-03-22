@@ -43,7 +43,7 @@ import android.util.Log;
  *
  */
 public class MicrophoneInput implements Runnable{
-    int mSampleRate = 8000;
+    int mSampleRate = 44100;
     int mAudioSource = MediaRecorder.AudioSource.VOICE_COMMUNICATION;
     final int mChannelConfig = AudioFormat.CHANNEL_IN_MONO;
     final int mAudioFormat = AudioFormat.ENCODING_PCM_16BIT;
@@ -103,7 +103,7 @@ public class MicrophoneInput implements Runnable{
                     mSampleRate,  // 8000
                     mChannelConfig, // 16
                     mAudioFormat, // 2
-                    buffer1000msSize); //8000 mycket bättre med högre samplerate!!!
+                    buffer1000msSize); //8000
 
             recorder.startRecording();
 
