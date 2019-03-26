@@ -62,7 +62,7 @@
     <TextView
         android:id="@+id/textView2"
         android:layout_width="287dp"
-        android:layout_height="100dp"
+        android:layout_height="10dp"
         android:layout_marginTop="5dp"
         android:text="@string/adjust_sensitivity_instructions" />
 
@@ -129,15 +129,15 @@
         android:layout_marginTop="10dp"
         android:text="Settings" />
 
-    <view class="com.example.myapplication.BarLevelDrawable"
-        android:id="@+id/bar_level_drawable_view"
-        android:layout_width="fill_parent"
-        android:layout_height="48dp" ></view>
-
     <Button
         android:id="@+id/setCalibrationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/setCalibrationButton" />
+
+    <com.example.myapplication.PlotFFT
+        android:id="@+id/plotFFT"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

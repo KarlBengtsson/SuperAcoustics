@@ -47,22 +47,25 @@ public class measuredBA extends AppCompatActivity {
         //implements MicrophoneInputListener {
 
     //-------------------------------- Calibrate -----------------------------------------------------
-    TextView mdBTextView;
-    TextView mdBFractionTextView;
-    BarLevelDrawable mBarLevel;
+    private TextView mdBTextView;
+    private TextView mdBFractionTextView;
+    private BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
+    private PlotFFT plotFFT;
+    private final float[] dbFftTimeDisplay = new float[BLOCK_SIZE_FFT / 2];
+    private final float[] dbFftATimeDisplay = new float[BLOCK_SIZE_FFT / 2];
 
     //-------------------------------- Measure SPL -----------------------------------------------
-    TextView seconds;
-    TextView measuredSPL1;
-    TextView measuredSPL2;
-    TextView measuredSPL3;
-    TextView measuredSPL4;
-    private ArrayList<Integer> signal1 = new ArrayList<>(); //används i plot functionen
-    private Button startButton, stopButton, finishMeasure, plotT, plotFFT;
+    private TextView seconds;
+    private TextView measuredSPL1;
+    private TextView measuredSPL2;
+    private TextView measuredSPL3;
+    private TextView measuredSPL4;
+    private final ArrayList<Integer> signal1 = new ArrayList<>(); //används i plot functionen
+    private Button startButton, stopButton, finishMeasure, plotT;
     private int counter4 = 0;
     private int average1, average2, average11, average12, average13, average14;
-    public String path = "";
+    private String path = "";
     private String FILE_NAME = "TestRoom";
     private String REPOSITORY_NAME;
     private int tOrFFT;
@@ -89,19 +92,20 @@ public class measuredBA extends AppCompatActivity {
     private final static int BLOCK_SIZE = AudioRecord.getMinBufferSize(
             RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING)
             / BYTES_PER_ELEMENT;
-    private final static int BLOCK_SIZE_FFT = 1764;
+    private final static int BLOCK_SIZE_FFT =(int) Math.ceil(((double) (highestPowerof2(RECORDER_SAMPLERATE))+1)/2);
+    /*private final static int BLOCK_SIZE_FFT = 4096;*/
     private final static int NUMBER_OF_FFT_PER_SECOND = RECORDER_SAMPLERATE
             / BLOCK_SIZE_FFT;
 
     private final static double FREQRESOLUTION = ((double) RECORDER_SAMPLERATE)
             / BLOCK_SIZE_FFT;
 
-    private double[] weightedA = new double[BLOCK_SIZE_FFT];
+    private final double[] weightedA = new double[BLOCK_SIZE_FFT];
     private Thread recordingThread = null;
     private boolean isRecording = false;
     private DoubleFFT_1D fft = null;
 
-    private float [] THIRD_OCTAVE = {16, 20, 25, 31.5f, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500,
+    private final float [] THIRD_OCTAVE = {16, 20, 25, 31.5f, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500,
             630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000};
     String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
             "630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
@@ -125,18 +129,38 @@ public class measuredBA extends AppCompatActivity {
 
         // Get a handle that will be used in async thread post to update the
         // display.
-        mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
+        mBarLevel = findViewById(R.id.bar_level_drawable_view);
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(gain));
-        // Toggle Button handler.
+
+
+            // Setting the PLOTFFT layout
+            plotFFT = (PlotFFT) findViewById(R.id.plotFFT);
+
+
+            // onclicklistener for PLOTVIEW
+            plotFFT.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    plotFFT.setVisibility(View.VISIBLE);
+                }
+            });
+
+
+
+
+
+
+
+            // Toggle Button handler.
 
         //final int finalCountTimeDisplay = (int) (timeDisplay * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeDisplay = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeDisplay = (int) (0.1 * NUMBER_OF_FFT_PER_SECOND);
 
         //final int finalCountTimeLog = (int) (timeLog * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeLog = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeLog = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
 
         final ToggleButton onOffButton=(ToggleButton)findViewById(
                 R.id.on_off_toggle_button);
@@ -283,8 +307,8 @@ public class measuredBA extends AppCompatActivity {
                 public void onClick(View v) {
                     stopButton.setEnabled(false);
                     startButton.setEnabled(true);
-                    plotFFT.setEnabled(true);
-                    plotT.setEnabled(true);
+/*                    plotFFT.setEnabled(true);
+                    plotT.setEnabled(true);*/
                     seconds.setText("05");
 
                     // if (Room == 1) {
@@ -359,7 +383,7 @@ public class measuredBA extends AppCompatActivity {
         startActivity(plotIntent);
     }
 
-    public String checkDigit(int number) {
+    private String checkDigit(int number) {
         return number <= 9 ? "0" + number : String.valueOf(number);
     }
 
@@ -367,9 +391,9 @@ public class measuredBA extends AppCompatActivity {
      * Inner class to handle press of gain adjustment buttons.
      */
     private class DbClickListener implements Button.OnClickListener {
-        private float gainIncrement;
+        private final float gainIncrement;
 
-        public DbClickListener(float gainIncrement) {
+        DbClickListener(float gainIncrement) {
             this.gainIncrement = gainIncrement;
         }
 
@@ -808,6 +832,30 @@ public class measuredBA extends AppCompatActivity {
                                 }
                             }*/
 
+                            // Calculate what to display in FFT plot
+                            for (int i = 0; i < dbFftTimeDisplay.length; i++) {
+                                linearFftTimeDisplay[i] +=  Math.pow(10, (float) dbFft[i] / 10f);
+                                linearFftATimeDisplay[i] +=  Math.pow(10, (float) dbFftA[i] / 10f);
+                            }
+
+
+                            // FFT plot
+                            for (int i = 0; i < dbFftTimeDisplay.length; i++) {
+                                dbFftTimeDisplay[i] =  10 *  (float) Math.log10(linearFftTimeDisplay[i] / finalCountTimeDisplay);
+                                dbFftATimeDisplay[i] =  10 *  (float) Math.log10(linearFftATimeDisplay[i] / finalCountTimeDisplay);
+                                linearFftTimeDisplay[i] = 0;
+                                linearFftATimeDisplay[i] = 0;
+                            }
+
+                            if (plotFFT.getVisibility() == View.VISIBLE) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        plotFFT.setDataPlot(BLOCK_SIZE_FFT, FREQRESOLUTION, dbFftTimeDisplay, dbFftATimeDisplay);
+                                    }
+                                });
+                            }
+
                         }
 
                     }
@@ -974,6 +1022,21 @@ public class measuredBA extends AppCompatActivity {
         stopRecording();
         finish();
         super.onBackPressed();
+    }
+
+    private static int highestPowerof2(int n)
+    {
+        int res = 0;
+        for (int i = n; i >= 1; i--)
+        {
+            // If i is a power of 2
+            if ((i & (i - 1)) == 0)
+            {
+                res = i;
+                break;
+            }
+        }
+        return res;
     }
 
 
