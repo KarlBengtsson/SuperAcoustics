@@ -90,4 +90,10 @@
     <string name="Start">Start: </string>
     <string name="Duration">Duration (t): </string>
     <string name="DurationLogFile">Duration:</string>
+    <string name="resultSRITextView">Not Calculated</string>
+    <string name="room_1_spl">Room 1 SPL</string>
+    <string name="room_2_spl">Room 2 SPL</string>
+    <string name="t60_room_2">T60 Room 2</string>
+    <string name="sound_reduction_index">Sound Reduction Index</string>
+    <string name="_0">0</string>
 </resources>

@@ -157,10 +157,10 @@ public class measuredBA extends AppCompatActivity {
             // Toggle Button handler.
 
         //final int finalCountTimeDisplay = (int) (timeDisplay * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeDisplay = (int) (0.1 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeDisplay = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
 
         //final int finalCountTimeLog = (int) (timeLog * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeLog = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeLog = (int) (1.0 * NUMBER_OF_FFT_PER_SECOND);
 
         final ToggleButton onOffButton=(ToggleButton)findViewById(
                 R.id.on_off_toggle_button);

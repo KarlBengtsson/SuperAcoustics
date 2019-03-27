@@ -100,8 +100,9 @@ public class PlotFFT extends View {
 
 
         // color with different style
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        String display_color = preferences.getString("display_color", "2");
+        /*final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        String display_color = preferences.getString("display_color", "2");*/
+        String display_color = "1";
 
         if (display_color.equals("1")){
             paintLabelsMaxRectFill.setColor(getResources().getColor(R.color.app_grey_light_light));
@@ -134,7 +135,8 @@ public class PlotFFT extends View {
             paintLines1.setColor(getResources().getColor(R.color.app_grey_dark));
         }
 
-        String timeDisplayString = preferences.getString("timeDisplay", "1");
+        /*String timeDisplayString = preferences.getString("timeDisplay", "1");*/
+        String timeDisplayString = "1";
         if  (timeDisplayString.equals("0.5")) {
             LAeqTimeDisplay = this.getContext().getResources().getString(R.string.LAeqTimeDisplay_label) + "(0.5 s)";
             LeqTimeDisplay = this.getContext().getResources().getString(R.string.LeqTimeDisplay_label) + "(0.5 s)";
