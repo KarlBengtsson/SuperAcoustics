@@ -3,4 +3,30 @@
     <color name="colorPrimary">#C6DFDC</color>
     <color name="colorPrimaryDark">#346760</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="app_white">#FFFFFF</color>
+    <color name="app_grey_light_light">#FAFAFA</color>
+    <color name="app_grey_light">#CCCCCC</color>
+    <color name="app_grey_dark">#808080</color>
+    <color name="app_grey_dark_dark">#404040</color>
+    <color name="app_black">#000000</color>
+
+
+    <!--<color name="background">#F2F2F2</color>   c60000-->
+    <color name="background_border">#A4A4A4</color>
+    <!--<color name="text">#6E6E6E</color>-->
+    <!--<color name="red">#b30000</color>-->
+
+    <color name="plot_text">#6E6E6E</color>
+    <color name="plot_red">#f61d1d</color>
+    <color name="plot_grey_light">#CCCCCC</color>
+    <color name="plot_grey_dark">#6E6E6E</color>
+    <color name="plot_green">#00802b </color>
+    <color name="plot_blue">#0000ff</color>
+    <color name="plot_violet">#b366ff</color>01A9DB
+    <color name="plot_cyan">#01A9DB</color>
+    <color name="app_zero">#66004d</color>
+    <color name="app_one">#b30086</color>
+    <color name="app_two">#ff33cc</color>
+
 </resources>

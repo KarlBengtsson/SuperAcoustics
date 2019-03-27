@@ -215,7 +215,7 @@ public class Plot  extends AppCompatActivity {
         File file = new File(path + "/"+"FrequencyData"+Integer.toString(Room)+Integer.toString(counter4)+".txt");
         String[] saveText = new String[freqs.length-2];
         for (int i = 0; i<freqs.length-2; i++) {
-          saveText[i] = Double.toString(freqs[i+2])+ " Hz    " + Double.toString(Math.round(banddB[i+2])) + " dB" + "\n";
+          saveText[i] = Double.toString(freqs[i+2])+ " Hz    " + Double.toString((double) Math.round(banddB[i+2] * 1000d)/1000d) + " dB" + "\n";
         }
 
         Toast.makeText(getApplicationContext(),"Saved to "+ getFilesDir() + "/"+ "FrequencyData" + Integer.toString(Room),Toast.LENGTH_LONG).show();

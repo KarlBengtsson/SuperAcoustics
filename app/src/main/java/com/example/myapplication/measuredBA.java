@@ -14,7 +14,6 @@
 
 package com.example.myapplication;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -42,6 +41,8 @@ import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 //Todo study and understand this implementation of FFT
 
+//Todo study and understand this implementation of FFT
+
 /**
  * Detta är ett försök till att mäta dBA istället för db. görs på samma sätt som i
  * openoise-meter appen
@@ -51,28 +52,31 @@ public class measuredBA extends AppCompatActivity {
         //implements MicrophoneInputListener {
 
     //-------------------------------- Calibrate -----------------------------------------------------
-    TextView mdBTextView;
-    TextView mdBFractionTextView;
-    BarLevelDrawable mBarLevel;
+    private TextView mdBTextView;
+    private TextView mdBFractionTextView;
+    private BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
+    private PlotFFT plotFFT;
+    private final float[] dbFftTimeDisplay = new float[BLOCK_SIZE_FFT / 2];
+    private final float[] dbFftATimeDisplay = new float[BLOCK_SIZE_FFT / 2];
 
     //-------------------------------- Measure SPL -----------------------------------------------
-    TextView seconds;
-    TextView measuredSPL1;
-    TextView measuredSPL2;
-    TextView measuredSPL3;
-    TextView measuredSPL4;
-    private ArrayList<Integer> signal1 = new ArrayList<>(); //används i plot functionen
-    private Button startButton, stopButton, finishMeasure, plotT, plotFFT;
+    private TextView seconds;
+    private TextView measuredSPL1;
+    private TextView measuredSPL2;
+    private TextView measuredSPL3;
+    private TextView measuredSPL4;
+    private final ArrayList<Integer> signal1 = new ArrayList<>(); //används i plot functionen
+    private Button startButton, stopButton, finishMeasure, plotT;
     private int counter4 = 0;
     private int average1, average2, average11, average12, average13, average14;
-    public String path = "";
+    private String path = "";
     private String FILE_NAME = "TestRoom";
     private String REPOSITORY_NAME;
     private int tOrFFT;
 
     //--------------------------------------------------------------------------------------------
-    double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
+    double mOffsetdB = 30;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
     // For displaying error in calibration.
     private int mSampleRate;  // The audio sampling rate to use.
     // Variables to monitor UI update and check for slow updates.
@@ -93,23 +97,23 @@ public class measuredBA extends AppCompatActivity {
     private final static int BLOCK_SIZE = AudioRecord.getMinBufferSize(
             RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING)
             / BYTES_PER_ELEMENT;
-    private final static int BLOCK_SIZE_FFT = 1764;
+    private final static int BLOCK_SIZE_FFT =(int) Math.ceil(((double) (highestPowerof2(RECORDER_SAMPLERATE))+1)/4);
+    /*private final static int BLOCK_SIZE_FFT = 4096;*/
     private final static int NUMBER_OF_FFT_PER_SECOND = RECORDER_SAMPLERATE
             / BLOCK_SIZE_FFT;
 
     private final static double FREQRESOLUTION = ((double) RECORDER_SAMPLERATE)
             / BLOCK_SIZE_FFT;
 
-    private double[] weightedA = new double[BLOCK_SIZE_FFT];
+    private final double[] weightedA = new double[BLOCK_SIZE_FFT];
     private Thread recordingThread = null;
     private boolean isRecording = false;
     private DoubleFFT_1D fft = null;
 
-    private float [] THIRD_OCTAVE = {16, 20, 25, 31.5f, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500,
+    private final float [] THIRD_OCTAVE = {16, 20, 25, 31.5f, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500,
             630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000};
     String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
             "630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
-    private String [] saveText;
     private double filter;
     private double dbATimeDisplay; //Final Result
     private float gain = 0;
@@ -135,24 +139,45 @@ public class measuredBA extends AppCompatActivity {
         readPreferences();
 
         if (Room == 0) {
+
         // Read the layout and construct.
         setContentView(R.layout.level_meter_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Get a handle that will be used in async thread post to update the
         // display.
-        mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
+        mBarLevel = findViewById(R.id.bar_level_drawable_view);
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         mGainTextView = (TextView)findViewById(R.id.gain);
         mGainTextView.setText(Double.toString(gain));
-        // Toggle Button handler.
+
+
+            // Setting the PLOTFFT layout
+            plotFFT = (PlotFFT) findViewById(R.id.plotFFT);
+
+
+            // onclicklistener for PLOTVIEW
+            plotFFT.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    plotFFT.setVisibility(View.VISIBLE);
+                }
+            });
+
+
+
+
+
+
+
+            // Toggle Button handler.
 
         //final int finalCountTimeDisplay = (int) (timeDisplay * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeDisplay = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeDisplay = (int) (0.2 * NUMBER_OF_FFT_PER_SECOND);
 
         //final int finalCountTimeLog = (int) (timeLog * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeLog = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeLog = (int) (1.0 * NUMBER_OF_FFT_PER_SECOND);
 
         final ToggleButton onOffButton=(ToggleButton)findViewById(
                 R.id.on_off_toggle_button);
@@ -162,12 +187,12 @@ public class measuredBA extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (onOffButton.isChecked()) {
-                            //file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+Integer.toString(counter4)+".txt");
-                            saveText = new String[32];
+                            onOffButton.setTextColor(getApplication().getResources().getColor(R.color.plot_red));
                             precalculateWeightedA();
                             startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
                         } else {
                             stopRecording();
+                            onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
                         }
                     }
                 };
@@ -248,13 +273,14 @@ public class measuredBA extends AppCompatActivity {
 
             final int finalCountTimeDisplay = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
 
-            final int finalCountTimeLog = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
+            final int finalCountTimeLog = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
 
             ToggleButton.OnClickListener tbListener =
                     new ToggleButton.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (onOffButton.isChecked()) {
+                                onOffButton.setTextColor(getApplication().getResources().getColor(R.color.plot_red));
                                 //plotFFT.setEnabled(false);
                                 //plotT.setEnabled(false);
                                 counter4++;
@@ -279,6 +305,9 @@ public class measuredBA extends AppCompatActivity {
                                 }
                                 startButton.setEnabled(false);
                                 finishMeasure.setEnabled(true);
+                                onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
+                                //plotFFT.setEnabled(true);
+                                //plotT.setEnabled(true);
                                 stopRecording();
                                 seconds.setText("05");
                             }
@@ -429,7 +458,7 @@ public class measuredBA extends AppCompatActivity {
         startActivity(plotIntent);
     }
 
-    public String checkDigit(int number) {
+    private String checkDigit(int number) {
         return number <= 9 ? "0" + number : String.valueOf(number);
     }
 
@@ -437,9 +466,9 @@ public class measuredBA extends AppCompatActivity {
      * Inner class to handle press of gain adjustment buttons.
      */
     private class DbClickListener implements Button.OnClickListener {
-        private float gainIncrement;
+        private final float gainIncrement;
 
-        public DbClickListener(float gainIncrement) {
+        DbClickListener(float gainIncrement) {
             this.gainIncrement = gainIncrement;
         }
 
@@ -480,8 +509,6 @@ public class measuredBA extends AppCompatActivity {
     }
 
 
-
-
     private void precalculateWeightedA() {
         for (int i = 0; i < BLOCK_SIZE_FFT; i++) {
             double actualFreq = FREQRESOLUTION * i;
@@ -508,9 +535,10 @@ public class measuredBA extends AppCompatActivity {
 
     private void startRecording(final float gain, final int finalCountTimeDisplay, final int finalCountTimeLog) {
 
-        recorder = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,
+        recorder = new AudioRecord(MediaRecorder.AudioSource.UNPROCESSED,
                 RECORDER_SAMPLERATE, RECORDER_CHANNELS,
                 RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
+
 
         recorder.startRecording();
         isRecording = true;
@@ -572,7 +600,7 @@ public class measuredBA extends AppCompatActivity {
                     // (> 100 dB) and low lows (10 dB) due perhaps to the initial activation of the device
                     initial_delay++;
 
-                    if (initial_delay > 20) {
+                    if (initial_delay > 5) {
 
                         for (int i = 0, j = 0; i < BLOCK_SIZE_FFT; i++, j += 2) {
 
@@ -640,6 +668,7 @@ public class measuredBA extends AppCompatActivity {
                             linearFftAGlobal += Math.pow(10, (float) dbFftA[i] / 10f);
 
                             float linearFft = (float) Math.pow(10, (float) dbFft[i] / 10f);
+
 
                             if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 17.8f)) {
                                 linearBandCount[0] += 1;
@@ -829,15 +858,19 @@ public class measuredBA extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if (Room != 0) {
+                                        // The bar has an input range of [0.0 ; 1.0] and 10 segments.
+                                        // Each LED corresponds to 6 dB.
+                                        mBarLevel.setLevel((-mOffsetdB+dbATimeDisplay) / 60);
+                                    }
+
+
 
                                     DecimalFormat df = new DecimalFormat("##");
                                     mdBTextView.setText(df.format(dbATimeDisplay));
-                                    //mdBTextView.setText(df.format(dbFftAGlobal));
-
 
                                     DecimalFormat df_fraction = new DecimalFormat("#");
                                     int one_decimal = (int) (Math.round(Math.abs(dbATimeDisplay * 10))) % 10;
-                                    //int one_decimal = (int) (Math.round(Math.abs(dbFftAGlobal * 10))) % 10;
                                     mdBFractionTextView.setText(Integer.toString(one_decimal));
                                 }
                             });
@@ -854,15 +887,12 @@ public class measuredBA extends AppCompatActivity {
                         if (indexTimeLog < finalCountTimeLog) {
                             indexTimeLog++;
                         } else {
-                            //Todo Här är datan som ska sparas!!!!!!!!
                             final double dbTimeLog = 10 * Math.log10(linearTimeLog / finalCountTimeLog);
                             final double dbATimeLog = 10 * Math.log10(linearATimeLog / finalCountTimeLog);
-                            //dbATimeLog ska sparas!!!!!!!!
 
                             final double[] dbBandTimeLog = new double[THIRD_OCTAVE.length];
                             for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                                 dbBandTimeLog[i] = 10 * Math.log10(linearBandTimeLog[i] / finalCountTimeLog);
-                                //dbBandTimeLog[i] ska sparas!!!!!!!!!!!
                                 linearBandTimeLog[i] = 0;
                             }
                             // part for bands without values
@@ -874,8 +904,6 @@ public class measuredBA extends AppCompatActivity {
                             indexTimeLog = 1;
                             linearTimeLog = 0;
                             linearATimeLog = 0;
-
-                            //Todo Write data to file, calculate average 11, 12, 13, 14.
 
                             // Write file
                             /*if (buttonLog.getText().toString().equals(buttonLogTextStop)) {
@@ -895,6 +923,32 @@ public class measuredBA extends AppCompatActivity {
                                     throw new RuntimeException(e);
                                 }
                             }*/
+
+                        if (Room == 0){
+                            // Calculate what to display in FFT plot
+                            for (int i = 0; i < dbFftTimeDisplay.length; i++) {
+                                linearFftTimeDisplay[i] +=  Math.pow(10, (float) dbFft[i] / 10f);
+                                linearFftATimeDisplay[i] +=  Math.pow(10, (float) dbFftA[i] / 10f);
+                            }
+
+
+                            // FFT plot
+                            for (int i = 0; i < dbFftTimeDisplay.length; i++) {
+                                dbFftTimeDisplay[i] =  10 *  (float) Math.log10(linearFftTimeDisplay[i] / finalCountTimeDisplay);
+                                dbFftATimeDisplay[i] =  10 *  (float) Math.log10(linearFftATimeDisplay[i] / finalCountTimeDisplay);
+                                linearFftTimeDisplay[i] = 0;
+                                linearFftATimeDisplay[i] = 0;
+                            }
+
+                            if (plotFFT.getVisibility() == View.VISIBLE) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        plotFFT.setDataPlot(BLOCK_SIZE_FFT, FREQRESOLUTION, dbFftTimeDisplay, dbFftATimeDisplay);
+                                    }
+                                });
+                            }
+                        }
 
                         }
 
@@ -922,8 +976,6 @@ public class measuredBA extends AppCompatActivity {
             recorder = null;
             recordingThread = null;
         }
-
-        //Save(file, saveText);
     }
 
     /**
@@ -1064,6 +1116,21 @@ public class measuredBA extends AppCompatActivity {
     private String dBformat(double dB) {
         // stop the recording log file
         return String.format(Locale.ENGLISH, "%.1f", dB);
+    }
+
+    private static int highestPowerof2(int n)
+    {
+        int res = 0;
+        for (int i = n; i >= 1; i--)
+        {
+            // If i is a power of 2
+            if ((i & (i - 1)) == 0)
+            {
+                res = i;
+                break;
+            }
+        }
+        return res;
     }
 
 

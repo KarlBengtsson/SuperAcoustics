@@ -26,6 +26,7 @@ public class ViewResult extends AppCompatActivity {
     private TextView resultSPL2;
     private TextView resultCal;
     private TextView resultreverb;
+    private TextView resultSRI;
 
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
     // The Google ASR input requirements state that audio input sensitivity
@@ -46,15 +47,17 @@ public class ViewResult extends AppCompatActivity {
     private double volume;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.short_results);
+        setContentView(R.layout.result_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        resultSPL1 = (TextView)findViewById(R.id.resultTextSpl1);
-        resultSPL2 = (TextView)findViewById(R.id.resultTextSpl2);
+        resultSPL1 = (TextView)findViewById(R.id.resultRoom1TextView);
+        resultSPL2 = (TextView)findViewById(R.id.resultRoom2TextView);
         resultCal = (TextView)findViewById(R.id.resultTextCal);
-        resultreverb = (TextView)findViewById(R.id.resultTextRT);
+        resultreverb = (TextView)findViewById(R.id.resultRTTextView);
+        resultSRI = (TextView)findViewById(R.id.resultSRITextView);
         readPreferences();
         calcResult();
     }
@@ -64,7 +67,18 @@ public class ViewResult extends AppCompatActivity {
         double X = 10*Math.log10(sArea/area);
         double R = result1 - result2 + X;
         R = Math.round(R * 10000d) / 10000d;
-        resultCal.setText(Double.toString(R) + " dB");
+
+
+        // Loading the saved txt file and reading into viewResult window
+
+        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
+        String [] saveText = Load(file);
+        String stringen = "Frequency:    Sound Reduction index:  \n";
+        for (int i = 0; i<1000; i++){
+            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
+        }
+        resultSRI.setText(stringen);
+        /*resultSRI.setText(Double.toString(R) + " dB");*/
     }
 
     private void readPreferences() {
@@ -79,6 +93,7 @@ public class ViewResult extends AppCompatActivity {
         volume = preferences.getInt("volume", 0);
         sArea = preferences.getInt("area", 0);
         reverb = preferences.getFloat("reverb", 0);
+        path = preferences.getString("loadpath",null);
 
         resultSPL1.setText(dBformat(result1) + " dB");
         resultSPL2.setText(dBformat(result2) + " dB");
@@ -157,7 +172,7 @@ public class ViewResult extends AppCompatActivity {
         BufferedReader br = new BufferedReader(isr);
 
         String test;
-        int anzahl=0;
+        int anzahl=1;
         try
         {
             while ((test=br.readLine()) != null)
@@ -181,7 +196,8 @@ public class ViewResult extends AppCompatActivity {
         {
             while((line=br.readLine())!=null)
             {
-                array[i] = line;
+                String str = line;
+                array[i] = str.replace("[","").replace(",","").replace("]","");
                 i++;
             }
         }

@@ -6,63 +6,86 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/dBTextView"
-            android:layout_width="107dp"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:gravity="right"
-            android:text="0"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="60dp"
-            android:typeface="monospace" />
+            android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="26dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="."
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="60dp"
-            android:typeface="monospace" />
+            <TextView
+                android:id="@+id/dBTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="right"
+                android:text="@string/_0"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="36sp" />
 
-        <TextView
-            android:id="@+id/dBFractionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="60dp"
-            android:typeface="monospace" />
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="26dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/blank"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="36sp" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/dBFractionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_0"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="@string/db_a"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="36sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/settingsButton"
+            style="@android:style/Widget.Button"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:text="dB(A)"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="60dp"
-            android:typeface="monospace" />
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:text="@string/settings" />
 
     </LinearLayout>
 
     <ToggleButton
         android:id="@+id/on_off_toggle_button"
-        android:layout_width="100dp"
+        style="@android:style/Widget.Button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="On" />
+        android:text="@string/on"
+        android:textOff="OFF"
+        android:textOn="ON" />
+
+    <Button
+        android:id="@+id/setCalibrationButton"
+        style="@android:style/Widget.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setCalibrationButton" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="287dp"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="@string/adjust_sensitivity_instructions" />
 
@@ -74,6 +97,7 @@
 
         <Button
             android:id="@+id/minus_5_db_button"
+            style="@android:style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.10"
@@ -81,6 +105,7 @@
 
         <Button
             android:id="@+id/minus_1_db_button"
+            style="@android:style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.10"
@@ -88,6 +113,7 @@
 
         <Button
             android:id="@+id/plus_1_db_button"
+            style="@android:style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.10"
@@ -95,6 +121,7 @@
 
         <Button
             android:id="@+id/plus_5_db_button"
+            style="@android:style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.10"
@@ -111,33 +138,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="@string/gain_error_text" />
+            android:text="@string/gain_error_text"
+            android:layout_marginStart="5dp" />
 
         <TextView
             android:id="@+id/gain"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_weight="0.40"
             android:text="@string/gain" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/settingsButton"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Settings" />
-
-    <view class="com.example.myapplication.BarLevelDrawable"
-        android:id="@+id/bar_level_drawable_view"
-        android:layout_width="fill_parent"
-        android:layout_height="48dp" ></view>
-
-    <Button
-        android:id="@+id/setCalibrationButton"
+    <com.example.myapplication.PlotFFT
+        android:id="@+id/plotFFT"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/setCalibrationButton" />
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:visibility="visible" />
 
 </LinearLayout>

@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">LevelMeter</string>
+    <string name="app_name">SuperAcoustics</string>
     <string name="toast_message">On or Off</string>
     <string name="settings_ok">ok</string>
     <string name="adjust_sensitivity">Calibrate sensitivity</string>
     <string name="adjust_sensitivity_instructions">To calibrate sensitivity you will need a steady sound source and a calibrated SPL meter. Turn on the sound source and the reference meter. Adjust the sensitivity until the two dB readings match. When satisfied, press SET CALIBRATION to save.</string>
-    <string name="minus_5_db">-5\ndB</string>
-    <string name="minus_1_db">-1\ndB</string>
-    <string name="plus_1_db">+1\ndB</string>
-    <string name="plus_5_db">+5\ndB</string>
+    <string name="minus_5_db">-5 dB</string>
+    <string name="minus_1_db">-1 dB</string>
+    <string name="plus_1_db">+1 dB</string>
+    <string name="plus_5_db">+5 dB</string>
     <string name="gain_error_text">Sensitivity correction:</string>
     <string name="gain">0.0</string>
     <string name="sample_rate">Sample Rate</string>
@@ -44,4 +44,60 @@
     <string name="volume">Enter the dimensions of the receiving room.</string>
     <string name="area">Surface area of the wall in m^2</string>
     <string name="plotFFT">Plot FFT</string>
+
+
+    <!-- Test Strings -->
+    <string name="LayoutSimpleLine1">SOUND LEVEL</string>
+    <string name="LayoutSimpleLine2">Refresh:</string>
+    <string name="LayoutSimpleLevel">0.0</string>
+
+    <string name="StartingTimeRunning"></string>
+    <string name="DurationTimeRunning"></string>
+    <string name="ButtonRunning">RESET</string>
+
+    <string name="LMax_label">LAMax</string>
+    <string name="LAeqTimeDisplay_label">LAeq</string>
+    <string name="LAeqTimeDisplay_label_simple">Sound level</string>
+    <string name="LeqTimeDisplay_label">Leq</string>
+    <string name="time_display_label_simple">Refresh:</string>
+    <string name="interface_label">Stai visualizzando l\'interfaccia semplice, puoi passare a quella Avanzata nelle impostazioni</string>
+    <string name="LMin_label">LAMin</string>
+    <string name="LMax">0</string>
+    <string name="LAeqTimeDisplay">0</string>
+    <string name="LMin">0</string>
+    <string name="LAeqRunning_label">LAeq(t)</string>
+    <string name="LAeqRunning"></string>
+
+    <string name="level">0</string>
+    <string name="level_label"></string>
+    <string name="level_label_dBA">dB(A)</string>
+
+    <string name="ButtonLogTextStart">SAVE</string>
+    <string name="ButtonLogTextStop">STOP</string>
+
+    <string name="StartingTimeLog"></string>
+    <string name="DurationTimeLog"></string>
+    <string name="StartingTimeLogText">You are not saving data</string>
+    <string name="DurationTimeLogText">You\'ll save data every:</string>
+    <string name="SavingText">You\'re saving data</string>
+
+    <string name="plot_label_SLMHistory">Storia temporale livello Live</string>
+    <string name="plot_label_SLM">Livelli a barra</string>
+    <string name="plot_label_ThirdOctave">Terzi di Ottava</string>
+    <string name="plot_label_FFT">FFT</string>
+
+    <string name="Days">days</string>
+    <string name="Start">Start: </string>
+    <string name="Duration">Duration (t): </string>
+    <string name="DurationLogFile">Duration:</string>
+    <string name="resultSRITextView">Not Calculated</string>
+    <string name="room_1_spl">Room 1 SPL</string>
+    <string name="room_2_spl">Room 2 SPL</string>
+    <string name="t60_room_2">T60 Room 2</string>
+    <string name="sound_reduction_index">Sound Reduction Index</string>
+    <string name="blank">.</string>
+    <string name="_0">0</string>
+    <string name="db_a">dB(A)</string>
+    <string name="settings">Settings</string>
+    <string name="on">On</string>
 </resources>
