@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 public class ViewResult extends AppCompatActivity {
 
@@ -38,8 +39,8 @@ public class ViewResult extends AppCompatActivity {
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
     private int mSampleRate;  // The audio sampling rate to use.
     private int mAudioSource;  // The audio source to use.
-    private int result1;
-    private int result2;
+    private float result1;
+    private float result2;
     private float reverb;
     private double area;
     private double sArea;
@@ -120,18 +121,22 @@ public class ViewResult extends AppCompatActivity {
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
         gain = preferences.getFloat("mGainDif", 0);
-        result1 = preferences.getInt("mRoom1",0);
-        result2 = preferences.getInt("mRoom2",0);
+        result1 = preferences.getFloat("mRoom1",0);
+        result2 = preferences.getFloat("mRoom2",0);
         volume = preferences.getInt("volume", 0);
         sArea = preferences.getInt("area", 0);
         reverb = preferences.getFloat("reverb", 0);
         path = preferences.getString("loadpath",null);
 
-        resultSPL1.setText(Integer.toString(result1) + " dB");
-        resultSPL2.setText(Integer.toString(result2) + " dB");
+        resultSPL1.setText(dBformat(result1) + " dB");
+        resultSPL2.setText(dBformat(result2) + " dB");
         resultreverb.setText(Float.toString(reverb) + " seconds");
     }
 
+    private String dBformat(double dB) {
+        // stop the recording log file
+        return String.format(Locale.ENGLISH, "%.1f", dB);
+    }
 
 /*    public void readFileFromTxtRoom1() {
         File file = new File(path + "TestFileRoom1.txt");

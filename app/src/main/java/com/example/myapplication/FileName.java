@@ -63,7 +63,6 @@ public class FileName extends Activity {
                         width = Integer.valueOf(widthTextView.getText().toString());
                         volume = height*length*width;
                         area = Integer.valueOf(areaTextView.getText().toString());
-
                         FileName.this.setPreferences();
                         startActivity(intent);
                         finish();
