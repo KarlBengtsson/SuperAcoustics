@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveFile(String number, double[] values ) {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format(number + "%s.txt", df.format(new Date()));
+        String filename = String.format(number + "_%s.txt", df.format(new Date()));
         File path = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName);
         if (!path.exists()) {
             Log.d("My oh my...", "The path doesn't exist, create one? : " + path.mkdirs());

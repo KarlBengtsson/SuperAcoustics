@@ -15,9 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 public class ViewResult extends AppCompatActivity {
@@ -25,8 +22,6 @@ public class ViewResult extends AppCompatActivity {
     // For saving and loading .txt file
 
     public String path;
-    private String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
-            "630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
     private TextView resultSPL1;
     private TextView resultSPL2;
     private TextView resultCal;
@@ -53,45 +48,41 @@ public class ViewResult extends AppCompatActivity {
     private String roomName;
     private File file;
     private int fromCheck;
+    String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
+            "630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.result_activity);
-        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        resultSPL1 = (TextView)findViewById(R.id.resultRoom1TextView);
-        resultSPL2 = (TextView)findViewById(R.id.resultRoom2TextView);
-        resultCal = (TextView)findViewById(R.id.resultTextCal);
-        resultreverb = (TextView)findViewById(R.id.resultRTTextView);
-        resultSRI = (TextView)findViewById(R.id.resultSRITextView);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        resultSPL1 = (TextView) findViewById(R.id.resultRoom1TextView);
+        resultSPL2 = (TextView) findViewById(R.id.resultRoom2TextView);
+        resultCal = (TextView) findViewById(R.id.resultTextCal);
+        resultreverb = (TextView) findViewById(R.id.resultRTTextView);
+        resultSRI = (TextView) findViewById(R.id.resultSRITextView);
         readPreferences();
         if (fromCheck == 1) {
             // Coming from welcomeActivity
-        }
-        else {
+        } else {
             // Coming from "View Results Button"
             path = Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName;
+            roomOneResult();
         }
-        roomOneResult();
-/*        roomTwoResult();
-        reverbResult();
-        calcResult();*/
     }
 
     private void roomOneResult() {
-        DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("SPL_Room1" + "%s.txt", df.format(new Date()));
-        file = new File(path + "/"+filename);
+        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
         String [] saveText = Load(file);
         String stringen = "Frequency:    Sound Pressure Level:  \n";
-        for (int i = 0; i<saveText.length-1; i++){
-            stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
+        for (int i = 0; i<32; i++){
+            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
         }
         resultSPL1.setText(stringen);
     }
 
-/*    private void roomTwoResult() {
+   /* private void roomTwoResult() {
         File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
         String [] saveText = Load(file);
         String stringen = "Frequency:    Sound Pressure Level:  \n";
@@ -99,9 +90,9 @@ public class ViewResult extends AppCompatActivity {
             stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
         }
         resultSPL2.setText(stringen);
-    }*/
+    }
 
-/*    private void reverbResult() {
+    private void reverbResult() {
         File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
         String [] saveText = Load(file);
         String stringen = "Frequency:    Reverberation time:  \n";
@@ -111,24 +102,25 @@ public class ViewResult extends AppCompatActivity {
         resultreverb.setText(stringen);
     }*/
 
-/*    private void calcResult() {
+    private void calcResult(){
         area = (0.163*volume)/reverb;
         double X = 10*Math.log10(sArea/area);
         double R = result1 - result2 + X;
         R = Math.round(R * 10000d) / 10000d;
+            resultSRI.setText(Double.toString(R) + " dB");
 
 
         // Loading the saved txt file and reading into viewResult window
-
+/*
         File file = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName);
         String [] saveText = Load(file);
         String stringen = "Frequency:    Sound Reduction index:  \n";
         for (int i = 0; i<32; i++){
             stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
         }
-        resultSRI.setText(stringen);*/
-        /*resultSRI.setText(Double.toString(R) + " dB");*/
-    //}
+        resultSRI.setText(stringen)*/;
+
+    }
 
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
