@@ -14,6 +14,7 @@
 
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -31,12 +32,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
+
+import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 //Todo study and understand this implementation of FFT
-import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 /**
  * Detta är ett försök till att mäta dBA istället för db. görs på samma sätt som i
@@ -105,9 +109,22 @@ public class measuredBA extends AppCompatActivity {
             630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000};
     String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
             "630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
+    private String [] saveText;
     private double filter;
     private double dbATimeDisplay; //Final Result
-    private float gain = 0; //är detta samma som mdifference from nominal kanske??
+    private float gain = 0;
+    private File file;
+    private double[] total;
+
+    private double[] measuredB = new double[THIRD_OCTAVE.length];
+    private double[] measuredB1 = new double[THIRD_OCTAVE.length];
+    private double[] measuredB2 = new double[THIRD_OCTAVE.length];
+    private double[] measuredB3 = new double[THIRD_OCTAVE.length];
+    private double[] measuredB4 = new double[THIRD_OCTAVE.length];
+    private int measeuredBsize;
+    private double decibelA;
+    private double decibelAfinal;
+    private int decibelAsize;
 
 
     /** Called when the activity is first created. */
@@ -118,7 +135,6 @@ public class measuredBA extends AppCompatActivity {
         readPreferences();
 
         if (Room == 0) {
-
         // Read the layout and construct.
         setContentView(R.layout.level_meter_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -146,6 +162,8 @@ public class measuredBA extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (onOffButton.isChecked()) {
+                            //file = new File(path + "/"+FILE_NAME+Integer.toString(Room)+Integer.toString(counter4)+".txt");
+                            saveText = new String[32];
                             precalculateWeightedA();
                             startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
                         } else {
@@ -228,9 +246,9 @@ public class measuredBA extends AppCompatActivity {
                     R.id.on_off_toggle_button);
             onOffButton.setChecked(false);
 
-            final int finalCountTimeDisplay = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+            final int finalCountTimeDisplay = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
 
-            final int finalCountTimeLog = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+            final int finalCountTimeLog = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
 
             ToggleButton.OnClickListener tbListener =
                     new ToggleButton.OnClickListener() {
@@ -239,18 +257,30 @@ public class measuredBA extends AppCompatActivity {
                             if (onOffButton.isChecked()) {
                                 //plotFFT.setEnabled(false);
                                 //plotT.setEnabled(false);
+                                counter4++;
                                 startButton.setEnabled(true);
                                 finishMeasure.setEnabled(false);
                                 readPreferences();
                                 precalculateWeightedA();
                                 startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
+                                new CountDownTimer(5000, 1000) {
+                                    int time=5;
+                                    public void onTick(long millisUntilFinished) {
+                                        seconds.setText(checkDigit(time));
+                                        time--;
+                                    }
+                                    public void onFinish() {
+                                        seconds.setText("0");
+                                    }
+                                }.start();
                             } else {
+                                if (counter4 > 0) {
+                                    savedBbandmeasure(counter4);
+                                }
                                 startButton.setEnabled(false);
                                 finishMeasure.setEnabled(true);
-                                //plotFFT.setEnabled(true);
-                                //plotT.setEnabled(true);
                                 stopRecording();
-                                //splRoom1 = stopMeasure(splRoom1, counter1);
+                                seconds.setText("05");
                             }
                         }
                     };
@@ -258,23 +288,8 @@ public class measuredBA extends AppCompatActivity {
             startButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    counter4 ++;
                     stopButton.setEnabled(true);
                     startButton.setEnabled(false);
-
-
-                    new CountDownTimer(5000, 1000) {
-                        int time=5;
-                        public void onTick(long millisUntilFinished) {
-                            seconds.setText(checkDigit(time));
-                            time--;
-                        }
-
-                        public void onFinish() {
-                            seconds.setText("0");
-                        }
-
-                    }.start();
                 }
             });
 
@@ -283,10 +298,6 @@ public class measuredBA extends AppCompatActivity {
                 public void onClick(View v) {
                     stopButton.setEnabled(false);
                     startButton.setEnabled(true);
-                    plotFFT.setEnabled(true);
-                    plotT.setEnabled(true);
-                    seconds.setText("05");
-
                     // if (Room == 1) {
                 }
             });
@@ -297,21 +308,19 @@ public class measuredBA extends AppCompatActivity {
 
                         @Override
                         public void onClick(View v) {
+                            Intent returnIntent = new Intent();
                             // Dismiss this dialog.
                             if (counter4 < 4) {
                                 Toast.makeText(getApplicationContext(), "Make 4 measurements in each room before finishing", Toast.LENGTH_LONG).show();
                             } else {
-                                switch (Room) {
-                                    case 1:
-                                        average1 = (average11 + average12 + average13 + average14) / 4;
-                                        break;
-
-                                    case 2:
-                                        average2 = (average11 + average12 + average13 + average14) / 4;
-                                        break;
-                                }
+                                decibelAfinal = decibelAfinal/4;
+                                returnIntent.putExtra("dBA", decibelAfinal);
+                                returnIntent.putExtra("measure1", measuredB1);
+                                returnIntent.putExtra("measure2", measuredB2);
+                                returnIntent.putExtra("measure3", measuredB3);
+                                returnIntent.putExtra("measure4", measuredB4);
                             }
-
+                            setResult(Activity.RESULT_OK,returnIntent);
                             measuredBA.this.setPreferences();
                             finish();
 
@@ -349,6 +358,67 @@ public class measuredBA extends AppCompatActivity {
 
         }
 
+    }
+
+    private void savedBbandmeasure(int counter4) {
+        switch (counter4) {
+            case 1:
+                for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                    measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
+                    measuredB1[i] = measuredB[i];
+                    measuredB[i] = 0;
+                }
+                decibelA = (10 * Math.log10(decibelA / decibelAsize));
+                decibelAfinal += decibelA;
+                measuredSPL1.setText(dBformat(decibelA));
+                decibelA = 0;
+                decibelAsize = 0;
+                measeuredBsize = 0;
+                break;
+
+            case 2: measuredB2 = measuredB;
+                for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                    measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
+                    measuredB2[i] = measuredB[i];
+                    measuredB[i] = 0;
+                }
+                decibelA = (10 * Math.log10(decibelA / decibelAsize));
+                decibelAfinal += decibelA;
+                measuredSPL2.setText(dBformat(decibelA));
+                decibelA = 0;
+                decibelAsize = 0;
+                measeuredBsize = 0;
+                break;
+
+            case 3: measuredB3 = measuredB;
+                for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                    measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
+                    measuredB3[i] = measuredB[i];
+                    measuredB[i] = 0;
+                }
+                decibelA = (10 * Math.log10(decibelA / decibelAsize));
+                decibelAfinal += decibelA;
+                measuredSPL3.setText(dBformat(decibelA));
+                decibelA = 0;
+                decibelAsize = 0;
+                measeuredBsize = 0;
+                break;
+
+            case 4: measuredB4 = measuredB;
+                for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                    measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
+                    measuredB4[i] = measuredB[i];
+                    measuredB[i] = 0;
+                }
+                decibelA = (10 * Math.log10(decibelA / decibelAsize));
+                decibelAfinal += decibelA;
+                measuredSPL4.setText(dBformat(decibelA));
+                decibelA = 0;
+                decibelAsize = 0;
+                measeuredBsize = 0;
+                break;
+
+        }
     }
 
     public void plot () {
@@ -410,6 +480,8 @@ public class measuredBA extends AppCompatActivity {
     }
 
 
+
+
     private void precalculateWeightedA() {
         for (int i = 0; i < BLOCK_SIZE_FFT; i++) {
             double actualFreq = FREQRESOLUTION * i;
@@ -440,13 +512,13 @@ public class measuredBA extends AppCompatActivity {
                 RECORDER_SAMPLERATE, RECORDER_CHANNELS,
                 RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
 
-
         recorder.startRecording();
         isRecording = true;
 
         fft = new DoubleFFT_1D(BLOCK_SIZE_FFT);
 
         recordingThread = new Thread(new Runnable() {
+            @SuppressWarnings("unused")
             @Override
             public void run() {
 
@@ -568,7 +640,6 @@ public class measuredBA extends AppCompatActivity {
                             linearFftAGlobal += Math.pow(10, (float) dbFftA[i] / 10f);
 
                             float linearFft = (float) Math.pow(10, (float) dbFft[i] / 10f);
-
 
                             if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 17.8f)) {
                                 linearBandCount[0] += 1;
@@ -730,8 +801,15 @@ public class measuredBA extends AppCompatActivity {
                                 linearBand[31] += linearFft;
                                 dbBand[31] = (float) (10 * Math.log10(linearBand[31]));
                             }
-
                         }
+
+                        measeuredBsize++;
+                        for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                            measuredB[i] += Math.pow(10, dbBand[i] / 10);
+                        }
+
+
+                        final double dbFftAGlobal = 10 * Math.log10(linearFftAGlobal);
 
                         linearATimeDisplay += linearFftAGlobal;
 
@@ -742,6 +820,8 @@ public class measuredBA extends AppCompatActivity {
 
                             // dbATimeDISPLAY is our result!!!!!
                             dbATimeDisplay = 10 * Math.log10(linearATimeDisplay / finalCountTimeDisplay);
+                            decibelA += Math.pow(10, dbATimeDisplay / 10);
+                            decibelAsize++;
                             indexTimeDisplay = 1;
                             linearATimeDisplay = 0;
 
@@ -752,9 +832,12 @@ public class measuredBA extends AppCompatActivity {
 
                                     DecimalFormat df = new DecimalFormat("##");
                                     mdBTextView.setText(df.format(dbATimeDisplay));
+                                    //mdBTextView.setText(df.format(dbFftAGlobal));
+
 
                                     DecimalFormat df_fraction = new DecimalFormat("#");
                                     int one_decimal = (int) (Math.round(Math.abs(dbATimeDisplay * 10))) % 10;
+                                    //int one_decimal = (int) (Math.round(Math.abs(dbFftAGlobal * 10))) % 10;
                                     mdBFractionTextView.setText(Integer.toString(one_decimal));
                                 }
                             });
@@ -771,12 +854,15 @@ public class measuredBA extends AppCompatActivity {
                         if (indexTimeLog < finalCountTimeLog) {
                             indexTimeLog++;
                         } else {
+                            //Todo Här är datan som ska sparas!!!!!!!!
                             final double dbTimeLog = 10 * Math.log10(linearTimeLog / finalCountTimeLog);
                             final double dbATimeLog = 10 * Math.log10(linearATimeLog / finalCountTimeLog);
+                            //dbATimeLog ska sparas!!!!!!!!
 
                             final double[] dbBandTimeLog = new double[THIRD_OCTAVE.length];
                             for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                                 dbBandTimeLog[i] = 10 * Math.log10(linearBandTimeLog[i] / finalCountTimeLog);
+                                //dbBandTimeLog[i] ska sparas!!!!!!!!!!!
                                 linearBandTimeLog[i] = 0;
                             }
                             // part for bands without values
@@ -788,6 +874,8 @@ public class measuredBA extends AppCompatActivity {
                             indexTimeLog = 1;
                             linearTimeLog = 0;
                             linearATimeLog = 0;
+
+                            //Todo Write data to file, calculate average 11, 12, 13, 14.
 
                             // Write file
                             /*if (buttonLog.getText().toString().equals(buttonLogTextStop)) {
@@ -834,6 +922,8 @@ public class measuredBA extends AppCompatActivity {
             recorder = null;
             recordingThread = null;
         }
+
+        //Save(file, saveText);
     }
 
     /**
@@ -847,12 +937,7 @@ public class measuredBA extends AppCompatActivity {
         Room = preferences.getInt("ROOM" , 0);
         REPOSITORY_NAME = preferences.getString("foldername", "");
         path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
-        if (Room == 1) {
-            average1 = preferences.getInt("mRoom1", 0);
-        }
-        else {
-            average2 = preferences.getInt("mRoom2", 0);
-        }
+
     }
 
     private void setPreferences() {
@@ -863,11 +948,11 @@ public class measuredBA extends AppCompatActivity {
         editor.putFloat("mGainDif", gain);
         editor.putInt("mCount", counter4);
         if (Room == 1) {
-            editor.putInt("mRoom1" , average1);
+            editor.putFloat("mRoom1" , (float) decibelAfinal);
             editor.putInt("ROOM",1);
         }
         else {
-            editor.putInt("mRoom2" , average2);
+            editor.putFloat("mRoom2" , (float) decibelAfinal);
             editor.putInt("ROOM",2);
         }
         editor.apply();
@@ -974,6 +1059,11 @@ public class measuredBA extends AppCompatActivity {
         stopRecording();
         finish();
         super.onBackPressed();
+    }
+
+    private String dBformat(double dB) {
+        // stop the recording log file
+        return String.format(Locale.ENGLISH, "%.1f", dB);
     }
 
 
