@@ -58,7 +58,40 @@ public class ViewResult extends AppCompatActivity {
         resultreverb = (TextView)findViewById(R.id.resultRTTextView);
         resultSRI = (TextView)findViewById(R.id.resultSRITextView);
         readPreferences();
+        roomOneResult();
+        roomTwoResult();
+        reverbResult();
         calcResult();
+    }
+
+    private void roomOneResult() {
+        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
+        String [] saveText = Load(file);
+        String stringen = "Frequency:    Sound Pressure Level:  \n";
+        for (int i = 0; i<32; i++){
+            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
+        }
+        resultSPL1.setText(stringen);
+    }
+
+    private void roomTwoResult() {
+        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
+        String [] saveText = Load(file);
+        String stringen = "Frequency:    Sound Pressure Level:  \n";
+        for (int i = 0; i<32; i++){
+            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
+        }
+        resultSPL2.setText(stringen);
+    }
+
+    private void reverbResult() {
+        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
+        String [] saveText = Load(file);
+        String stringen = "Frequency:    Reverberation time:  \n";
+        for (int i = 0; i<6; i++){
+            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  s   \n";
+        }
+        resultreverb.setText(stringen);
     }
 
     private void calcResult() {
@@ -73,7 +106,7 @@ public class ViewResult extends AppCompatActivity {
         File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
         String [] saveText = Load(file);
         String stringen = "Frequency:    Sound Reduction index:  \n";
-        for (int i = 0; i<1000; i++){
+        for (int i = 0; i<32; i++){
             stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
         }
         resultSRI.setText(stringen);
