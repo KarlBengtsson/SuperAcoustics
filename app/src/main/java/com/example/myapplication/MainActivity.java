@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private double SPLRoom2;
     private float avg;
     private FileOutputStream fos;
+    private int fromCheck;
 
     //Todo Measure background noise and explore new way to measure Reverberation time.
 
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void ViewResult (View view) {
         Intent intent = new Intent(this,ViewResult.class);
+        fromCheck = 2;
         setPreferences();
         startActivity(intent);
     }
@@ -185,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         String filename = String.format(number + "%s.txt", df.format(new Date()));
         File path = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName);
         if (!path.exists()) {
-            Log.d("mio", "il path non esiste. Creato? : " + path.mkdirs());
+            Log.d("My oh my...", "The path doesn't exist, create one? : " + path.mkdirs());
         }
         try {
             File file = new File(path, filename);
@@ -234,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putFloat("mRoom1", (float) SPLRoom1);
         editor.putFloat("mRoom2", (float) SPLRoom2);
         editor.putFloat("reverb" , avg);
+        editor.putInt("fromCheck",fromCheck);
         editor.apply();
     }
 

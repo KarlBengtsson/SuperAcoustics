@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
@@ -51,10 +52,10 @@ public class WelcomeActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         // Dismiss this dialog.
                         Intent intent = null;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        if (VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                             intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                             intent.addCategory(Intent.CATEGORY_DEFAULT);
-                            startActivityForResult(intent.createChooser(intent,"Choose Directory:"), 9999);
+                            startActivityForResult(Intent.createChooser(intent,"Choose Directory:"), 9999);
                         }
                     }
                 };
@@ -65,7 +66,7 @@ public class WelcomeActivity extends AppCompatActivity {
             case 9999:
                 Uri uri = data.getData();
                 Uri docUri = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                if (VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     docUri = DocumentsContract.buildDocumentUriUsingTree(uri,
                             DocumentsContract.getTreeDocumentId(uri));
                     path = getPath(this, docUri);
@@ -99,10 +100,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public static String getPath(final Context context, final Uri uri) {
 
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        final boolean isKitKat = VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
                 // ExternalStorageProvider
                 if (isExternalStorageDocument(uri)) {
@@ -120,7 +121,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 else if (isDownloadsDocument(uri)) {
 
                     final String id;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         id = DocumentsContract.getDocumentId(uri);
                         final Uri contentUri = ContentUris.withAppendedId(
                                 Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
@@ -131,7 +132,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 // MediaProvider
                 else if (isMediaDocument(uri)) {
                     final String docId;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         docId = DocumentsContract.getDocumentId(uri);
                         final String[] split = docId.split(":");
                         final String type = split[0];

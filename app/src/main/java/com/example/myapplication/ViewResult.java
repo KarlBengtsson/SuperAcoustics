@@ -21,7 +21,7 @@ public class ViewResult extends AppCompatActivity {
 
     // For saving and loading .txt file
 
-    //public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Spartest";
+    public String path;
     private TextView resultSPL1;
     private TextView resultSPL2;
     private TextView resultCal;
@@ -47,6 +47,7 @@ public class ViewResult extends AppCompatActivity {
     private double volume;
     private String roomName;
     private File file;
+    private int fromCheck;
 
 
     @Override
@@ -60,14 +61,20 @@ public class ViewResult extends AppCompatActivity {
         resultreverb = (TextView)findViewById(R.id.resultRTTextView);
         resultSRI = (TextView)findViewById(R.id.resultSRITextView);
         readPreferences();
-        file = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName);
-        roomOneResult();
+        if (fromCheck == 1) {
+            // Coming from welcomeActivity
+        }
+        else {
+            // Coming from "View Results Button"
+            path = Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName;
+        }
+/*        roomOneResult();
         roomTwoResult();
-        reverbResult();
+        reverbResult();*/
         calcResult();
     }
 
-    private void roomOneResult() {
+/*    private void roomOneResult() {
         File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
         String [] saveText = Load(file);
         String stringen = "Frequency:    Sound Pressure Level:  \n";
@@ -75,9 +82,9 @@ public class ViewResult extends AppCompatActivity {
             stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
         }
         resultSPL1.setText(stringen);
-    }
+    }*/
 
-    private void roomTwoResult() {
+/*    private void roomTwoResult() {
         File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
         String [] saveText = Load(file);
         String stringen = "Frequency:    Sound Pressure Level:  \n";
@@ -85,9 +92,9 @@ public class ViewResult extends AppCompatActivity {
             stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
         }
         resultSPL2.setText(stringen);
-    }
+    }*/
 
-    private void reverbResult() {
+/*    private void reverbResult() {
         File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
         String [] saveText = Load(file);
         String stringen = "Frequency:    Reverberation time:  \n";
@@ -95,7 +102,7 @@ public class ViewResult extends AppCompatActivity {
             stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  s   \n";
         }
         resultreverb.setText(stringen);
-    }
+    }*/
 
     private void calcResult() {
         area = (0.163*volume)/reverb;
@@ -106,7 +113,7 @@ public class ViewResult extends AppCompatActivity {
 
         // Loading the saved txt file and reading into viewResult window
 
-        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName);
         String [] saveText = Load(file);
         String stringen = "Frequency:    Sound Reduction index:  \n";
         for (int i = 0; i<32; i++){
@@ -119,7 +126,6 @@ public class ViewResult extends AppCompatActivity {
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
-        roomName = preferences.getString("foldername", null);
         mSampleRate = preferences.getInt("SampleRate", 8000);
         mAudioSource = preferences.getInt("AudioSource",
                 MediaRecorder.AudioSource.VOICE_RECOGNITION);
@@ -130,7 +136,8 @@ public class ViewResult extends AppCompatActivity {
         sArea = preferences.getInt("area", 0);
         reverb = preferences.getFloat("reverb", 0);
         path = preferences.getString("loadpath",null);
-
+        roomName = preferences.getString("foldername", null);
+        fromCheck = preferences.getInt("fromCheck", 0);
         resultSPL1.setText(dBformat(result1) + " dB");
         resultSPL2.setText(dBformat(result2) + " dB");
         resultreverb.setText(Float.toString(reverb) + " seconds");
@@ -141,7 +148,7 @@ public class ViewResult extends AppCompatActivity {
         return String.format(Locale.ENGLISH, "%.1f", dB);
     }
 
-    public void readFileFromTxtRoom1() {
+/*    public void readFileFromTxtRoom1() {
         File file = new File(path + "TestFileRoom1.txt");
         String[] loadText = Load(file);
         String finalString = "";
@@ -160,7 +167,7 @@ public class ViewResult extends AppCompatActivity {
             finalString += loadText[i] + System.getProperty("line.separator");
         }
         resultSPL2.setText(finalString + " dB");
-    }
+    }*/
 
     public static void Save(File file, String[] data)
     {
