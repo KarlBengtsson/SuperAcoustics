@@ -4,11 +4,9 @@ package com.example.myapplication;
  * Created by stefmase on 16/04/2015.
  */
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
 

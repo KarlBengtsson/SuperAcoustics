@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("ROOM" , 3);
         editor.commit();
-        startActivity(intent);
+        startActivityForResult(intent, 3);
     }
 
     public void ViewResult (View view) {
@@ -150,26 +150,30 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == 2) {
             if(resultCode == Activity.RESULT_OK){
                 SPLmeasure1 = data.getDoubleArrayExtra("measure1");
-                saveFile("Room1_measure1", SPLmeasure1);
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
-                saveFile("Room1_measure2", SPLmeasure2);
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
-                saveFile("Room1_measure3", SPLmeasure3);
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
-                saveFile("Room1_measure4", SPLmeasure4);
+                double SPLaverageRoom1 [] = new double[0];
+                for (int i = 0; i<SPLmeasure1.length; i++) {
+                    SPLaverageRoom1[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
+                            + SPLmeasure4[i]) / 4;
+                }
+                saveFile("SPL_Room1", SPLaverageRoom1);
                 SPLRoom1=data.getDoubleExtra("dBA", 0);
                 measureText1.setText(dBformat(SPLRoom1));
             }
         } else if (requestCode == 3) {
             if(resultCode == Activity.RESULT_OK){
                 SPLmeasure1 = data.getDoubleArrayExtra("measure1");
-                saveFile("Room2_measure1", SPLmeasure1);
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
-                saveFile("Room2_measure2", SPLmeasure2);
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
-                saveFile("Room2_measure3", SPLmeasure2);
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
-                saveFile("Room2_measure4", SPLmeasure2);
+                double SPLaverageRoom2 [] = new double[0];
+                for (int i = 0; i<SPLmeasure1.length; i++) {
+                    SPLaverageRoom2[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
+                            + SPLmeasure4[i]) / 4;
+                }
+                saveFile("SPL_Room2", SPLaverageRoom2);
                 SPLRoom2=data.getDoubleExtra("dBA", 0);
                 measureText2.setText(dBformat(SPLRoom2));
             }
@@ -177,8 +181,8 @@ public class MainActivity extends AppCompatActivity {
     }//onActivityResult
 
     private void saveFile(String number, double[] values ) {
-        DateFormat df = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss");
-        String filename = String.format(number + ".txt", df.format(new Date()));
+        DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+        String filename = String.format(number + "%s.txt", df.format(new Date()));
         File path = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName);
         if (!path.exists()) {
             Log.d("mio", "il path non esiste. Creato? : " + path.mkdirs());
