@@ -25,6 +25,7 @@ public class ViewResult extends AppCompatActivity {
     private TextView resultSPL2;
     private TextView resultCal;
     private TextView resultreverb;
+    private TextView resultSRI;
 
     double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
     // The Google ASR input requirements state that audio input sensitivity
@@ -45,15 +46,17 @@ public class ViewResult extends AppCompatActivity {
     private double volume;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.short_results);
+        setContentView(R.layout.result_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        resultSPL1 = (TextView)findViewById(R.id.resultTextSpl1);
-        resultSPL2 = (TextView)findViewById(R.id.resultTextSpl2);
+        resultSPL1 = (TextView)findViewById(R.id.resultRoom1TextView);
+        resultSPL2 = (TextView)findViewById(R.id.resultRoom2TextView);
         resultCal = (TextView)findViewById(R.id.resultTextCal);
-        resultreverb = (TextView)findViewById(R.id.resultTextRT);
+        resultreverb = (TextView)findViewById(R.id.resultRTTextView);
+        resultSRI = (TextView)findViewById(R.id.resultSRITextView);
         readPreferences();
         calcResult();
     }
@@ -63,7 +66,14 @@ public class ViewResult extends AppCompatActivity {
         double X = 10*Math.log10(sArea/area);
         double R = result1 - result2 + X;
         R = Math.round(R * 10000d) / 10000d;
-        resultCal.setText(Double.toString(R) + " dB");
+        String[] string = new String[100];
+        String stringen = new String();
+        for (int i = 0; i<100; i++){
+            string[i] = "TestSträng"+ Integer.toString(i);
+            stringen += string[i] + "   \n";
+        }
+        resultSRI.setText(stringen);
+        /*resultSRI.setText(Double.toString(R) + " dB");*/
     }
 
     private void readPreferences() {

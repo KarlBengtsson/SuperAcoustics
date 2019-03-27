@@ -5,84 +5,95 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="395dp"
-        android:layout_height="715dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="fill"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView8"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/room_1_spl"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="fill_vertical"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/resultRoom1TextView"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:layout_weight="@android:integer/config_shortAnimTime"
-            android:text="@string/resultTextSpl1"
-            tools:text="@string/resultTextSpl1" />
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/room_1_spl"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/room_2_spl"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <TextView
+                android:id="@+id/resultRoom1TextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.25"
+                android:text="@string/resultTextSpl1"
+                tools:text="@string/resultTextSpl1" />
 
-        <TextView
-            android:id="@+id/resultRoom2TextView"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:layout_weight="@android:integer/config_shortAnimTime"
-            android:contentDescription="@string/resultTextSpl2"
-            android:text="@string/resultTextSpl2"
-            tools:text="@string/resultTextSpl2" />
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/room_2_spl"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/t60_room_2"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <TextView
+                android:id="@+id/resultRoom2TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/resultTextSpl2"
+                android:text="@string/resultTextSpl2"
+                tools:text="@string/resultTextSpl2" />
 
-        <TextView
-            android:id="@+id/resultRTTextView"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:layout_weight="@android:integer/config_shortAnimTime"
-            android:contentDescription="@string/resultTextRT"
-            android:text="@string/resultTextRT"
-            tools:text="@string/resultTextRT" />
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/t60_room_2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sound_reduction_index"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:typeface="normal" />
+            <TextView
+                android:id="@+id/resultRTTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/resultTextRT"
+                android:text="@string/resultTextRT"
+                tools:text="@string/resultTextRT" />
 
-        <TextView
-            android:id="@+id/resultSRITextView"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:layout_weight="@android:integer/config_shortAnimTime"
-            android:contentDescription="@string/resultSRITextView"
-            android:text="@string/resultSRITextView"
-            tools:text="@string/resultSRITextView" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sound_reduction_index"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:typeface="normal" />
+
+            <TextView
+                android:id="@+id/resultSRITextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/resultSRITextView"
+                android:text="@string/resultSRITextView"
+                tools:text="@string/resultSRITextView" />
+        </LinearLayout>
+    </ScrollView>
+
 </android.support.constraint.ConstraintLayout>

@@ -25,4 +25,8 @@
     <color name="plot_blue">#0000ff</color>
     <color name="plot_violet">#b366ff</color>01A9DB
     <color name="plot_cyan">#01A9DB</color>
+    <color name="app_zero">#66004d</color>
+    <color name="app_one">#b30086</color>
+    <color name="app_two">#ff33cc</color>
+
 </resources>

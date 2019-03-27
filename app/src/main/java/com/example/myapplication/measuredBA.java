@@ -71,7 +71,7 @@ public class measuredBA extends AppCompatActivity {
     private int tOrFFT;
 
     //--------------------------------------------------------------------------------------------
-    double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
+    double mOffsetdB = 30;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
     // For displaying error in calibration.
     private int mSampleRate;  // The audio sampling rate to use.
     // Variables to monitor UI update and check for slow updates.
@@ -157,7 +157,7 @@ public class measuredBA extends AppCompatActivity {
             // Toggle Button handler.
 
         //final int finalCountTimeDisplay = (int) (timeDisplay * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeDisplay = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeDisplay = (int) (0.2 * NUMBER_OF_FFT_PER_SECOND);
 
         //final int finalCountTimeLog = (int) (timeLog * NUMBER_OF_FFT_PER_SECOND);
         final int finalCountTimeLog = (int) (1.0 * NUMBER_OF_FFT_PER_SECOND);
@@ -777,6 +777,13 @@ public class measuredBA extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if (Room != 0) {
+                                        // The bar has an input range of [0.0 ; 1.0] and 10 segments.
+                                        // Each LED corresponds to 6 dB.
+                                        mBarLevel.setLevel((-mOffsetdB+dbATimeDisplay) / 60);
+                                    }
+
+
 
                                     DecimalFormat df = new DecimalFormat("##");
                                     mdBTextView.setText(df.format(dbATimeDisplay));

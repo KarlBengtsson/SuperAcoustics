@@ -80,7 +80,8 @@
             android:id="@+id/gain_error_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="10dp"
             android:text="@string/gain_error_text" />
 
         <TextView
@@ -107,6 +108,8 @@
                 style="@android:style/Widget.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:paddingLeft="10dp"
                 android:text="@string/start_measure" />
 
             <Button
@@ -129,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Seconds" />
+
         </LinearLayout>
 
         <TextView
@@ -141,49 +145,37 @@
             android:paddingRight="10dp"
             android:text="@string/measure_info_text" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/finishButton"
+            style="@android:style/Widget.Button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/finishButton"
-                style="@android:style/Widget.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/finish_button" />
-
-            <Button
-                android:id="@+id/plotT"
-                style="@android:style/Widget.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/plotT"
-                tools:text="@string/plotT" />
-
-            <Button
-                android:id="@+id/plotFFT"
-                style="@android:style/Widget.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/plotFFT"
-                tools:text="@string/plotFFT" />
-        </LinearLayout>
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="10dp"
+            android:text="@string/finish_button" />
 
         <TextView
             android:id="@+id/textview3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
             android:text="@string/measured_spl" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="46dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="top"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/measuredSPL1"

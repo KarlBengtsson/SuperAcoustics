@@ -330,7 +330,7 @@ public class MeasureSPL extends AppCompatActivity implements
                 };
         finishMeasure.setOnClickListener(setFinishBtnListener);
 
-        plotT=(Button)findViewById(R.id.plotT);
+/*        plotT=(Button)findViewById(R.id.plotT);
         plotT.setEnabled(false);
         Button.OnClickListener setPlotTListener =
                 new Button.OnClickListener() {
@@ -356,7 +356,7 @@ public class MeasureSPL extends AppCompatActivity implements
                         MeasureSPL.this.plot();
                     }
                 };
-        plotFFT.setOnClickListener(setPlotFFTListener);
+        plotFFT.setOnClickListener(setPlotFFTListener);*/
 
     }
 

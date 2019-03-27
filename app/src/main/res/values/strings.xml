@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LevelMeter</string>
+    <string name="app_name">SuperAcoustics</string>
     <string name="toast_message">On or Off</string>
     <string name="settings_ok">ok</string>
     <string name="adjust_sensitivity">Calibrate sensitivity</string>
