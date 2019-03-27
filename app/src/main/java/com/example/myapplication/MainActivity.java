@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
-                double SPLaverageRoom1 [] = new double[0];
+                double SPLaverageRoom1 [] = new double[32];
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     SPLaverageRoom1[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
                             + SPLmeasure4[i]) / 4;
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             }
             fos = new FileOutputStream(file);
             for (int i = 0; i < values.length; i++) {
-                fos.write(("  " + values[i] + "\n").getBytes());
+                fos.write(("  " + dBformat(values[i]) + "\n").getBytes());
             }
 
         } catch (Exception e) {

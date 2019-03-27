@@ -113,8 +113,6 @@ public class measuredBA extends AppCompatActivity {
 
     private final float [] THIRD_OCTAVE = {16, 20, 25, 31.5f, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500,
             630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000};
-    String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
-            "630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
     private double filter;
     private double dbATimeDisplay; //Final Result
     private float gain = 0;
@@ -406,7 +404,7 @@ public class measuredBA extends AppCompatActivity {
                 measeuredBsize = 0;
                 break;
 
-            case 2: measuredB2 = measuredB;
+            case 2:
                 for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                     measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
                     measuredB2[i] = measuredB[i];
@@ -420,7 +418,7 @@ public class measuredBA extends AppCompatActivity {
                 measeuredBsize = 0;
                 break;
 
-            case 3: measuredB3 = measuredB;
+            case 3:
                 for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                     measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
                     measuredB3[i] = measuredB[i];
@@ -434,7 +432,7 @@ public class measuredBA extends AppCompatActivity {
                 measeuredBsize = 0;
                 break;
 
-            case 4: measuredB4 = measuredB;
+            case 4:
                 for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                     measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
                     measuredB4[i] = measuredB[i];
