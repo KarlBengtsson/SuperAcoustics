@@ -66,11 +66,15 @@ public class ViewResult extends AppCompatActivity {
         double X = 10*Math.log10(sArea/area);
         double R = result1 - result2 + X;
         R = Math.round(R * 10000d) / 10000d;
-        String[] string = new String[100];
-        String stringen = new String();
-        for (int i = 0; i<100; i++){
-            string[i] = "TestSträng"+ Integer.toString(i);
-            stringen += string[i] + "   \n";
+
+
+        // Loading the saved txt file and reading into viewResult window
+
+        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
+        String [] saveText = Load(file);
+        String stringen = "Frequency:    Sound Reduction index:  \n";
+        for (int i = 0; i<1000; i++){
+            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
         }
         resultSRI.setText(stringen);
         /*resultSRI.setText(Double.toString(R) + " dB");*/
@@ -88,6 +92,7 @@ public class ViewResult extends AppCompatActivity {
         volume = preferences.getInt("volume", 0);
         sArea = preferences.getInt("area", 0);
         reverb = preferences.getFloat("reverb", 0);
+        path = preferences.getString("loadpath",null);
 
         resultSPL1.setText(Integer.toString(result1) + " dB");
         resultSPL2.setText(Integer.toString(result2) + " dB");
@@ -162,7 +167,7 @@ public class ViewResult extends AppCompatActivity {
         BufferedReader br = new BufferedReader(isr);
 
         String test;
-        int anzahl=0;
+        int anzahl=1;
         try
         {
             while ((test=br.readLine()) != null)
@@ -186,7 +191,8 @@ public class ViewResult extends AppCompatActivity {
         {
             while((line=br.readLine())!=null)
             {
-                array[i] = line;
+                String str = line;
+                array[i] = str.replace("[","").replace(",","").replace("]","");
                 i++;
             }
         }

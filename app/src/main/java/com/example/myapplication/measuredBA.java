@@ -464,7 +464,7 @@ public class measuredBA extends AppCompatActivity {
 
     private void startRecording(final float gain, final int finalCountTimeDisplay, final int finalCountTimeLog) {
 
-        recorder = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,
+        recorder = new AudioRecord(MediaRecorder.AudioSource.UNPROCESSED,
                 RECORDER_SAMPLERATE, RECORDER_CHANNELS,
                 RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
 
