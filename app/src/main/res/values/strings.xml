@@ -95,5 +95,9 @@
     <string name="room_2_spl">Room 2 SPL</string>
     <string name="t60_room_2">T60 Room 2</string>
     <string name="sound_reduction_index">Sound Reduction Index</string>
+    <string name="blank">.</string>
     <string name="_0">0</string>
+    <string name="db_a">dB(A)</string>
+    <string name="settings">Settings</string>
+    <string name="on">On</string>
 </resources>

@@ -92,7 +92,7 @@ public class measuredBA extends AppCompatActivity {
     private final static int BLOCK_SIZE = AudioRecord.getMinBufferSize(
             RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING)
             / BYTES_PER_ELEMENT;
-    private final static int BLOCK_SIZE_FFT =(int) Math.ceil(((double) (highestPowerof2(RECORDER_SAMPLERATE))+1)/2);
+    private final static int BLOCK_SIZE_FFT =(int) Math.ceil(((double) (highestPowerof2(RECORDER_SAMPLERATE))+1)/4);
     /*private final static int BLOCK_SIZE_FFT = 4096;*/
     private final static int NUMBER_OF_FFT_PER_SECOND = RECORDER_SAMPLERATE
             / BLOCK_SIZE_FFT;
@@ -170,10 +170,12 @@ public class measuredBA extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (onOffButton.isChecked()) {
+                            onOffButton.setTextColor(getApplication().getResources().getColor(R.color.plot_red));
                             precalculateWeightedA();
                             startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
                         } else {
                             stopRecording();
+                            onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
                         }
                     }
                 };
@@ -252,7 +254,7 @@ public class measuredBA extends AppCompatActivity {
                     R.id.on_off_toggle_button);
             onOffButton.setChecked(false);
 
-            final int finalCountTimeDisplay = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+            final int finalCountTimeDisplay = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
 
             final int finalCountTimeLog = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
 
@@ -261,6 +263,7 @@ public class measuredBA extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             if (onOffButton.isChecked()) {
+                                onOffButton.setTextColor(getApplication().getResources().getColor(R.color.plot_red));
                                 //plotFFT.setEnabled(false);
                                 //plotT.setEnabled(false);
                                 startButton.setEnabled(true);
@@ -271,6 +274,7 @@ public class measuredBA extends AppCompatActivity {
                             } else {
                                 startButton.setEnabled(false);
                                 finishMeasure.setEnabled(true);
+                                onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
                                 //plotFFT.setEnabled(true);
                                 //plotT.setEnabled(true);
                                 stopRecording();
@@ -524,7 +528,7 @@ public class measuredBA extends AppCompatActivity {
                     // (> 100 dB) and low lows (10 dB) due perhaps to the initial activation of the device
                     initial_delay++;
 
-                    if (initial_delay > 20) {
+                    if (initial_delay > 5) {
 
                         for (int i = 0, j = 0; i < BLOCK_SIZE_FFT; i++, j += 2) {
 
@@ -832,6 +836,7 @@ public class measuredBA extends AppCompatActivity {
                                 }
                             }*/
 
+                        if (Room == 0){
                             // Calculate what to display in FFT plot
                             for (int i = 0; i < dbFftTimeDisplay.length; i++) {
                                 linearFftTimeDisplay[i] +=  Math.pow(10, (float) dbFft[i] / 10f);
@@ -855,6 +860,7 @@ public class measuredBA extends AppCompatActivity {
                                     }
                                 });
                             }
+                        }
 
                         }
 

@@ -30,6 +30,7 @@
 
             <Button
                 android:id="@+id/dbmeterButton"
+                style="@android:style/Widget.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="CalibrateSPL"
@@ -43,6 +44,7 @@
 
             <Button
                 android:id="@+id/button"
+                style="@android:style/Widget.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="measuredB"
@@ -60,6 +62,7 @@
 
             <Button
                 android:id="@+id/measureButton1"
+                style="@android:style/Widget.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="MeasureSPL1"
@@ -79,6 +82,7 @@
 
             <Button
                 android:id="@+id/measureButton2"
+                style="@android:style/Widget.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="MeasureSPL2"
@@ -98,6 +102,7 @@
 
             <Button
                 android:id="@+id/reverbButton"
+                style="@android:style/Widget.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="MeasureReverb"
@@ -115,6 +120,7 @@
 
     <Button
         android:id="@+id/resultButton"
+        style="@android:style/Widget.Button"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"

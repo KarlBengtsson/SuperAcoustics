@@ -23,30 +23,34 @@
                 android:layout_weight="0.25"
                 android:gravity="right"
                 android:text="@string/_0"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="36sp" />
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="26dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="."
-                android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+                android:text="@string/blank"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="36sp" />
 
             <TextView
                 android:id="@+id/dBFractionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+                android:text="@string/_0"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="36sp" />
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:text="dB(A)"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+                android:text="@string/db_a"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="36sp" />
 
         </LinearLayout>
 
@@ -57,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:text="Settings" />
+            android:text="@string/settings" />
 
     </LinearLayout>
 
@@ -67,7 +71,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="On" />
+        android:text="@string/on"
+        android:textOff="OFF"
+        android:textOn="ON" />
 
     <Button
         android:id="@+id/setCalibrationButton"
@@ -132,7 +138,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="@string/gain_error_text" />
+            android:text="@string/gain_error_text"
+            android:layout_marginStart="5dp" />
 
         <TextView
             android:id="@+id/gain"
@@ -145,7 +152,8 @@
 
     <com.example.myapplication.PlotFFT
         android:id="@+id/plotFFT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
 </LinearLayout>
