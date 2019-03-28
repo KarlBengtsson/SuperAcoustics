@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     String roomName;
     int mAudioSource = 0;
     int mSampleRate = 0;
+    private int indices[] = {9, 12, 15, 18, 21, 24};
     private float[] reverbResult;
     private double[] SPLmeasure1;
     private double[] SPLmeasure2;
@@ -50,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private float avg;
     private FileOutputStream fos;
     private int fromCheck;
+    private boolean room1check;
+    private boolean room2check;
+    private boolean reverbcheck;
 
     //Todo Measure background noise and explore new way to measure Reverberation time.
 
@@ -109,10 +114,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ViewResult (View view) {
-        Intent intent = new Intent(this,ViewResult.class);
-        fromCheck = 2;
-        setPreferences();
-        startActivity(intent);
+        if (reverbcheck && room1check && room2check) {
+            Intent intent = new Intent(this,ViewResult.class);
+            fromCheck = 2;
+            setPreferences();
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(this, "Please perform all the measurements first!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void MeasureReverb (View view) {
@@ -136,9 +147,11 @@ public class MainActivity extends AppCompatActivity {
                     reverbResultDouble[i] = reverbResult[i];
                 }
                 saveFile("Reverberation_time", reverbResultDouble);
+                reverbcheck = true;
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
+                Log.v(TAG,"Stuff didnt get sent back");
             }
             float total = 0;
             for (double a:reverbResult) {
@@ -161,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                             + SPLmeasure4[i]) / 4;
                 }
                 saveFile("SPL_Room1", SPLaverageRoom1);
+                room1check = true;
                 SPLRoom1=data.getDoubleExtra("dBA", 0);
                 measureText1.setText(dBformat(SPLRoom1));
             }
@@ -170,12 +184,13 @@ public class MainActivity extends AppCompatActivity {
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
-                double SPLaverageRoom2 [] = new double[0];
+                double SPLaverageRoom2 [] = new double[32];
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     SPLaverageRoom2[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
                             + SPLmeasure4[i]) / 4;
                 }
                 saveFile("SPL_Room2", SPLaverageRoom2);
+                room2check = true;
                 SPLRoom2=data.getDoubleExtra("dBA", 0);
                 measureText2.setText(dBformat(SPLRoom2));
             }
@@ -266,6 +281,9 @@ public class MainActivity extends AppCompatActivity {
         measureText2.setText("Not measured");
         measureRT = (TextView) findViewById(R.id.measureTextRT);
         measureRT.setText("Not measured");
+        room1check = false;
+        room2check = false;
+        reverbcheck = false;
 
     }
 

@@ -27,6 +27,9 @@ public class ViewResult extends AppCompatActivity {
     public String path;
     private String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
             "630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
+    // number 10, 13, 16, 19, 22, 25
+    // indices 9, 12, 15, 18, 21, 24
+    private int indices[] = {9, 12, 15, 18, 21, 24};
     private TextView resultSPL1;
     private TextView resultSPL2;
     private TextView resultCal;
@@ -68,50 +71,68 @@ public class ViewResult extends AppCompatActivity {
         readPreferences();
         if (fromCheck == 1) {
             // Coming from welcomeActivity
+            //Todo make sure the results are loaded from the chosen directory, once again check if
+            //Todo the specified measurement exists
+            readPreferences();
+            roomTwoResult();
+            roomOneResult();
+            reverbResult();
         }
         else {
             // Coming from "View Results Button"
             path = Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName;
         }
+        //Todo input check if results from each measurement exists....!
         roomOneResult();
-/*        roomTwoResult();
+        roomTwoResult();
         reverbResult();
-        calcResult();*/
+/*        calcResult();*/
     }
 
     private void roomOneResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
         String filename = String.format("SPL_Room1" + "%s.txt", df.format(new Date()));
         file = new File(path + "/"+filename);
-        String [] saveText = Load(file);
-        String stringen = "Frequency:    Sound Pressure Level:  \n";
-        for (int i = 0; i<saveText.length-1; i++){
-            stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
+        if (file.exists()) {
+            String [] saveText = Load(file);
+            String stringen = "Frequency:    Sound Pressure Level:  \n";
+            for (int i = 0; i<saveText.length-1; i++){
+                stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
+            }
+            resultSPL1.setText(stringen);
         }
-        resultSPL1.setText(stringen);
+
     }
 
-/*    private void roomTwoResult() {
-        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
-        String [] saveText = Load(file);
-        String stringen = "Frequency:    Sound Pressure Level:  \n";
-        for (int i = 0; i<32; i++){
-            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
+    private void roomTwoResult() {
+        DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+        String filename = String.format("SPL_Room2" + "%s.txt", df.format(new Date()));
+        file = new File(path + "/"+filename);
+        if (file.exists()) {
+            String [] saveText = Load(file);
+            String stringen = "Frequency:    Sound Pressure Level:  \n";
+            for (int i = 0; i<saveText.length-1; i++){
+                stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
+            }
+            resultSPL2.setText(stringen);
         }
-        resultSPL2.setText(stringen);
-    }*/
+    }
 
-/*    private void reverbResult() {
-        File file = new File(path + "/"+"TestRoom"+"1"+"1"+".txt");
+    private void reverbResult() {
+        DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+        String filename = String.format("Reverberation_time" + "%s.txt", df.format(new Date()));
+        file = new File(path + "/"+filename);
+        if (file.exists()){
         String [] saveText = Load(file);
-        String stringen = "Frequency:    Reverberation time:  \n";
-        for (int i = 0; i<6; i++){
-            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  s   \n";
+            String stringen = "Frequency:    Sound Pressure Level:  \n";
+            for (int i = 0; i<saveText.length-1; i++){
+                stringen += THIRD_OCTAVE_LABEL[indices[i]] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
+            }
+            resultreverb.setText(stringen);
         }
-        resultreverb.setText(stringen);
-    }*/
+    }
 
-/*    private void calcResult() {
+    private void calcResult() {
         area = (0.163*volume)/reverb;
         double X = 10*Math.log10(sArea/area);
         double R = result1 - result2 + X;
@@ -120,15 +141,7 @@ public class ViewResult extends AppCompatActivity {
 
         // Loading the saved txt file and reading into viewResult window
 
-        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName);
-        String [] saveText = Load(file);
-        String stringen = "Frequency:    Sound Reduction index:  \n";
-        for (int i = 0; i<32; i++){
-            stringen += saveText[i] +" Hz                \t\t\t\t" + saveText[i+2] + "  dB   \n";
-        }
-        resultSRI.setText(stringen);*/
-        /*resultSRI.setText(Double.toString(R) + " dB");*/
-    //}
+    }
 
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
