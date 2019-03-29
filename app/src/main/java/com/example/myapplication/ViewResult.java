@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.BreakIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -67,7 +66,6 @@ public class ViewResult extends AppCompatActivity {
         setContentView(R.layout.result_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         resultSPL1 = (TextView)findViewById(R.id.resultRoom1TextView);
-        result2SPL1 = (TextView)findViewById(R.id.resultRoom1TextView2);
         resultSPL2 = (TextView)findViewById(R.id.resultRoom2TextView);
         resultCal = (TextView)findViewById(R.id.resultTextCal);
         resultreverb = (TextView)findViewById(R.id.resultRTTextView);
@@ -89,9 +87,9 @@ public class ViewResult extends AppCompatActivity {
         }
         //Todo input check if results from each measurement exists....!
         roomOneResult();
-/*        roomTwoResult();
+        roomTwoResult();
         reverbResult();
-        calcResult();*/
+        calcResult();
     }
 
     private void roomOneResult() {
@@ -112,7 +110,7 @@ public class ViewResult extends AppCompatActivity {
 
     private void roomTwoResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("SPL_Room2_" + "%s.txt", df.format(new Date()));
+        String filename = "SPL_Room2" + ".txt";
         file = new File(path + "/"+filename);
         if (file.exists()) {
             String [] saveText = Load(file);
@@ -127,12 +125,12 @@ public class ViewResult extends AppCompatActivity {
 
     private void reverbResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("Reverberation_time_" + "%s.txt", df.format(new Date()));
+        String filename = "Reverberation_time" + ".txt";
         file = new File(path + "/"+filename);
         if (file.exists()){
         String [] saveText = Load(file);
-            String stringen = "Frequency:    Time:  \n";
-            for (int i = 0; i<saveText.length-1; i++){
+            String stringen = "Frequency:                        Time:  \n";
+            for (int i = 0; i<THIRD_OCTAVE_LABEL.length; i++){
                 stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  seconds   \n";
             }
             resultreverb.setText(stringen);
@@ -141,12 +139,12 @@ public class ViewResult extends AppCompatActivity {
 
     private void calcResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("SRI" + "%s.txt", df.format(new Date()));
+        String filename = "SRI" + ".txt";
         file = new File(path + "/"+filename);
         if (file.exists()){
             String [] saveText = Load(file);
             String stringen = "Frequency:    Sound Reduction index:  \n";
-            for (int i = 0; i<saveText.length-1; i++){
+            for (int i = 0; i<THIRD_OCTAVE_LABEL.length; i++){
                 stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
             }
             resultSRI.setText(stringen);

@@ -123,11 +123,10 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i<indices.length; i++){
                 Area[i] = (0.163*volume)/ reverbResult[i];
                 double X = 10*Math.log10(sArea/Area[i]);
-                R[i] = SPLaverageRoom2[indices[i]] - SPLaverageRoom1[indices[i]] + X;
+                R[i] = SPLaverageRoom1[i] - SPLaverageRoom2[i] + X;
                 R[i] = Math.round(R[i] * 10000d) / 10000d;
                 saveFile("SRI", R);
             }
-
 
             Intent intent = new Intent(this,ViewResult.class);
             fromCheck = 2;
@@ -184,8 +183,9 @@ public class MainActivity extends AppCompatActivity {
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
 
                 for (int i = 0; i<SPLmeasure1.length; i++) {
-                    SPLaverageRoom1[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
-                            + SPLmeasure4[i]) / 4;
+                    double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
+                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10);
+                    SPLaverageRoom1[i] = 10* Math.log10(sum);
                 }
                 saveFile("SPL_Room1", SPLaverageRoom1);
                 room1check = true;
@@ -200,8 +200,9 @@ public class MainActivity extends AppCompatActivity {
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
 
                 for (int i = 0; i<SPLmeasure1.length; i++) {
-                    SPLaverageRoom2[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
-                            + SPLmeasure4[i]) / 4;
+                    double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
+                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10);
+                    SPLaverageRoom2[i] = 10* Math.log10(sum);
                 }
                 saveFile("SPL_Room2", SPLaverageRoom2);
                 room2check = true;

@@ -53,15 +53,6 @@
                     android:text="@string/resultTextSpl1"
                     tools:text="@string/resultTextSpl1" />
 
-                <TextView
-                    android:id="@+id/resultRoom1TextView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_weight="0.25"
-                    android:paddingLeft="20dp"
-                    android:text="@string/resultTextSpl1"
-                    tools:text="@string/resultTextSpl1" />
             </LinearLayout>
 
             <TextView

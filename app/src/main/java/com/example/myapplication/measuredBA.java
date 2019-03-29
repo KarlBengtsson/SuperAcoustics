@@ -675,34 +675,34 @@ public class measuredBA extends AppCompatActivity {
 
                             /////////////////////////////////////////////////////////////////
                             if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 177f)) {
+                                linearBandCount[0] += 1;
+                                linearBand[0] += linearFft;
+                                dbBand[0] = (float) (10 * Math.log10(linearBand[0]));
+                            }
+                            if ((177f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 355f)) {
+                                linearBandCount[1] += 1;
+                                linearBand[1] += linearFft;
+                                dbBand[1] = (float) (10 * Math.log10(linearBand[1]));
+                            }
+                            if ((355f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 710f)) {
+                                linearBandCount[2] += 1;
+                                linearBand[2] += linearFft;
+                                dbBand[2] = (float) (10 * Math.log10(linearBand[2]));
+                            }
+                            if ((710f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 1420f)) {
                                 linearBandCount[3] += 1;
                                 linearBand[3] += linearFft;
                                 dbBand[3] = (float) (10 * Math.log10(linearBand[3]));
                             }
-                            if ((177f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 355f)) {
+                            if ((1420f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 2840f)) {
                                 linearBandCount[4] += 1;
                                 linearBand[4] += linearFft;
                                 dbBand[4] = (float) (10 * Math.log10(linearBand[4]));
                             }
-                            if ((355f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 710f)) {
+                            if ((2840f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 5680f)) {
                                 linearBandCount[5] += 1;
                                 linearBand[5] += linearFft;
                                 dbBand[5] = (float) (10 * Math.log10(linearBand[5]));
-                            }
-                            if ((710f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 1420f)) {
-                                linearBandCount[6] += 1;
-                                linearBand[6] += linearFft;
-                                dbBand[6] = (float) (10 * Math.log10(linearBand[6]));
-                            }
-                            if ((1420f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 2840f)) {
-                                linearBandCount[7] += 1;
-                                linearBand[7] += linearFft;
-                                dbBand[7] = (float) (10 * Math.log10(linearBand[7]));
-                            }
-                            if ((2840f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 5680f)) {
-                                linearBandCount[8] += 1;
-                                linearBand[8] += linearFft;
-                                dbBand[8] = (float) (10 * Math.log10(linearBand[8]));
                             }
 
                             /////////////////////////////////////////////////////////////////////
@@ -869,6 +869,7 @@ public class measuredBA extends AppCompatActivity {
                             }*/
                         }
 
+                        //Todo Räknas det här på rätt sätt??????
                         measeuredBsize++;
                         for (int i = 0; i < dbBand.length; i++) {
                             measuredB[i] += Math.pow(10, dbBand[i] / 10);
