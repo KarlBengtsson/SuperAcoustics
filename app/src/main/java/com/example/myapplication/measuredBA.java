@@ -674,23 +674,7 @@ public class measuredBA extends AppCompatActivity {
                             float linearFft = (float) Math.pow(10, (float) dbFft[i] / 10f);
 
                             /////////////////////////////////////////////////////////////////
-
-                            if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 22f)) {
-                                linearBandCount[0] += 1;
-                                linearBand[0] += linearFft;
-                                dbBand[0] = (float) (10 * Math.log10(linearBand[0]));
-                            }
-                            if ((22f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 44f)) {
-                                linearBandCount[1] += 1;
-                                linearBand[1] += linearFft;
-                                dbBand[1] = (float) (10 * Math.log10(linearBand[1]));
-                            }
-                            if ((44f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 88f)) {
-                                linearBandCount[2] += 1;
-                                linearBand[2] += linearFft;
-                                dbBand[2] = (float) (10 * Math.log10(linearBand[2]));
-                            }
-                            if ((88f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 177f)) {
+                            if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 177f)) {
                                 linearBandCount[3] += 1;
                                 linearBand[3] += linearFft;
                                 dbBand[3] = (float) (10 * Math.log10(linearBand[3]));

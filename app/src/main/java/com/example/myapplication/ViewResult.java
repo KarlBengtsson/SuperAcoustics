@@ -28,7 +28,7 @@ public class ViewResult extends AppCompatActivity {
     public String path;
     //private String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
             //"630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
-    private String [] THIRD_OCTAVE_LABEL = {"16", "31.5", "63", "125", "250", "500", "1000", "2000", "4000"};
+    private String [] THIRD_OCTAVE_LABEL = {"125", "250", "500", "1000", "2000", "4000"};
     // number 10, 13, 16, 19, 22, 25
     // indices 9, 12, 15, 18, 21, 24
     private int indices[] = {9, 12, 15, 18, 21, 24};
@@ -85,7 +85,7 @@ public class ViewResult extends AppCompatActivity {
         else {
             // Coming from "View Results Button"
             DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-            path = (Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_" +df.format(new Date()));
+            path = String.format(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_%s" ,df.format(new Date()));
         }
         //Todo input check if results from each measurement exists....!
         roomOneResult();
@@ -96,7 +96,7 @@ public class ViewResult extends AppCompatActivity {
 
     private void roomOneResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("SPL_Room1" + "%s.txt", df.format(new Date()));
+        String filename = "SPL_Room1" + ".txt";
         file = new File(path + "/"+filename);
         if (file.exists()) {
             String [] saveText = Load(file);
