@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.BreakIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,6 +58,7 @@ public class ViewResult extends AppCompatActivity {
     private String roomName;
     private File file;
     private int fromCheck;
+    private TextView result2SPL1;
 
 
     @Override
@@ -65,6 +67,7 @@ public class ViewResult extends AppCompatActivity {
         setContentView(R.layout.result_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         resultSPL1 = (TextView)findViewById(R.id.resultRoom1TextView);
+        result2SPL1 = (TextView)findViewById(R.id.resultRoom1TextView2);
         resultSPL2 = (TextView)findViewById(R.id.resultRoom2TextView);
         resultCal = (TextView)findViewById(R.id.resultTextCal);
         resultreverb = (TextView)findViewById(R.id.resultRTTextView);
@@ -81,18 +84,19 @@ public class ViewResult extends AppCompatActivity {
         }
         else {
             // Coming from "View Results Button"
-            path = Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName;
+            DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+            path = (Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_" +df.format(new Date()));
         }
         //Todo input check if results from each measurement exists....!
         roomOneResult();
-        roomTwoResult();
+/*        roomTwoResult();
         reverbResult();
-/*       calcResult();*/
+        calcResult();*/
     }
 
     private void roomOneResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("SPL_Room1_" + "%s.txt", df.format(new Date()));
+        String filename = String.format("SPL_Room1" + "%s.txt", df.format(new Date()));
         file = new File(path + "/"+filename);
         if (file.exists()) {
             String [] saveText = Load(file);
@@ -127,7 +131,7 @@ public class ViewResult extends AppCompatActivity {
         file = new File(path + "/"+filename);
         if (file.exists()){
         String [] saveText = Load(file);
-            String stringen = "Frequency:    Sound Pressure Level:  \n";
+            String stringen = "Frequency:    Time:  \n";
             for (int i = 0; i<saveText.length-1; i++){
                 stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  seconds   \n";
             }
@@ -136,14 +140,17 @@ public class ViewResult extends AppCompatActivity {
     }
 
     private void calcResult() {
-        area = (0.163*volume)/reverb;
-        double X = 10*Math.log10(sArea/area);
-        double R = result1 - result2 + X;
-        R = Math.round(R * 10000d) / 10000d;
-            resultSRI.setText(Double.toString(R) + " dB");
-
-
-        // Loading the saved txt file and reading into viewResult window
+        DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+        String filename = String.format("SRI" + "%s.txt", df.format(new Date()));
+        file = new File(path + "/"+filename);
+        if (file.exists()){
+            String [] saveText = Load(file);
+            String stringen = "Frequency:    Sound Reduction index:  \n";
+            for (int i = 0; i<saveText.length-1; i++){
+                stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
+            }
+            resultSRI.setText(stringen);
+        }
 
     }
 

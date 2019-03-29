@@ -40,13 +40,29 @@
                 android:text="@string/room_1_spl"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-            <TextView
-                android:id="@+id/resultRoom1TextView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.25"
-                android:text="@string/resultTextSpl1"
-                tools:text="@string/resultTextSpl1" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/resultRoom1TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="@string/resultTextSpl1"
+                    tools:text="@string/resultTextSpl1" />
+
+                <TextView
+                    android:id="@+id/resultRoom1TextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="0.25"
+                    android:paddingLeft="20dp"
+                    android:text="@string/resultTextSpl1"
+                    tools:text="@string/resultTextSpl1" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView10"

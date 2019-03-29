@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private double[] SPLmeasure2;
     private double[] SPLmeasure3;
     private double[] SPLmeasure4;
+    double SPLaverageRoom1 [] = new double[32];
+    double SPLaverageRoom2 [] = new double[32];
     private double SPLRoom1;
     private double SPLRoom2;
     private float avg;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean room1check;
     private boolean room2check;
     private boolean reverbcheck;
+    private int sArea;
 
     //Todo Measure background noise and explore new way to measure Reverberation time.
 
@@ -115,6 +118,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void ViewResult (View view) {
         if (reverbcheck && room1check && room2check) {
+            double[] Area = new double[indices.length];
+            double[] R = new double[indices.length];
+            for (int i = 0; i<indices.length; i++){
+                Area[i] = (0.163*volume)/ reverbResult[i];
+                double X = 10*Math.log10(sArea/Area[i]);
+                R[i] = SPLaverageRoom2[indices[i]] - SPLaverageRoom1[indices[i]] + X;
+                R[i] = Math.round(R[i] * 10000d) / 10000d;
+                saveFile("SRI", R);
+            }
+
+
             Intent intent = new Intent(this,ViewResult.class);
             fromCheck = 2;
             setPreferences();
@@ -168,8 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
-                double SPLaverageRoom1 [] = new double[32];
-                //Todo calculate logarithmic average not sum/4
+
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     SPLaverageRoom1[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
                             + SPLmeasure4[i]) / 4;
@@ -185,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
-                double SPLaverageRoom2 [] = new double[32];
+
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     SPLaverageRoom2[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
                             + SPLmeasure4[i]) / 4;
@@ -200,8 +213,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveFile(String number, double[] values ) {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format(number + "_%s.txt", df.format(new Date()));
-        File path = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName);
+        String filename = String.format(number + ".txt");
+        File path = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_%s", df.format(new Date()));
         if (!path.exists()) {
             Log.d("My oh my...", "The path doesn't exist, create one? : " + path.mkdirs());
         }
@@ -269,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
         Room = preferences.getInt("ROOM",0);
         volume = preferences.getInt("volume", 0);
         area = preferences.getInt("area", 0);
+        sArea = preferences.getInt("area", 0);
         length = preferences.getInt("length", 0);
         width = preferences.getInt("width", 0);
         height = preferences.getInt("height", 0);
