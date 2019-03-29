@@ -21,6 +21,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private Button newButton, loadButton;
     private String path;
+    private int fromCheck;
 
 
     @Override
@@ -71,6 +72,7 @@ public class WelcomeActivity extends AppCompatActivity {
                             DocumentsContract.getTreeDocumentId(uri));
                     path = getPath(this, docUri);
                     Log.i("Test", "Result Path: " + path);
+                    fromCheck = 1;
                     setPreferences();
                     Intent intent;
                     intent = new Intent(WelcomeActivity.this,ViewResult.class);
@@ -85,6 +87,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("loadpath", path);
+        editor.putInt("fromCheck", fromCheck);
         editor.apply();
     }
 
