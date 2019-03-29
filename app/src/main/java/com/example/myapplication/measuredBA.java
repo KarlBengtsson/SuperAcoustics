@@ -124,6 +124,7 @@ public class measuredBA extends AppCompatActivity {
     private double[] measuredB2 = new double[THIRD_OCTAVE.length];
     private double[] measuredB3 = new double[THIRD_OCTAVE.length];
     private double[] measuredB4 = new double[THIRD_OCTAVE.length];
+
     private int measeuredBsize;
     private double decibelA;
     private double decibelAfinal;
@@ -391,7 +392,8 @@ public class measuredBA extends AppCompatActivity {
     private void savedBbandmeasure(int counter4) {
         switch (counter4) {
             case 1:
-                for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                for (int i = 0; i < 9; i++) {
+                //for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                     measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
                     measuredB1[i] = measuredB[i];
                     measuredB[i] = 0;
@@ -405,7 +407,8 @@ public class measuredBA extends AppCompatActivity {
                 break;
 
             case 2:
-                for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                for (int i = 0; i < 9; i++) {
+                    //for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                     measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
                     measuredB2[i] = measuredB[i];
                     measuredB[i] = 0;
@@ -419,7 +422,8 @@ public class measuredBA extends AppCompatActivity {
                 break;
 
             case 3:
-                for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                for (int i = 0; i < 9; i++) {
+                    //for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                     measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
                     measuredB3[i] = measuredB[i];
                     measuredB[i] = 0;
@@ -433,7 +437,8 @@ public class measuredBA extends AppCompatActivity {
                 break;
 
             case 4:
-                for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                for (int i = 0; i < 9; i++) {
+                    //for (int i = 0; i < THIRD_OCTAVE.length; i++) {
                     measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
                     measuredB4[i] = measuredB[i];
                     measuredB[i] = 0;
@@ -668,8 +673,57 @@ public class measuredBA extends AppCompatActivity {
 
                             float linearFft = (float) Math.pow(10, (float) dbFft[i] / 10f);
 
+                            /////////////////////////////////////////////////////////////////
 
-                            if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 17.8f)) {
+                            if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 22f)) {
+                                linearBandCount[0] += 1;
+                                linearBand[0] += linearFft;
+                                dbBand[0] = (float) (10 * Math.log10(linearBand[0]));
+                            }
+                            if ((22f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 44f)) {
+                                linearBandCount[1] += 1;
+                                linearBand[1] += linearFft;
+                                dbBand[1] = (float) (10 * Math.log10(linearBand[1]));
+                            }
+                            if ((44f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 88f)) {
+                                linearBandCount[2] += 1;
+                                linearBand[2] += linearFft;
+                                dbBand[2] = (float) (10 * Math.log10(linearBand[2]));
+                            }
+                            if ((88f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 177f)) {
+                                linearBandCount[3] += 1;
+                                linearBand[3] += linearFft;
+                                dbBand[3] = (float) (10 * Math.log10(linearBand[3]));
+                            }
+                            if ((177f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 355f)) {
+                                linearBandCount[4] += 1;
+                                linearBand[4] += linearFft;
+                                dbBand[4] = (float) (10 * Math.log10(linearBand[4]));
+                            }
+                            if ((355f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 710f)) {
+                                linearBandCount[5] += 1;
+                                linearBand[5] += linearFft;
+                                dbBand[5] = (float) (10 * Math.log10(linearBand[5]));
+                            }
+                            if ((710f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 1420f)) {
+                                linearBandCount[6] += 1;
+                                linearBand[6] += linearFft;
+                                dbBand[6] = (float) (10 * Math.log10(linearBand[6]));
+                            }
+                            if ((1420f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 2840f)) {
+                                linearBandCount[7] += 1;
+                                linearBand[7] += linearFft;
+                                dbBand[7] = (float) (10 * Math.log10(linearBand[7]));
+                            }
+                            if ((2840f <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 5680f)) {
+                                linearBandCount[8] += 1;
+                                linearBand[8] += linearFft;
+                                dbBand[8] = (float) (10 * Math.log10(linearBand[8]));
+                            }
+
+                            /////////////////////////////////////////////////////////////////////
+
+                            /*if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 17.8f)) {
                                 linearBandCount[0] += 1;
                                 linearBand[0] += linearFft;
                                 dbBand[0] = (float) (10 * Math.log10(linearBand[0]));
@@ -828,11 +882,11 @@ public class measuredBA extends AppCompatActivity {
                                 linearBandCount[31] += 1;
                                 linearBand[31] += linearFft;
                                 dbBand[31] = (float) (10 * Math.log10(linearBand[31]));
-                            }
+                            }*/
                         }
 
                         measeuredBsize++;
-                        for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                        for (int i = 0; i < dbBand.length; i++) {
                             measuredB[i] += Math.pow(10, dbBand[i] / 10);
                         }
 

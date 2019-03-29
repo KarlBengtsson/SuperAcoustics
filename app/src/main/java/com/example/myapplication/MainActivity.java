@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
                 double SPLaverageRoom1 [] = new double[32];
+                //Todo calculate logarithmic average not sum/4
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     SPLaverageRoom1[i] = (SPLmeasure1[i] + SPLmeasure2[i] + SPLmeasure3[i]
                             + SPLmeasure4[i]) / 4;

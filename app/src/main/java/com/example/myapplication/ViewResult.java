@@ -25,8 +25,9 @@ public class ViewResult extends AppCompatActivity {
     // For saving and loading .txt file
 
     public String path;
-    private String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
-            "630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
+    //private String [] THIRD_OCTAVE_LABEL = {"16", "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160", "200", "250", "315", "400", "500",
+            //"630", "800", "1000", "1250", "1600", "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"};
+    private String [] THIRD_OCTAVE_LABEL = {"16", "31.5", "63", "125", "250", "500", "1000", "2000", "4000"};
     // number 10, 13, 16, 19, 22, 25
     // indices 9, 12, 15, 18, 21, 24
     private int indices[] = {9, 12, 15, 18, 21, 24};
@@ -86,17 +87,18 @@ public class ViewResult extends AppCompatActivity {
         roomOneResult();
         roomTwoResult();
         reverbResult();
-/*        calcResult();*/
+/*       calcResult();*/
     }
 
     private void roomOneResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("SPL_Room1" + "%s.txt", df.format(new Date()));
+        String filename = String.format("SPL_Room1_" + "%s.txt", df.format(new Date()));
         file = new File(path + "/"+filename);
         if (file.exists()) {
             String [] saveText = Load(file);
             String stringen = "Frequency:    Sound Pressure Level:  \n";
-            for (int i = 0; i<saveText.length-1; i++){
+            for (int i = 0; i<THIRD_OCTAVE_LABEL.length; i++){
+            //for (int i = 0; i<saveText.length-1; i++){
                 stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
             }
             resultSPL1.setText(stringen);
@@ -106,12 +108,13 @@ public class ViewResult extends AppCompatActivity {
 
     private void roomTwoResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("SPL_Room2" + "%s.txt", df.format(new Date()));
+        String filename = String.format("SPL_Room2_" + "%s.txt", df.format(new Date()));
         file = new File(path + "/"+filename);
         if (file.exists()) {
             String [] saveText = Load(file);
             String stringen = "Frequency:    Sound Pressure Level:  \n";
-            for (int i = 0; i<saveText.length-1; i++){
+            for (int i = 0; i<THIRD_OCTAVE_LABEL.length; i++){
+                //for (int i = 0; i<saveText.length-1; i++){
                 stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
             }
             resultSPL2.setText(stringen);
@@ -120,13 +123,13 @@ public class ViewResult extends AppCompatActivity {
 
     private void reverbResult() {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        String filename = String.format("Reverberation_time" + "%s.txt", df.format(new Date()));
+        String filename = String.format("Reverberation_time_" + "%s.txt", df.format(new Date()));
         file = new File(path + "/"+filename);
         if (file.exists()){
         String [] saveText = Load(file);
             String stringen = "Frequency:    Sound Pressure Level:  \n";
             for (int i = 0; i<saveText.length-1; i++){
-                stringen += THIRD_OCTAVE_LABEL[indices[i]] +" Hz                \t\t\t\t" + saveText[i] + "  dB   \n";
+                stringen += THIRD_OCTAVE_LABEL[i] +" Hz                \t\t\t\t" + saveText[i] + "  seconds   \n";
             }
             resultreverb.setText(stringen);
         }
@@ -143,6 +146,7 @@ public class ViewResult extends AppCompatActivity {
         // Loading the saved txt file and reading into viewResult window
 
     }
+
 
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
