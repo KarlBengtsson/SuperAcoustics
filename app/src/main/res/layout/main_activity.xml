@@ -114,6 +114,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/measureTextRT"
                 tools:text=" " />
+
+            <Button
+                android:id="@+id/button2"
+                style="@android:style/Widget.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="enterReverb"
+                android:text="Enter RT" />
         </LinearLayout>
 
     </LinearLayout>

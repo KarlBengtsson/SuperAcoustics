@@ -11,6 +11,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ReverbFragment.ReverbDialogListener {
     public static final String EXTRA_MESSAGE = "Calibration";
     public static final String ROOM_MESSAGE = "Room";
     private Button dbMeter;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     int mAudioSource = 0;
     int mSampleRate = 0;
     private int indices[] = {9, 12, 15, 18, 21, 24};
-    private float[] reverbResult;
+    private float[] reverbResult = {0, 0, 0, 0, 0, 0};
     private double[] SPLmeasure1;
     private double[] SPLmeasure2;
     private double[] SPLmeasure3;
@@ -114,6 +115,35 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("ROOM" , 3);
         editor.commit();
         startActivityForResult(intent, 3);
+    }
+
+    public void enterReverb (View view) {
+        FragmentManager fm = getSupportFragmentManager();
+        ReverbFragment reverbFragment = ReverbFragment.newInstance("ReverbFragment");
+        reverbFragment.show(fm, "fragment_reverb");
+    }
+
+    public void onFinishEditDialog(String a1, String b, String c, String d, String e, String f) {
+        reverbResult[0] = Float.parseFloat(a1);
+        reverbResult[1] = Float.parseFloat(b);
+        reverbResult[2] = Float.parseFloat(c);
+        reverbResult[3] = Float.parseFloat(d);
+        reverbResult[4] = Float.parseFloat(e);
+        reverbResult[5] = Float.parseFloat(f);
+        double reverbResultDouble [] = new double [reverbResult.length];
+        for ( int i = 0; i < reverbResult.length; i++) {
+            reverbResultDouble[i] = reverbResult[i];
+        }
+        saveFile("Reverberation_time", reverbResultDouble);
+        reverbcheck = true;
+        float total = 0;
+        for (double a:reverbResult) {
+            total += a;
+        }
+        avg = total/6;
+        avg = (float)(Math.round(avg * 10000d) / 10000d);
+        measureRT.setText(String.valueOf(avg));
+        setPreferences();
     }
 
     public void ViewResult (View view) {
