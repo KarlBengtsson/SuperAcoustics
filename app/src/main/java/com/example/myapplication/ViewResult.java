@@ -73,8 +73,6 @@ public class ViewResult extends AppCompatActivity {
         readPreferences();
         if (fromCheck == 1) {
             // Coming from welcomeActivity
-            //Todo make sure the results are loaded from the chosen directory, once again check if
-            //Todo the specified measurement exists
             readPreferences();
             roomTwoResult();
             roomOneResult();
@@ -85,7 +83,6 @@ public class ViewResult extends AppCompatActivity {
             DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
             path = String.format(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_%s" ,df.format(new Date()));
         }
-        //Todo input check if results from each measurement exists....!
         roomOneResult();
         roomTwoResult();
         reverbResult();
