@@ -210,7 +210,7 @@ public class LevelMeterActivity extends Activity implements
                 public void run() {
                     // The bar has an input range of [0.0 ; 1.0] and 10 segments.
                     // Each LED corresponds to 6 dB.
-                    //mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
+                    mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
 
                     DecimalFormat df = new DecimalFormat("##");
                     mdBTextView.setText(df.format(20 + rmsdB));

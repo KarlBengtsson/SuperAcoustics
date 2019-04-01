@@ -9,14 +9,14 @@
 
     <LinearLayout
         android:id="@+id/edit_name"
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         android:orientation="vertical"
-        android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,14 +32,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center"
+                android:paddingStart="3dp"
+                android:paddingLeft="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp"
                 android:text="125 Hz:"
                 android:textSize="18sp" />
 
@@ -47,7 +54,8 @@
                 android:id="@+id/editText1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="13dp"
+                android:layout_weight="2"
                 android:ems="10"
                 android:hint="(seconds)"
                 android:inputType="numberDecimal" />
@@ -57,14 +65,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center"
+                android:paddingStart="3dp"
+                android:paddingLeft="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp"
                 android:text="250 Hz:"
                 android:textSize="18sp" />
 
@@ -72,7 +87,8 @@
                 android:id="@+id/editText2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="13dp"
+                android:layout_weight="2"
                 android:ems="10"
                 android:hint="(seconds)"
                 android:inputType="numberDecimal" />
@@ -82,14 +98,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center"
+                android:paddingStart="3dp"
+                android:paddingLeft="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp"
                 android:text="500 Hz:"
                 android:textSize="18sp" />
 
@@ -97,7 +120,8 @@
                 android:id="@+id/editText3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="13dp"
+                android:layout_weight="2"
                 android:ems="10"
                 android:hint="(seconds)"
                 android:inputType="numberDecimal" />
@@ -107,14 +131,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center"
+                android:paddingStart="3dp"
+                android:paddingLeft="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp"
                 android:text="1000 Hz"
                 android:textSize="18sp" />
 
@@ -122,7 +153,8 @@
                 android:id="@+id/editText4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_weight="2"
                 android:ems="10"
                 android:hint="(seconds)"
                 android:inputType="numberDecimal" />
@@ -132,14 +164,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center"
+                android:paddingStart="3dp"
+                android:paddingLeft="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp"
                 android:text="2000 Hz:"
                 android:textSize="18sp" />
 
@@ -147,7 +186,8 @@
                 android:id="@+id/editText5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="3dp"
+                android:layout_weight="2"
                 android:ems="10"
                 android:hint="(seconds)"
                 android:inputType="numberDecimal" />
@@ -157,14 +197,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center"
+                android:paddingStart="3dp"
+                android:paddingLeft="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp"
                 android:text="4000 Hz:"
                 android:textSize="18sp" />
 
@@ -172,7 +219,8 @@
                 android:id="@+id/editText6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="3dp"
+                android:layout_weight="2"
                 android:ems="10"
                 android:hint="(seconds)"
                 android:inputType="numberDecimal" />
