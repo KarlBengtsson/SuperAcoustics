@@ -109,6 +109,7 @@
                     style="@android:style/Widget.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="MeasureBackground"
                     android:text="@string/MeasureBackGroundButton" />
 
                 <TextView

@@ -674,7 +674,7 @@ public class measuredBA extends AppCompatActivity {
                             float linearFft = (float) Math.pow(10, (float) dbFft[i] / 10f);
 
                             /////////////////////////////////////////////////////////////////
-                            if ((0 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 177f)) {
+                            if ((88 <= i * FREQRESOLUTION) && (i * FREQRESOLUTION < 177f)) {
                                 linearBandCount[0] += 1;
                                 linearBand[0] += linearFft;
                                 dbBand[0] = (float) (10 * Math.log10(linearBand[0]));
@@ -1153,7 +1153,7 @@ public class measuredBA extends AppCompatActivity {
 
     private String dBformat(double dB) {
         // stop the recording log file
-        return String.format(Locale.ENGLISH, "%.1f", dB);
+        return String.format(Locale.ENGLISH, "%.3f", dB);
     }
 
     private static int highestPowerof2(int n)

@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private double[] SPLmeasure4;
     double SPLaverageRoom1 [] = new double[32];
     double SPLaverageRoom2 [] = new double[32];
+    double SPLbackgroundRoom2 [] = new double [32];
     private double SPLRoom1;
     private double SPLRoom2;
     private float avg;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private boolean room2check;
     private boolean reverbcheck;
     private int sArea;
+    private boolean backgroundcheck;
 
 
     //Todo Measure background noise and explore new way to measure Reverberation time.
@@ -109,14 +111,30 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         editor.commit();
         startActivityForResult(intent, 2);
     }
-    public void MeasureSPL2 (View view) {
+
+    public void MeasureBackground (View view) {
         Intent intent = new Intent(this, measuredBA.class);
         intent.putExtra(EXTRA_MESSAGE, gain );
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("ROOM" , 3);
+        editor.putInt("ROOM" , 4);
         editor.commit();
-        startActivityForResult(intent, 3);
+        startActivityForResult(intent, 4);
+    }
+
+    public void MeasureSPL2 (View view) {
+        if(backgroundcheck) {
+            Intent intent = new Intent(this, measuredBA.class);
+            intent.putExtra(EXTRA_MESSAGE, gain);
+            SharedPreferences preferences = getSharedPreferences("LevelMeter", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt("ROOM", 3);
+            editor.commit();
+            startActivityForResult(intent, 3);
+        } else {
+            Toast.makeText(this, "Please measure backgound noise in room 2 " +
+                    "first!", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void enterReverb (View view) {
@@ -149,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     }
 
     public void ViewResult (View view) {
-        if (reverbcheck && room1check && room2check) {
+        if (reverbcheck && room1check && room2check && backgroundcheck) {
             double[] Area = new double[indices.length];
             double[] R = new double[indices.length];
             for (int i = 0; i<indices.length; i++){
@@ -159,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                 R[i] = Math.round(R[i] * 10000d) / 10000d;
                 saveFile("SRI", R);
             }
-
             Intent intent = new Intent(this,ViewResult.class);
             fromCheck = 2;
             setPreferences();
@@ -169,6 +186,18 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
             Toast.makeText(this, "Please perform all the measurements first!", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void checkBackgroundNoise(double[] SPL, double[] Background) {
+        for (int i = 0; i<SPL.length; i++) {
+            double diff = SPL[i] - Background[i];
+            if (diff < 10 && diff > 6) {
+                SPL[i] = 10 * Math.log10((Math.pow(10, SPL[i]/10)) - (Math.pow(10, Background[i]/10)));
+            } else if (diff <= 6) {
+                SPL[i] -= 1.3;
+            }
+        }
+        SPLaverageRoom2 = SPL;
     }
 
     public void MeasureReverb (View view) {
@@ -236,8 +265,26 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                             + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10);
                     SPLaverageRoom2[i] = 10* Math.log10(sum);
                 }
+                checkBackgroundNoise(SPLaverageRoom2, SPLbackgroundRoom2);
                 saveFile("SPL_Room2", SPLaverageRoom2);
                 room2check = true;
+                SPLRoom2=data.getDoubleExtra("dBA", 0);
+                measureText2.setText(dBformat(SPLRoom2));
+            }
+        } else if (requestCode == 4) {
+            if(resultCode == Activity.RESULT_OK){
+                SPLmeasure1 = data.getDoubleArrayExtra("measure1");
+                SPLmeasure2 = data.getDoubleArrayExtra("measure2");
+                SPLmeasure3 = data.getDoubleArrayExtra("measure3");
+                SPLmeasure4 = data.getDoubleArrayExtra("measure4");
+
+                for (int i = 0; i<SPLmeasure1.length; i++) {
+                    double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
+                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10);
+                    SPLbackgroundRoom2[i] = 10* Math.log10(sum);
+                }
+                saveFile("SPL_Room2", SPLbackgroundRoom2);
+                backgroundcheck = true;
                 SPLRoom2=data.getDoubleExtra("dBA", 0);
                 measureText2.setText(dBformat(SPLRoom2));
             }
@@ -399,7 +446,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     }
     private String dBformat(double dB) {
         // stop the recording log file
-        return String.format(Locale.ENGLISH, "%.1f", dB);
+        return String.format(Locale.ENGLISH, "%.3f", dB);
     }
 
 }
