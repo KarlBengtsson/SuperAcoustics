@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private TextView calTextView;
     private TextView measureText1;
     private TextView measureText2;
+    private TextView measureText3;
     private TextView measureRT;
     private static final String TAG = "MainActivity";
     float gain = 0;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private boolean room2check;
     private boolean reverbcheck;
     private int sArea;
+
 
     //Todo Measure background noise and explore new way to measure Reverberation time.
 
@@ -325,6 +327,8 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         measureText1.setText("Not measured");
         measureText2 = (TextView) findViewById(R.id.measureText2);
         measureText2.setText("Not measured");
+        measureText3 = (TextView) findViewById(R.id.measureText3);
+        measureText3.setText("Not measured");
         measureRT = (TextView) findViewById(R.id.measureTextRT);
         measureRT.setText("Not measured");
         room1check = false;

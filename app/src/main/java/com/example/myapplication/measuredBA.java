@@ -273,7 +273,7 @@ public class measuredBA extends AppCompatActivity {
 
             final int finalCountTimeDisplay = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
 
-            final int finalCountTimeLog = (int) (1 * NUMBER_OF_FFT_PER_SECOND);
+            final int finalCountTimeLog = (int) (1.0 * NUMBER_OF_FFT_PER_SECOND);
 
             ToggleButton.OnClickListener tbListener =
                     new ToggleButton.OnClickListener() {
