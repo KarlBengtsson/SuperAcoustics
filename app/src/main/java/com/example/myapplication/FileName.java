@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FileName extends Activity {
     public static final String EXTRA_MESSAGE = "Calibration";
@@ -49,23 +50,33 @@ public class FileName extends Activity {
         widthTextView = (TextView) findViewById(R.id.widthText);
         areaTextView = (TextView) findViewById(R.id.areaText);
         okButton = (Button) findViewById(R.id.nameButton);
+
+
         Button.OnClickListener okListener =
                 new Button.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        // Dismiss this dialog.
-                        Intent intent;
-                        intent = new Intent(FileName.this, MainActivity.class);
-                        REPOSITORY_NAME = nameTextView.getText().toString();
-                        height = Integer.valueOf(heightTextView.getText().toString());
-                        length = Integer.valueOf(lengthTextView.getText().toString());
-                        width = Integer.valueOf(widthTextView.getText().toString());
-                        volume = height*length*width;
-                        area = Integer.valueOf(areaTextView.getText().toString());
-                        FileName.this.setPreferences();
-                        startActivity(intent);
-                        finish();
+
+                        if (nameTextView.getText().length() == 0 || lengthTextView.getText().length() == 0 ||
+                                widthTextView.getText().length() == 0 || heightTextView.getText().length() == 0
+                                || areaTextView.getText().length() == 0 ) {
+                            Toast.makeText(FileName.this, "Please fill out all the information", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            // Dismiss this dialog.
+                            Intent intent;
+                            intent = new Intent(FileName.this, MainActivity.class);
+                            REPOSITORY_NAME = nameTextView.getText().toString();
+                            height = Integer.valueOf(heightTextView.getText().toString());
+                            length = Integer.valueOf(lengthTextView.getText().toString());
+                            width = Integer.valueOf(widthTextView.getText().toString());
+                            volume = height * length * width;
+                            area = Integer.valueOf(areaTextView.getText().toString());
+                            FileName.this.setPreferences();
+                            startActivity(intent);
+                            finish();
+                        }
 
                     }
                 };
