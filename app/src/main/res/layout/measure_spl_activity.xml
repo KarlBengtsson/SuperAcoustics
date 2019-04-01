@@ -179,10 +179,11 @@
 
             <TextView
                 android:id="@+id/measuredSPL1"
-                android:layout_width="7dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
+                android:padding="5dp"
                 android:text="@string/SPL" />
 
             <TextView
@@ -190,6 +191,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:padding="5dp"
                 android:text="@string/SPL" />
 
             <TextView
@@ -197,6 +199,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:padding="5dp"
                 android:text="@string/SPL" />
 
             <TextView
@@ -204,6 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:padding="5dp"
                 android:text="@string/SPL" />
 
         </LinearLayout>

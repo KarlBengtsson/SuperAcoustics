@@ -98,8 +98,8 @@ public class measuredBA extends AppCompatActivity {
     private final static int BLOCK_SIZE = AudioRecord.getMinBufferSize(
             RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING)
             / BYTES_PER_ELEMENT;
-    private final static int BLOCK_SIZE_FFT =(int) Math.ceil(((double) (highestPowerof2(RECORDER_SAMPLERATE))+1)/4);
-    /*private final static int BLOCK_SIZE_FFT = 4096;*/
+    /*private final static int BLOCK_SIZE_FFT =(int) Math.ceil(((double) (highestPowerof2(RECORDER_SAMPLERATE))+1)/4);*/
+    private final static int BLOCK_SIZE_FFT = 1764;
     private final static int NUMBER_OF_FFT_PER_SECOND = RECORDER_SAMPLERATE
             / BLOCK_SIZE_FFT;
 
