@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     double SPLbackgroundRoom2 [] = new double [32];
     private double SPLRoom1;
     private double SPLRoom2;
+    private double Background;
     private float avg;
     private FileOutputStream fos;
     private int fromCheck;
@@ -62,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private boolean reverbcheck;
     private int sArea;
     private boolean backgroundcheck;
-    private double Background;
 
 
     //Todo Measure background noise and explore new way to measure Reverberation time.
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         intent.putExtra(EXTRA_MESSAGE, gain );
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("ROOM" , 4);
+        editor.putInt("ROOM" , 3);
         editor.commit();
         startActivityForResult(intent, 4);
     }
