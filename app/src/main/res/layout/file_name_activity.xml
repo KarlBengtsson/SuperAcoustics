@@ -29,6 +29,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="@string/nameInput"
+        android:nextFocusDown="@+id/HeightText"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
