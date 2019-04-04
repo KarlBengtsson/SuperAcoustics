@@ -131,7 +131,7 @@ public class measuredBA extends AppCompatActivity {
     private double decibelA;
     private double decibelAfinal;
     private int decibelAsize;
-
+    private CountDownTimer timer;
 
 
     /** Called when the activity is first created. */
@@ -284,14 +284,16 @@ public class measuredBA extends AppCompatActivity {
                                 readPreferences();
                                 precalculateWeightedA();
                                 startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
-                                new CountDownTimer(10000, 1000) {
+                                timer = new CountDownTimer(10000, 1000) {
                                     int time=10;
                                     public void onTick(long millisUntilFinished) {
                                         seconds.setText(checkDigit(time));
+                                        time--;
                                     }
                                     public void onFinish() {
                                         seconds.setText("0");
                                         onOffButton.toggle();
+
                                         if (counter4 > 0) {
                                             savedBbandmeasure(counter4);
                                         }
@@ -302,6 +304,13 @@ public class measuredBA extends AppCompatActivity {
                                         seconds.setText("10");
                                     }
                                 }.start();
+                            } else {
+                                counter4--;
+                                Toast.makeText(measuredBA.this, "The measurement was aborted, let the countdown finish in order to save the measurement", Toast.LENGTH_LONG).show();
+                                timer.cancel();
+                                stopRecording();
+                                seconds.setText("10");
+                                onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
                             }
                         }
                     };
