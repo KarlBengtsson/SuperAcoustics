@@ -132,11 +132,11 @@ public class MeasureSPL extends AppCompatActivity implements
         dir.mkdirs();
 
         //StartButton handler
-        startButton = (Button) findViewById(R.id.startButton);
+/*        startButton = (Button) findViewById(R.id.startButton);
         startButton.setEnabled(false);
         //StopButton handler
         stopButton = (Button) findViewById(R.id.stopButton);
-        stopButton.setEnabled(false);
+        stopButton.setEnabled(false);*/
         //Textview to display measured SPL
         //measuredSPL1 = (TextView) findViewById(R.id.measuredSPL1);
 

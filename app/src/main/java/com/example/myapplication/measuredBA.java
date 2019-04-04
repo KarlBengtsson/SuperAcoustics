@@ -68,7 +68,7 @@ public class measuredBA extends AppCompatActivity {
     private TextView measuredSPL3;
     private TextView measuredSPL4;
     private final ArrayList<Integer> signal1 = new ArrayList<>(); //används i plot functionen
-    private Button startButton, stopButton, finishMeasure, plotT;
+    private Button finishMeasure, plotT;
     private int counter4 = 0;
     private int average1, average2, average11, average12, average13, average14;
     private String path = "";
@@ -201,8 +201,7 @@ public class measuredBA extends AppCompatActivity {
         // Call for the method to activate the calibration buttons
         onClickLevelAdjustment();
 
-        //Todo: Behöver vi ha settings? Ska inte samplerate alltid vara 44100?????
-        // Settings button, launches the settings dialog.
+/*        // Settings button, launches the settings dialog.
         Button settingsButton=(Button)findViewById(R.id.settingsButton);
         Button.OnClickListener settingsBtnListener =
                 new Button.OnClickListener() {
@@ -219,7 +218,7 @@ public class measuredBA extends AppCompatActivity {
                         measuredBA.this.startActivity(settingsIntent);
                     }
                 };
-        settingsButton.setOnClickListener(settingsBtnListener);
+        settingsButton.setOnClickListener(settingsBtnListener);*/
 
         Button setCalButton=(Button)findViewById(R.id.setCalibrationButton);
         Button.OnClickListener setCalBtnListener =
@@ -259,12 +258,12 @@ public class measuredBA extends AppCompatActivity {
             //File dir = new File(path);
             //dir.mkdirs();
 
-            //StartButton handler
+/*            //StartButton handler
             startButton = (Button) findViewById(R.id.startButton);
             startButton.setEnabled(false);
             //StopButton handler
             stopButton = (Button) findViewById(R.id.stopButton);
-            stopButton.setEnabled(false);
+            stopButton.setEnabled(false);*/
 
             // Toggle Button handler.
             final ToggleButton onOffButton=(ToggleButton)findViewById(
@@ -284,7 +283,7 @@ public class measuredBA extends AppCompatActivity {
                                 //plotFFT.setEnabled(false);
                                 //plotT.setEnabled(false);
                                 counter4++;
-                                startButton.setEnabled(true);
+                                /*startButton.setEnabled(true);*/
                                 finishMeasure.setEnabled(false);
                                 readPreferences();
                                 precalculateWeightedA();
@@ -303,7 +302,7 @@ public class measuredBA extends AppCompatActivity {
                                 if (counter4 > 0) {
                                     savedBbandmeasure(counter4);
                                 }
-                                startButton.setEnabled(false);
+                                /*startButton.setEnabled(false);*/
                                 finishMeasure.setEnabled(true);
                                 onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
                                 //plotFFT.setEnabled(true);
@@ -314,7 +313,7 @@ public class measuredBA extends AppCompatActivity {
                         }
                     };
             onOffButton.setOnClickListener(tbListener);
-            startButton.setOnClickListener(new View.OnClickListener(){
+/*            startButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
                     stopButton.setEnabled(true);
@@ -329,7 +328,7 @@ public class measuredBA extends AppCompatActivity {
                     startButton.setEnabled(true);
                     // if (Room == 1) {
                 }
-            });
+            });*/
 
             finishMeasure=(Button)findViewById(R.id.finishButton);
             Button.OnClickListener setFinishBtnListener =
@@ -348,10 +347,11 @@ public class measuredBA extends AppCompatActivity {
                                 returnIntent.putExtra("measure2", measuredB2);
                                 returnIntent.putExtra("measure3", measuredB3);
                                 returnIntent.putExtra("measure4", measuredB4);
+                                setResult(Activity.RESULT_OK,returnIntent);
+                                measuredBA.this.setPreferences();
+                                finish();
                             }
-                            setResult(Activity.RESULT_OK,returnIntent);
-                            measuredBA.this.setPreferences();
-                            finish();
+
 
                         }
                     };

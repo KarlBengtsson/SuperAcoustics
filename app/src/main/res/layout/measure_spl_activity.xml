@@ -45,14 +45,38 @@
 
     </LinearLayout>
 
-    <ToggleButton
-        android:id="@+id/on_off_toggle_button"
-        style="@android:style/Widget.Button"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:checked="false"
-        android:text="On" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:layout_weight="0"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/on_off_toggle_button"
+            style="@android:style/Widget.Button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:text="On" />
+
+        <TextView
+            android:id="@+id/textseconds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="0.25"
+            android:text="05" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:text="Seconds" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView2"
@@ -102,36 +126,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/startButton"
-                style="@android:style/Widget.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:paddingLeft="10dp"
-                android:text="@string/start_measure" />
-
-            <Button
-                android:id="@+id/stopButton"
-                style="@android:style/Widget.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stop_measure" />
-
-            <TextView
-                android:id="@+id/textseconds"
-                android:layout_width="3dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:text="05" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Seconds" />
 
         </LinearLayout>
 

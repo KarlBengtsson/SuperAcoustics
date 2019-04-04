@@ -117,7 +117,7 @@ public class LevelMeterActivity extends Activity implements
         // Call for the method to activate the calibration buttons
         onClickLevelAdjustment();
 
-        // Settings button, launches the settings dialog.
+/*        // Settings button, launches the settings dialog.
         Button settingsButton=(Button)findViewById(R.id.settingsButton);
         Button.OnClickListener settingsBtnListener =
                 new Button.OnClickListener() {
@@ -134,7 +134,7 @@ public class LevelMeterActivity extends Activity implements
                         LevelMeterActivity.this.startActivity(settingsIntent);
                     }
                 };
-        settingsButton.setOnClickListener(settingsBtnListener);
+        settingsButton.setOnClickListener(settingsBtnListener);*/
 
         Button setCalButton=(Button)findViewById(R.id.setCalibrationButton);
         Button.OnClickListener setCalBtnListener =

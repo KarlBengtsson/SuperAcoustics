@@ -5,11 +5,6 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <com.example.myapplication.BarLevelDrawable
-        android:id="@+id/bar_level_drawable_view"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,15 +53,6 @@
                 android:textSize="36sp" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/settingsButton"
-            style="@android:style/Widget.Button"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:text="@string/settings" />
 
     </LinearLayout>
 
