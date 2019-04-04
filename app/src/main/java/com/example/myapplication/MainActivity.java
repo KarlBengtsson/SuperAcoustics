@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private double[] SPLmeasure2;
     private double[] SPLmeasure3;
     private double[] SPLmeasure4;
+    private double[] SPLmeasure5;
     double SPLaverageRoom1 [] = new double[32];
     double SPLaverageRoom2 [] = new double[32];
     double SPLbackgroundRoom2 [] = new double [32];
@@ -243,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
+                SPLmeasure5 = data.getDoubleArrayExtra("measure5");
 
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
@@ -260,10 +262,11 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
+                SPLmeasure5 = data.getDoubleArrayExtra("measure5");
 
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
-                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10);
+                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10) + Math.pow(10, SPLmeasure5[i] / 10);
                     SPLaverageRoom2[i] = 10* Math.log10(sum);
                 }
                 checkBackgroundNoise(SPLaverageRoom2, SPLbackgroundRoom2);
@@ -278,10 +281,11 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                 SPLmeasure2 = data.getDoubleArrayExtra("measure2");
                 SPLmeasure3 = data.getDoubleArrayExtra("measure3");
                 SPLmeasure4 = data.getDoubleArrayExtra("measure4");
+                SPLmeasure5 = data.getDoubleArrayExtra("measure5");
 
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
-                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10);
+                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10) + Math.pow(10, SPLmeasure5[i] / 10);
                     SPLbackgroundRoom2[i] = 10* Math.log10(sum);
                 }
                 saveFile("SPL_Room2", SPLbackgroundRoom2);

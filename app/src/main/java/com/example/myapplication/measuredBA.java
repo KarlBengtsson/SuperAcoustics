@@ -67,6 +67,7 @@ public class measuredBA extends AppCompatActivity {
     private TextView measuredSPL2;
     private TextView measuredSPL3;
     private TextView measuredSPL4;
+    private TextView measuredSPL5;
     private final ArrayList<Integer> signal1 = new ArrayList<>(); //används i plot functionen
     private Button finishMeasure, plotT;
     private int counter4 = 0;
@@ -124,11 +125,13 @@ public class measuredBA extends AppCompatActivity {
     private double[] measuredB2 = new double[THIRD_OCTAVE.length];
     private double[] measuredB3 = new double[THIRD_OCTAVE.length];
     private double[] measuredB4 = new double[THIRD_OCTAVE.length];
+    private double[] measuredB5 = new double[THIRD_OCTAVE.length];
 
     private int measeuredBsize;
     private double decibelA;
     private double decibelAfinal;
     private int decibelAsize;
+
 
 
     /** Called when the activity is first created. */
@@ -246,6 +249,7 @@ public class measuredBA extends AppCompatActivity {
             measuredSPL2 = (TextView) findViewById(R.id.measuredSPL2);
             measuredSPL3 = (TextView) findViewById(R.id.measuredSPL3);
             measuredSPL4 = (TextView) findViewById(R.id.measuredSPL4);
+            measuredSPL5 = (TextView) findViewById(R.id.measuredSPL5);
             seconds = (TextView) findViewById(R.id.textseconds);
 
             // Defining a new File for saving later on
@@ -284,24 +288,20 @@ public class measuredBA extends AppCompatActivity {
                                     int time=10;
                                     public void onTick(long millisUntilFinished) {
                                         seconds.setText(checkDigit(time));
-                                        time--;
-                                        if (time == 0) {
-                                            onOffButton.setChecked(false);
-                                        }
                                     }
                                     public void onFinish() {
                                         seconds.setText("0");
+                                        onOffButton.toggle();
+                                        if (counter4 > 0) {
+                                            savedBbandmeasure(counter4);
+                                        }
+                                        /*startButton.setEnabled(false);*/
+                                        finishMeasure.setEnabled(true);
+                                        onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
+                                        stopRecording();
+                                        seconds.setText("10");
                                     }
                                 }.start();
-                            } else {
-                                if (counter4 > 0) {
-                                    savedBbandmeasure(counter4);
-                                }
-                                /*startButton.setEnabled(false);*/
-                                finishMeasure.setEnabled(true);
-                                onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
-                                stopRecording();
-                                seconds.setText("10");
                             }
                         }
                     };
@@ -331,7 +331,7 @@ public class measuredBA extends AppCompatActivity {
                         public void onClick(View v) {
                             Intent returnIntent = new Intent();
                             // Dismiss this dialog.
-                            if (counter4 < 4) {
+                            if (counter4 < 5) {
                                 Toast.makeText(getApplicationContext(), "Make 4 measurements in each room before finishing", Toast.LENGTH_LONG).show();
                             } else {
                                 decibelAfinal = decibelAfinal/4;
@@ -340,6 +340,7 @@ public class measuredBA extends AppCompatActivity {
                                 returnIntent.putExtra("measure2", measuredB2);
                                 returnIntent.putExtra("measure3", measuredB3);
                                 returnIntent.putExtra("measure4", measuredB4);
+                                returnIntent.putExtra("measure5", measuredB5);
                                 setResult(Activity.RESULT_OK,returnIntent);
                                 measuredBA.this.setPreferences();
                                 finish();
@@ -439,6 +440,21 @@ public class measuredBA extends AppCompatActivity {
                 decibelA = (10 * Math.log10(decibelA / decibelAsize));
                 decibelAfinal += decibelA;
                 measuredSPL4.setText(dBformat(decibelA));
+                decibelA = 0;
+                decibelAsize = 0;
+                measeuredBsize = 0;
+                break;
+
+            case 5:
+                for (int i = 0; i < 9; i++) {
+                    //for (int i = 0; i < THIRD_OCTAVE.length; i++) {
+                    measuredB[i] = (10 * Math.log10(measuredB[i] / measeuredBsize));
+                    measuredB5[i] = measuredB[i];
+                    measuredB[i] = 0;
+                }
+                decibelA = (10 * Math.log10(decibelA / decibelAsize));
+                decibelAfinal += decibelA;
+                measuredSPL5.setText(dBformat(decibelA));
                 decibelA = 0;
                 decibelAsize = 0;
                 measeuredBsize = 0;
