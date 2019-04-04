@@ -165,12 +165,6 @@ public class measuredBA extends AppCompatActivity {
                 }
             });
 
-
-
-
-
-
-
             // Toggle Button handler.
 
         //final int finalCountTimeDisplay = (int) (timeDisplay * NUMBER_OF_FFT_PER_SECOND);
@@ -280,19 +274,20 @@ public class measuredBA extends AppCompatActivity {
                         public void onClick(View v) {
                             if (onOffButton.isChecked()) {
                                 onOffButton.setTextColor(getApplication().getResources().getColor(R.color.plot_red));
-                                //plotFFT.setEnabled(false);
-                                //plotT.setEnabled(false);
                                 counter4++;
                                 /*startButton.setEnabled(true);*/
                                 finishMeasure.setEnabled(false);
                                 readPreferences();
                                 precalculateWeightedA();
                                 startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
-                                new CountDownTimer(5000, 1000) {
-                                    int time=5;
+                                new CountDownTimer(10000, 1000) {
+                                    int time=10;
                                     public void onTick(long millisUntilFinished) {
                                         seconds.setText(checkDigit(time));
                                         time--;
+                                        if (time == 0) {
+                                            onOffButton.setChecked(false);
+                                        }
                                     }
                                     public void onFinish() {
                                         seconds.setText("0");
@@ -305,10 +300,8 @@ public class measuredBA extends AppCompatActivity {
                                 /*startButton.setEnabled(false);*/
                                 finishMeasure.setEnabled(true);
                                 onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
-                                //plotFFT.setEnabled(true);
-                                //plotT.setEnabled(true);
                                 stopRecording();
-                                seconds.setText("05");
+                                seconds.setText("10");
                             }
                         }
                     };
