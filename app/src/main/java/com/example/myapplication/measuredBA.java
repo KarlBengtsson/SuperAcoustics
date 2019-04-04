@@ -149,7 +149,6 @@ public class measuredBA extends AppCompatActivity {
 
         // Get a handle that will be used in async thread post to update the
         // display.
-        mBarLevel = findViewById(R.id.bar_level_drawable_view);
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
         mGainTextView = (TextView)findViewById(R.id.gain);
@@ -171,10 +170,10 @@ public class measuredBA extends AppCompatActivity {
             // Toggle Button handler.
 
         //final int finalCountTimeDisplay = (int) (timeDisplay * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeDisplay = (int) (0.2 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeDisplay = (int) (0.3 * NUMBER_OF_FFT_PER_SECOND);
 
         //final int finalCountTimeLog = (int) (timeLog * NUMBER_OF_FFT_PER_SECOND);
-        final int finalCountTimeLog = (int) (1.0 * NUMBER_OF_FFT_PER_SECOND);
+        final int finalCountTimeLog = (int) (0.3 * NUMBER_OF_FFT_PER_SECOND);
 
         final ToggleButton onOffButton=(ToggleButton)findViewById(
                 R.id.on_off_toggle_button);
@@ -268,9 +267,9 @@ public class measuredBA extends AppCompatActivity {
                     R.id.on_off_toggle_button);
             onOffButton.setChecked(false);
 
-            final int finalCountTimeDisplay = (int) (0.5 * NUMBER_OF_FFT_PER_SECOND);
+            final int finalCountTimeDisplay = (int) (0.3 * NUMBER_OF_FFT_PER_SECOND);
 
-            final int finalCountTimeLog = (int) (1.0 * NUMBER_OF_FFT_PER_SECOND);
+            final int finalCountTimeLog = (int) (0.3 * NUMBER_OF_FFT_PER_SECOND);
 
             ToggleButton.OnClickListener tbListener =
                     new ToggleButton.OnClickListener() {

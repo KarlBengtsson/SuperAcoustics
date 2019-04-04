@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("ROOM" , 0);
-        editor.commit();
+        editor.apply();
         startActivity(intent);
     }
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("ROOM" , 1);
-        editor.commit();
+        editor.apply();
         startActivityForResult(intent, 2);
     }
 
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("ROOM" , 3);
-        editor.commit();
+        editor.apply();
         startActivityForResult(intent, 4);
     }
 
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
             SharedPreferences preferences = getSharedPreferences("LevelMeter", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("ROOM", 2);
-            editor.commit();
+            editor.apply();
             startActivityForResult(intent, 3);
         } else {
             Toast.makeText(this, "Please measure backgound noise in room 2 " +
