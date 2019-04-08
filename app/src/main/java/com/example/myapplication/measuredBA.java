@@ -78,7 +78,7 @@ public class measuredBA extends AppCompatActivity {
     private int tOrFFT;
 
     //--------------------------------------------------------------------------------------------
-    double mOffsetdB = 30;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
+    double mOffsetdB = 20;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
     // For displaying error in calibration.
     private int mSampleRate;  // The audio sampling rate to use.
     // Variables to monitor UI update and check for slow updates.
@@ -583,8 +583,7 @@ public class measuredBA extends AppCompatActivity {
 
                 float normalizedRawData;
 
-                // La fft lavora con double e con numeri complessi (re + im in
-                // sequenza)
+                // The FFT data is in the format double followed by complex number (re+im) order
                 double[] audioDataForFFT = new double[BLOCK_SIZE_FFT * 2];
 
                 // Audibility threshold (20 * 10 ^ (- 6))
