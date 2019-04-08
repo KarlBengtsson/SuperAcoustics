@@ -11,12 +11,6 @@
         android:id="@+id/textView9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:lineSpacingExtra="8sp"
         android:text="Super Acoustics"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/plot_grey_dark"
-        android:textSize="36sp"
-        android:typeface="normal" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large" />
 </LinearLayout>

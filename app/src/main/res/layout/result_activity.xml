@@ -41,18 +41,25 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/resultRoom1TextView"
+                    android:id="@+id/resultRoom11TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
                     android:text="@string/resultTextSpl1"
                     tools:text="@string/resultTextSpl1" />
 
+                <TextView
+                    android:id="@+id/resultRoom1TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="@string/nameInput"
+                    tools:text="@string/nameInput" />
             </LinearLayout>
 
             <TextView
@@ -62,13 +69,28 @@
                 android:text="@string/room_2_spl"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-            <TextView
-                android:id="@+id/resultRoom2TextView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/resultTextSpl2"
-                android:text="@string/resultTextSpl2"
-                tools:text="@string/resultTextSpl2" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/resultRoom22TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="@string/resultTextSpl1"
+                    tools:text="@string/resultTextSpl1" />
+
+                <TextView
+                    android:id="@+id/resultRoom2TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:contentDescription="@string/resultTextSpl2"
+                    android:text="@string/nameInput"
+                    tools:text="@string/nameInput" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView12"
@@ -77,13 +99,58 @@
                 android:text="@string/t60_room_2"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/resultRTTTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="@string/resultTextSpl1"
+                    tools:text="@string/resultTextSpl1" />
+
+                <TextView
+                    android:id="@+id/resultRTTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:contentDescription="@string/resultTextRT"
+                    android:text="@string/nameInput"
+                    tools:text="@string/nameInput" />
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/resultRTTextView"
+                android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/resultTextRT"
-                android:text="@string/resultTextRT"
-                tools:text="@string/resultTextRT" />
+                android:text="@string/resultBackgroundNoise"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/resultBackgrounddTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="@string/resultTextSpl1"
+                    tools:text="@string/resultTextSpl1" />
+
+                <TextView
+                    android:id="@+id/resultBackgroundTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:contentDescription="@string/resultTextRT"
+                    android:text="@string/nameInput"
+                    tools:text="@string/nameInput" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView14"
@@ -93,13 +160,29 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:typeface="normal" />
 
-            <TextView
-                android:id="@+id/resultSRITextView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/resultSRITextView"
-                android:text="@string/resultSRITextView"
-                tools:text="@string/resultSRITextView" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/resultSRIITextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="@string/resultSRITextView"
+                    tools:text="@string/resultSRITextView" />
+
+                <TextView
+                    android:id="@+id/resultSRITextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:contentDescription="@string/resultSRITextView"
+                    android:text="@string/nameInput"
+                    tools:text="@string/nameInput" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
