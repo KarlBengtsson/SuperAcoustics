@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                             + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10) + Math.pow(10, SPLmeasure5[i] / 10);
                     SPLbackgroundRoom2[i] = 10* Math.log10(sum);
                 }
-                saveFile("SPL_Room2", SPLbackgroundRoom2);
+                saveFile("SPL_Background_Room2", SPLbackgroundRoom2);
                 backgroundcheck = true;
                 Background=data.getDoubleExtra("dBA", 0);
                 measureText3.setText(dBformat(Background));

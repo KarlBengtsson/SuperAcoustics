@@ -343,7 +343,7 @@ public class measuredBA extends AppCompatActivity {
                             if (counter4 < 5) {
                                 Toast.makeText(getApplicationContext(), "Make 4 measurements in each room before finishing", Toast.LENGTH_LONG).show();
                             } else {
-                                decibelAfinal = decibelAfinal/4;
+                                decibelAfinal = decibelAfinal/5;
                                 returnIntent.putExtra("dBA", decibelAfinal);
                                 returnIntent.putExtra("measure1", measuredB1);
                                 returnIntent.putExtra("measure2", measuredB2);
@@ -557,7 +557,7 @@ public class measuredBA extends AppCompatActivity {
 
     private void startRecording(final float gain, final int finalCountTimeDisplay, final int finalCountTimeLog) {
 
-        recorder = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,
+        recorder = new AudioRecord(MediaRecorder.AudioSource.DEFAULT,
                 RECORDER_SAMPLERATE, RECORDER_CHANNELS,
                 RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
 
@@ -633,9 +633,26 @@ public class measuredBA extends AppCompatActivity {
                             // + (fastB * filter);
                             filter = normalizedRawData;
 
-                            // Finestra di Hannings
+/*                          // Hanning/Hamming window
+                            double a0 = 0.53836; //setting the value to 0.5 produces the regular "Hann" window
                             double x = (2 * Math.PI * i) / (BLOCK_SIZE_FFT - 1);
-                            double winValue = (1 - Math.cos(x)) * 0.5d;
+                            double winValue = a0 - (1 - a0) * Math.cos(x);*/
+
+                            // Uniform window
+                            double winValue = 1;
+
+/*                            // Flat-top window
+                            double a0, a1, a2, a3, a4;
+                            double x = (2 * Math.PI * i) / (BLOCK_SIZE_FFT - 1);
+                            a0 = 0.21557895;
+                            a1 = 0.41663158;
+                            a2 = 0.277263158;
+                            a3 = 0.083578947;
+                            a4 = 0.006947368;
+                            double winValue = a0 - a1*Math.cos(x) + a2 * Math.cos(2*x) - a3 * Math.cos(3*x) + a4 * Math.cos(4*x);*/
+
+
+
 
                             // Real part
                             audioDataForFFT[j] = filter * winValue;
