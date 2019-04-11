@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -359,8 +358,6 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                 MODE_PRIVATE);
         roomName = preferences.getString("foldername", null);
         mSampleRate = preferences.getInt("SampleRate", 8000);
-        mAudioSource = preferences.getInt("AudioSource",
-                MediaRecorder.AudioSource.VOICE_RECOGNITION);
         gain = preferences.getFloat("mGainDif", 0);
         SPLRoom1 = preferences.getFloat("mRoom1", 0);
         SPLRoom2 = preferences.getFloat("mRoom2", 0);
@@ -371,6 +368,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         length = preferences.getInt("length", 0);
         width = preferences.getInt("width", 0);
         height = preferences.getInt("height", 0);
+        mAudioSource = preferences.getInt("AudioSource", 0);
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);

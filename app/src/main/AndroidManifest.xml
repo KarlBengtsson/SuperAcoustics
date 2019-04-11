@@ -63,7 +63,7 @@
         <activity
             android:name=".Settings"
             android:screenOrientation="portrait"
-            android:parentActivityName=".LevelMeterActivity">
+            android:parentActivityName=".measuredBA">
         </activity>
         <activity
             android:name=".MeasureSPL"

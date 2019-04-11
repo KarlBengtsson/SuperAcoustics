@@ -20,7 +20,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
@@ -58,6 +57,7 @@ public class measuredBA extends AppCompatActivity {
     private BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
     private PlotFFT plotFFT;
+    private Button SettingsButton;
     private final float[] dbFftTimeDisplay = new float[BLOCK_SIZE_FFT / 2];
     private final float[] dbFftATimeDisplay = new float[BLOCK_SIZE_FFT / 2];
 
@@ -133,6 +133,7 @@ public class measuredBA extends AppCompatActivity {
     private double decibelAfinal;
     private int decibelAsize;
     private CountDownTimer timer;
+    private int mAudioSource;
 
 
     /** Called when the activity is first created. */
@@ -251,6 +252,7 @@ public class measuredBA extends AppCompatActivity {
             measuredSPL4 = (TextView) findViewById(R.id.measuredSPL4);
             measuredSPL5 = (TextView) findViewById(R.id.measuredSPL5);
             seconds = (TextView) findViewById(R.id.textseconds);
+            SettingsButton = (Button) findViewById(R.id.SettingsButton);
 
             // Defining a new File for saving later on
             //File dir = new File(path);
@@ -279,6 +281,7 @@ public class measuredBA extends AppCompatActivity {
                             if (onOffButton.isChecked()) {
                                 onOffButton.setTextColor(getApplication().getResources().getColor(R.color.plot_red));
                                 counter4++;
+                                SettingsButton.setEnabled(false);
                                 /*startButton.setEnabled(true);*/
                                 finishMeasure.setEnabled(false);
                                 readPreferences();
@@ -390,6 +393,11 @@ public class measuredBA extends AppCompatActivity {
 
         }
 
+    }
+
+    public void settings (View view) {
+        Intent intent = new Intent(this, Settings.class);
+        startActivity(intent);
     }
 
     private void savedBbandmeasure(int counter4) {
@@ -557,10 +565,9 @@ public class measuredBA extends AppCompatActivity {
 
     private void startRecording(final float gain, final int finalCountTimeDisplay, final int finalCountTimeLog) {
 
-        recorder = new AudioRecord(MediaRecorder.AudioSource.DEFAULT,
+        recorder = new AudioRecord(mAudioSource,
                 RECORDER_SAMPLERATE, RECORDER_CHANNELS,
                 RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
-
 
         recorder.startRecording();
         isRecording = true;
@@ -1061,6 +1068,7 @@ public class measuredBA extends AppCompatActivity {
         Room = preferences.getInt("ROOM" , 0);
         REPOSITORY_NAME = preferences.getString("foldername", "");
         path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
+        mAudioSource = preferences.getInt("AudioSource", 0);
 
     }
 

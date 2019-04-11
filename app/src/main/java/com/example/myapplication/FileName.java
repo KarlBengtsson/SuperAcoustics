@@ -97,6 +97,7 @@ public class FileName extends Activity {
         length = preferences.getInt("length", 0);
         width = preferences.getInt("width", 0);
         height = preferences.getInt("height", 0);
+        mAudioSource = preferences.getInt("AudioSource", 0);
 
     }
 

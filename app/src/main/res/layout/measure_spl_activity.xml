@@ -89,6 +89,14 @@
         android:paddingRight="10dp"
         android:text="@string/measure_spl_instructions" />
 
+    <Button
+        android:id="@+id/SettingsButton"
+        style="@android:style/Widget.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="settings"
+        android:text="Settings" />
+
     <view
         android:id="@+id/bar_level_drawable_view"
         class="com.example.myapplication.BarLevelDrawable"

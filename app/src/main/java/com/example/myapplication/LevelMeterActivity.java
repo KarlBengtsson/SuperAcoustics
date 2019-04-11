@@ -15,7 +15,6 @@
 package com.example.myapplication;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
@@ -150,6 +149,8 @@ public class LevelMeterActivity extends Activity implements
                 };
         setCalButton.setOnClickListener(setCalBtnListener);
     }
+
+
 
     /**
      * Inner class to handle press of gain adjustment buttons.

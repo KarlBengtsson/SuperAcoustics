@@ -35,10 +35,11 @@
     <string name="newButton">New Measurement</string>
     <string name="loadButton">Load Measurement</string>
     <string-array name="sample_rate_array">
-        <item>8000</item>
-        <item>16000</item>
-        <item>24000</item>
-        <item>48000</item>
+        <item>Default</item>
+        <item>Mic</item>
+        <item>Voice Communication</item>
+        <item>Voice Recognition</item>
+        <item>Unprocessed</item>
     </string-array>
     <string name="editText">Type in the name of the measurement</string>
     <string name="volume">Enter the dimensions of the receiving room.</string>
@@ -101,8 +102,7 @@
     <string name="settings">Settings</string>
     <string name="on">On</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="MeasureBackGroundButton">Measure Noise</string>
     <string name="resultBackgroundNoise">Background noise</string>
+    <string name="Audio_source">Audio Source</string>
 </resources>
