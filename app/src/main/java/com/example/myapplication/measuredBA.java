@@ -344,7 +344,7 @@ public class measuredBA extends AppCompatActivity {
                             Intent returnIntent = new Intent();
                             // Dismiss this dialog.
                             if (counter4 < 5) {
-                                Toast.makeText(getApplicationContext(), "Make 4 measurements in each room before finishing", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Make 5 measurements in each room before finishing", Toast.LENGTH_LONG).show();
                             } else {
                                 decibelAfinal = decibelAfinal/5;
                                 returnIntent.putExtra("dBA", decibelAfinal);
@@ -640,13 +640,13 @@ public class measuredBA extends AppCompatActivity {
                             // + (fastB * filter);
                             filter = normalizedRawData;
 
-/*                          // Hanning/Hamming window
-                            double a0 = 0.53836; //setting the value to 0.5 produces the regular "Hann" window
+                          // Hanning/Hamming window
+                            double a0 = 0.5; //setting the value to 0.5 produces the regular "Hann" window
                             double x = (2 * Math.PI * i) / (BLOCK_SIZE_FFT - 1);
-                            double winValue = a0 - (1 - a0) * Math.cos(x);*/
+                            double winValue = a0 - (1 - a0) * Math.cos(x);
 
-                            // Uniform window
-                            double winValue = 1;
+/*                            // Uniform window
+                            double winValue = 1;*/
 
 /*                            // Flat-top window
                             double a0, a1, a2, a3, a4;

@@ -94,7 +94,7 @@ public class ViewResult extends AppCompatActivity {
         else {
             // Coming from "View Results Button"
             DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-            path = String.format(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_%s" ,df.format(new Date()));
+            path = String.format(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_" + gain + "_%s" ,df.format(new Date()));
         }
         roomOneResult();
         roomTwoResult();
