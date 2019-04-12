@@ -41,8 +41,6 @@ import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 //Todo study and understand this implementation of FFT
 
-//Todo study and understand this implementation of FFT
-
 /**
  * Detta är ett försök till att mäta dBA istället för db. görs på samma sätt som i
  * openoise-meter appen
@@ -130,7 +128,8 @@ public class measuredBA extends AppCompatActivity {
 
     private int measeuredBsize;
     private double decibelA;
-    private double decibelAfinal;
+    double dBAFinal = 0;
+    private double [] decibelAfinal;
     private int decibelAsize;
     private CountDownTimer timer;
     private int mAudioSource;
@@ -346,8 +345,11 @@ public class measuredBA extends AppCompatActivity {
                             if (counter4 < 5) {
                                 Toast.makeText(getApplicationContext(), "Make 5 measurements in each room before finishing", Toast.LENGTH_LONG).show();
                             } else {
-                                decibelAfinal = decibelAfinal/5;
-                                returnIntent.putExtra("dBA", decibelAfinal);
+                                for (int i = 0; i <decibelAfinal.length; i++) {
+                                    dBAFinal += Math.pow(10, decibelAfinal[i]/10);
+                                }
+                                dBAFinal = 10*Math.log10(dBAFinal/5);
+                                returnIntent.putExtra("dBA", dBAFinal);
                                 returnIntent.putExtra("measure1", measuredB1);
                                 returnIntent.putExtra("measure2", measuredB2);
                                 returnIntent.putExtra("measure3", measuredB3);
@@ -410,7 +412,7 @@ public class measuredBA extends AppCompatActivity {
                     measuredB[i] = 0;
                 }
                 decibelA = (10 * Math.log10(decibelA / decibelAsize));
-                decibelAfinal += decibelA;
+                decibelAfinal[0] = decibelA;
                 measuredSPL1.setText(dBformat(decibelA));
                 decibelA = 0;
                 decibelAsize = 0;
@@ -425,7 +427,7 @@ public class measuredBA extends AppCompatActivity {
                     measuredB[i] = 0;
                 }
                 decibelA = (10 * Math.log10(decibelA / decibelAsize));
-                decibelAfinal += decibelA;
+                decibelAfinal [1] = decibelA;
                 measuredSPL2.setText(dBformat(decibelA));
                 decibelA = 0;
                 decibelAsize = 0;
@@ -440,7 +442,7 @@ public class measuredBA extends AppCompatActivity {
                     measuredB[i] = 0;
                 }
                 decibelA = (10 * Math.log10(decibelA / decibelAsize));
-                decibelAfinal += decibelA;
+                decibelAfinal[2] = decibelA;
                 measuredSPL3.setText(dBformat(decibelA));
                 decibelA = 0;
                 decibelAsize = 0;
@@ -455,7 +457,7 @@ public class measuredBA extends AppCompatActivity {
                     measuredB[i] = 0;
                 }
                 decibelA = (10 * Math.log10(decibelA / decibelAsize));
-                decibelAfinal += decibelA;
+                decibelAfinal[3] = decibelA;
                 measuredSPL4.setText(dBformat(decibelA));
                 decibelA = 0;
                 decibelAsize = 0;
@@ -470,7 +472,7 @@ public class measuredBA extends AppCompatActivity {
                     measuredB[i] = 0;
                 }
                 decibelA = (10 * Math.log10(decibelA / decibelAsize));
-                decibelAfinal += decibelA;
+                decibelAfinal[4] = decibelA;
                 measuredSPL5.setText(dBformat(decibelA));
                 decibelA = 0;
                 decibelAsize = 0;
@@ -1080,11 +1082,11 @@ public class measuredBA extends AppCompatActivity {
         editor.putFloat("mGainDif", gain);
         editor.putInt("mCount", counter4);
         if (Room == 1) {
-            editor.putFloat("mRoom1" , (float) decibelAfinal);
+            editor.putFloat("mRoom1" , (float) dBAFinal);
             editor.putInt("ROOM",1);
         }
         else {
-            editor.putFloat("mRoom2" , (float) decibelAfinal);
+            editor.putFloat("mRoom2" , (float) dBAFinal);
             editor.putInt("ROOM",2);
         }
         editor.apply();
