@@ -49,7 +49,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onRadioButtonClicked"
             android:text="Default" />
 
         <RadioButton
@@ -57,7 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onRadioButtonClicked"
             android:text="Mic" />
 
         <RadioButton
@@ -65,7 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onRadioButtonClicked"
             android:text="Voice Communication" />
 
         <RadioButton
@@ -73,7 +70,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onRadioButtonClicked"
             android:text="Voice Recognition" />
 
         <RadioButton
@@ -81,7 +77,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onRadioButtonClicked"
             android:text="Unprocessed" />
 
     </RadioGroup>

@@ -44,11 +44,9 @@ public class Settings extends Activity {
         setContentView(R.layout.settings);
         readPreferences();
 
-        RadioGroup audioSourceGroup = (RadioGroup) findViewById(R.id.RadioGroup1);
-        final String answer1 = ((RadioButton) findViewById(audioSourceGroup.getCheckedRadioButtonId())).toString();
 
-        RadioGroup WindowingGroup = (RadioGroup) findViewById(R.id.RadioGroup2);
-        final String answer2 = ((RadioButton) findViewById(WindowingGroup.getCheckedRadioButtonId())).getText().toString();
+
+
 
         /**
          * Ok button dismiss settings.
@@ -58,8 +56,8 @@ public class Settings extends Activity {
                 new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mAudioSource = getAudiosource(answer1);
-                        processing = getProcessing(answer2);
+                        mAudioSource = getAudiosource();
+                        processing = getProcessing();
                         Settings.this.setPreferences();
                         finish();
                     }
@@ -67,7 +65,9 @@ public class Settings extends Activity {
         okButton.setOnClickListener(okBtnListener);
     }
 
-    private int getProcessing(String answer2) {
+    private int getProcessing() {
+        RadioGroup WindowingGroup = (RadioGroup) findViewById(R.id.RadioGroup2);
+        final String answer2 = ((RadioButton) findViewById(WindowingGroup.getCheckedRadioButtonId())).getText().toString();
         switch (answer2) {
             case "case1":
                 processing = 1;
@@ -83,7 +83,9 @@ public class Settings extends Activity {
     }
 
 
-    private int getAudiosource(String answer) {
+    private int getAudiosource() {
+        RadioGroup audioSourceGroup = (RadioGroup) findViewById(R.id.RadioGroup1);
+        final String answer = ((RadioButton) findViewById(audioSourceGroup.getCheckedRadioButtonId())).getText().toString();
         switch(answer) {
             case "noll" :
                 mAudioSource = 0;
