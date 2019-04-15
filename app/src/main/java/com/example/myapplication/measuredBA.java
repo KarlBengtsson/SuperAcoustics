@@ -133,6 +133,7 @@ public class measuredBA extends AppCompatActivity {
     private int decibelAsize;
     private CountDownTimer timer;
     private int mAudioSource;
+    private int processing;
 
 
     /** Called when the activity is first created. */
@@ -641,24 +642,39 @@ public class measuredBA extends AppCompatActivity {
                             // filter = ((double) (fastA * normalizedRawData))
                             // + (fastB * filter);
                             filter = normalizedRawData;
+                            
+                            double winValue = 0, a0, x, a1, a2, a3, a4;
+                            switch (processing) {
+                                case 1:
+                                    // Hanning/Hamming window
+                                    a0 = 0.5; //setting the value to 0.5 produces the regular "Hann" window
+                                    x = (2 * Math.PI * i) / (BLOCK_SIZE_FFT - 1);
+                                    winValue = a0 - (1 - a0) * Math.cos(x);
+                                    break;
+                                    
+                                case 2:
+                                    // Uniform window
+                                     winValue = 1; 
+                                     break;
+                                     
+                                case 3:
+                                    // Flat-top window
+                                    x = (2 * Math.PI * i) / (BLOCK_SIZE_FFT - 1);
+                                    a0 = 0.21557895;
+                                    a1 = 0.41663158;
+                                    a2 = 0.277263158;
+                                    a3 = 0.083578947;
+                                    a4 = 0.006947368;
+                                    winValue = a0 - a1*Math.cos(x) + a2 * Math.cos(2*x) - a3 * Math.cos(3*x) + a4 * Math.cos(4*x);
+                                    break;
+                            }
+                                    
+                            
 
-                          // Hanning/Hamming window
-                            double a0 = 0.5; //setting the value to 0.5 produces the regular "Hann" window
-                            double x = (2 * Math.PI * i) / (BLOCK_SIZE_FFT - 1);
-                            double winValue = a0 - (1 - a0) * Math.cos(x);
 
-/*                            // Uniform window
-                            double winValue = 1;*/
 
-/*                            // Flat-top window
-                            double a0, a1, a2, a3, a4;
-                            double x = (2 * Math.PI * i) / (BLOCK_SIZE_FFT - 1);
-                            a0 = 0.21557895;
-                            a1 = 0.41663158;
-                            a2 = 0.277263158;
-                            a3 = 0.083578947;
-                            a4 = 0.006947368;
-                            double winValue = a0 - a1*Math.cos(x) + a2 * Math.cos(2*x) - a3 * Math.cos(3*x) + a4 * Math.cos(4*x);*/
+
+
 
 
 
