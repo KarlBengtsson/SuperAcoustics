@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private boolean reverbcheck;
     private int sArea;
     private boolean backgroundcheck;
+    private int processing;
 
 
     //Todo Measure background noise and explore new way to measure Reverberation time.
@@ -350,6 +351,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         editor.putFloat("mRoom2", (float) SPLRoom2);
         editor.putFloat("reverb" , avg);
         editor.putInt("fromCheck",fromCheck);
+        editor.putInt("window", processing);
         editor.apply();
     }
 
@@ -368,7 +370,8 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         length = preferences.getInt("length", 0);
         width = preferences.getInt("width", 0);
         height = preferences.getInt("height", 0);
-        mAudioSource = preferences.getInt("AudioSource", 0);
+        mAudioSource = preferences.getInt("AudioSource", 6);
+        processing = preferences.getInt("window", 1);
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);

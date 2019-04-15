@@ -29,49 +29,98 @@
         android:layout_marginTop="20dp"
         android:text="@string/settings_ok" />
 
-    <RadioGroup
+    <TextView
+        android:id="@+id/textView13"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:text="Select Audio Source"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/RadioGroup1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5">
 
         <RadioButton
-            android:id="@+id/Default"
+            android:id="@+id/noll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Default"
-            android:onClick="onRadioButtonClicked"/>
+            android:onClick="onRadioButtonClicked"
+            android:text="Default" />
 
         <RadioButton
-            android:id="@+id/Mic"
+            android:id="@+id/ett"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Mic"
-            android:onClick="onRadioButtonClicked"/>
+            android:onClick="onRadioButtonClicked"
+            android:text="Mic" />
 
         <RadioButton
-            android:id="@+id/Voice_Communication"
+            android:id="@+id/sju"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Voice Communication"
-            android:onClick="onRadioButtonClicked"/>
+            android:onClick="onRadioButtonClicked"
+            android:text="Voice Communication" />
 
         <RadioButton
-            android:id="@+id/Voice_Recognition"
+            android:id="@+id/sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Voice Recognition"
-            android:onClick="onRadioButtonClicked"/>
+            android:onClick="onRadioButtonClicked"
+            android:text="Voice Recognition" />
 
         <RadioButton
-            android:id="@+id/unprocessed"
+            android:id="@+id/nio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Unprocessed"
-            android:onClick="onRadioButtonClicked"/>
+            android:onClick="onRadioButtonClicked"
+            android:text="Unprocessed" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Windowing"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/RadioGroup2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="3">
+
+        <RadioButton
+            android:id="@+id/case1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Hann Window" />
+
+        <RadioButton
+            android:id="@+id/case2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Uniform Window" />
+
+        <RadioButton
+            android:id="@+id/case3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Flat Top Window" />
     </RadioGroup>
 
 </LinearLayout>

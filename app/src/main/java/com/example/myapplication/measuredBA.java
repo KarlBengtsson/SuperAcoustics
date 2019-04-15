@@ -129,10 +129,11 @@ public class measuredBA extends AppCompatActivity {
     private int measeuredBsize;
     private double decibelA;
     double dBAFinal = 0;
-    private double [] decibelAfinal;
+    private double [] decibelAfinal = new double[5];
     private int decibelAsize;
     private CountDownTimer timer;
     private int mAudioSource;
+    private int processing;
 
 
     /** Called when the activity is first created. */
@@ -1070,7 +1071,8 @@ public class measuredBA extends AppCompatActivity {
         Room = preferences.getInt("ROOM" , 0);
         REPOSITORY_NAME = preferences.getString("foldername", "");
         path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
-        mAudioSource = preferences.getInt("AudioSource", 0);
+        mAudioSource = preferences.getInt("AudioSource", 6);
+        processing = preferences.getInt("window", 1);
 
     }
 

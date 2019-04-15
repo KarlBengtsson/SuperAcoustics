@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 /**
  * This is an example of a simple settings pane with persistence of settings.
@@ -34,6 +35,7 @@ import android.widget.RadioButton;
 public class Settings extends Activity {
 
     private int mAudioSource;
+    private int processing;
 
     /** Called when the activity is first created. */
     @Override
@@ -41,6 +43,12 @@ public class Settings extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
         readPreferences();
+
+        RadioGroup audioSourceGroup = (RadioGroup) findViewById(R.id.RadioGroup1);
+        final String answer1 = ((RadioButton) findViewById(audioSourceGroup.getCheckedRadioButtonId())).toString();
+
+        RadioGroup WindowingGroup = (RadioGroup) findViewById(R.id.RadioGroup2);
+        final String answer2 = ((RadioButton) findViewById(WindowingGroup.getCheckedRadioButtonId())).getText().toString();
 
         /**
          * Ok button dismiss settings.
@@ -50,7 +58,8 @@ public class Settings extends Activity {
                 new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Dismiss this dialog.
+                        mAudioSource = getAudiosource(answer1);
+                        processing = getProcessing(answer2);
                         Settings.this.setPreferences();
                         finish();
                     }
@@ -58,39 +67,49 @@ public class Settings extends Activity {
         okButton.setOnClickListener(okBtnListener);
     }
 
-    public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.Default:
-                if (checked)
-                    mAudioSource = 0;
-                    break;
-            case R.id.Mic:
-                if (checked)
-                    mAudioSource = 1;
-                    break;
-            case R.id.Voice_Communication:
-                if (checked)
-                    mAudioSource = 7;
+    private int getProcessing(String answer2) {
+        switch (answer2) {
+            case "case1":
+                processing = 1;
                 break;
-            case R.id.Voice_Recognition:
-                if (checked)
-                    mAudioSource = 6;
+            case "case2":
+                processing = 2;
                 break;
-            case R.id.unprocessed:
-                if (checked)
-                    mAudioSource = 9;
+            case "case3":
+                processing = 3;
                 break;
         }
+        return processing;
     }
+
+
+    private int getAudiosource(String answer) {
+        switch(answer) {
+            case "noll" :
+                mAudioSource = 0;
+                break;
+            case "ett" :
+                mAudioSource = 1;
+                break;
+            case "sju":
+                mAudioSource = 7;
+                break;
+            case "sex" :
+                mAudioSource = 6;
+                break;
+            case "nio" :
+                mAudioSource = 9;
+                break;
+        }
+            return mAudioSource;
+    }
+
 
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
-        mAudioSource = preferences.getInt("AudioSource", 0);
+        mAudioSource = preferences.getInt("AudioSource", 6);
+        processing = preferences.getInt("window", 1);
 
     }
 
@@ -98,7 +117,7 @@ public class Settings extends Activity {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-
+        editor.putInt("window", processing);
         editor.putInt("AudioSource", mAudioSource);
         editor.commit();
     }
