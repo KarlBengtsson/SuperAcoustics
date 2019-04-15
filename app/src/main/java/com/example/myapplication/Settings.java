@@ -69,13 +69,13 @@ public class Settings extends Activity {
         RadioGroup WindowingGroup = (RadioGroup) findViewById(R.id.RadioGroup2);
         final String answer2 = ((RadioButton) findViewById(WindowingGroup.getCheckedRadioButtonId())).getText().toString();
         switch (answer2) {
-            case "case1":
+            case "Hann Window":
                 processing = 1;
                 break;
-            case "case2":
+            case "Uniform Window":
                 processing = 2;
                 break;
-            case "case3":
+            case "Flat Top Window":
                 processing = 3;
                 break;
         }
@@ -87,19 +87,19 @@ public class Settings extends Activity {
         RadioGroup audioSourceGroup = (RadioGroup) findViewById(R.id.RadioGroup1);
         final String answer = ((RadioButton) findViewById(audioSourceGroup.getCheckedRadioButtonId())).getText().toString();
         switch(answer) {
-            case "noll" :
+            case "Default" :
                 mAudioSource = 0;
                 break;
-            case "ett" :
+            case "Mic" :
                 mAudioSource = 1;
                 break;
-            case "sju":
+            case "Voice Communication":
                 mAudioSource = 7;
                 break;
-            case "sex" :
+            case "Voice Recognition" :
                 mAudioSource = 6;
                 break;
-            case "nio" :
+            case "Unprocessed" :
                 mAudioSource = 9;
                 break;
         }
