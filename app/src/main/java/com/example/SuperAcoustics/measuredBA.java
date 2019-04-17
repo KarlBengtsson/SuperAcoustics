@@ -490,13 +490,6 @@ public class measuredBA extends AppCompatActivity {
         }
     }
 
-    public void plot () {
-        Intent plotIntent = new Intent(measuredBA.this, Plot.class);
-        //plotIntent.putIntegerArrayListExtra("plotData", signal1);
-        plotIntent.putExtra("SignalLength",signal1.size());
-        plotIntent.putExtra("plotType", tOrFFT);
-        startActivity(plotIntent);
-    }
 
     private String checkDigit(int number) {
         return number <= 9 ? "0" + number : String.valueOf(number);
