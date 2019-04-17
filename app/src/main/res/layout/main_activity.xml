@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
             android:orientation="vertical"
@@ -26,6 +26,30 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom|center"
+                android:orientation="horizontal"
+                tools:layout_editor_absoluteX="32dp"
+                tools:layout_editor_absoluteY="555dp">
+
+                <Button
+                    android:id="@+id/button5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="getInfo"
+                    android:text="SuperAcoustics Info" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                tools:layout_editor_absoluteX="32dp"
+                tools:layout_editor_absoluteY="555dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,17 +69,6 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="TextView" />
-
-                <Button
-                    android:id="@+id/button"
-                    style="@android:style/Widget.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="measuredB"
-                    android:text="DB"
-                    android:textSize="18sp"
-                    tools:layout_editor_absoluteX="8dp"
-                    tools:layout_editor_absoluteY="410dp" />
 
             </LinearLayout>
 
@@ -85,18 +98,19 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/measureButton2"
+                    android:id="@+id/CalibrateBackgroundButton"
                     style="@android:style/Widget.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="MeasureSPL2"
-                    android:text="@string/measure_2" />
+                    android:onClick="CalibrateBackground"
+                    android:text="Calibrate Background Noise" />
 
                 <TextView
-                    android:id="@+id/measureText2"
-                    android:layout_width="136dp"
+                    android:id="@+id/calibrateBackgroundText"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="TextView" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -117,6 +131,26 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:text="TextView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/measureButton2"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="MeasureSPL2"
+                    android:text="@string/measure_2" />
+
+                <TextView
+                    android:id="@+id/measureText2"
+                    android:layout_width="136dp"
+                    android:layout_height="wrap_content"
                     android:text="TextView" />
             </LinearLayout>
 
@@ -146,7 +180,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="enterReverb"
-                    android:text="Enter RT" />
+                    android:text="Manual Entry" />
 
             </LinearLayout>
 
@@ -160,12 +194,20 @@
                     style="@android:style/Widget.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="100dp"
                     android:layout_marginLeft="100dp"
                     android:onClick="ViewResult"
                     android:text="@string/result_button"
-                    tools:layout_editor_absoluteX="154dp"
-                    android:layout_marginStart="100dp" />
+                    android:textAlignment="center"
+                    tools:layout_editor_absoluteX="154dp" />
+
             </LinearLayout>
+
+            <View
+                android:id="@+id/view7"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
 
         </LinearLayout>
     </ScrollView>

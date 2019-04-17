@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private Button dbMeter;
     private Button measure1;
     private Button reverb;
+    private TextView calBackTextView;
     private TextView calTextView;
     private TextView measureText1;
     private TextView measureText2;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private TextView measureRT;
     private static final String TAG = "MainActivity";
     float gain = 0;
+    float gainBack = 0;
     int Room = 0; int volume = 0; int area = 0; int length = 0; int width = 0; int height = 0;
     String roomName;
     int mAudioSource = 0;
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private int sArea;
     private boolean backgroundcheck;
     private int processing;
+    private int mAudioSourceBack;
+    private int processingBack;
 
 
     //Todo Measure background noise and explore new way to measure Reverberation time.
@@ -88,18 +92,24 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         onCheckPerm();
     }
 
-    public void measuredB (View view) {
-        Intent intent = new Intent(this, LevelMeterActivity.class);
-        startActivity(intent);
-    }
-
     public void CalibrateSPL (View view) {
-        //Intent intent = new Intent(this, LevelMeterActivity.class);
         Intent intent = new Intent(this, measuredBA.class);
         intent.putExtra(EXTRA_MESSAGE, gain );
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("ROOM" , 0);
+        editor.putInt("CALIBRATE", 1);
+        editor.apply();
+        startActivity(intent);
+    }
+
+    public void CalibrateBackground (View view) {
+        Intent intent = new Intent(this, measuredBA.class);
+        intent.putExtra(EXTRA_MESSAGE, gainBack );
+        SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("ROOM" , 0);
+        editor.putInt("CALIBRATE", 2);
         editor.apply();
         startActivity(intent);
     }
@@ -110,16 +120,18 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("ROOM" , 1);
+        editor.putInt("CALIBRATE", 1);
         editor.apply();
         startActivityForResult(intent, 2);
     }
 
     public void MeasureBackground (View view) {
         Intent intent = new Intent(this, measuredBA.class);
-        intent.putExtra(EXTRA_MESSAGE, gain );
+        intent.putExtra(EXTRA_MESSAGE, gainBack);
         SharedPreferences preferences = getSharedPreferences("LevelMeter" , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("ROOM" , 3);
+        editor.putInt("ROOM", 3);
+        editor.putInt("CALIBRATE", 2);
         editor.apply();
         startActivityForResult(intent, 4);
     }
@@ -131,12 +143,19 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
             SharedPreferences preferences = getSharedPreferences("LevelMeter", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("ROOM", 2);
+            editor.putInt("CALIBRATE", 1);
             editor.apply();
             startActivityForResult(intent, 3);
         } else {
             Toast.makeText(this, "Please measure backgound noise in room 2 " +
                     "first!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void MeasureReverb (View view) {
+        Intent launchIntent = new Intent();
+        launchIntent.setAction("com.example.cuiyuzhao.acousticmeasurement.action.LAUNCH_IT");
+        startActivityForResult(launchIntent, 1);
     }
 
     public void enterReverb (View view) {
@@ -202,15 +221,6 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         SPLaverageRoom2 = SPL;
     }
 
-    public void MeasureReverb (View view) {
-        Intent launchIntent = new Intent();
-        launchIntent.setAction("com.example.cuiyuzhao.acousticmeasurement.action.LAUNCH_IT");
-        startActivityForResult(launchIntent, 1);
-
-        //Set EP till 1 och MP til 4
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -227,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
-                Log.v(TAG,"Stuff didnt get sent back");
+                Log.v(TAG,"Stuff didn't get sent back");
             }
             float total = 0;
             for (double a:reverbResult) {
@@ -252,6 +262,11 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                     SPLaverageRoom1[i] = 10* Math.log10(sum);
                 }
                 saveFile("SPL_Room1", SPLaverageRoom1);
+
+                double [] gainDouble = new double[1];
+                gainDouble[0] = gain;
+                saveFile("Gain SPL", gainDouble);
+
                 room1check = true;
                 SPLRoom1=data.getDoubleExtra("dBA", 0);
                 measureText1.setText(dBformat(SPLRoom1));
@@ -289,6 +304,11 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                     SPLbackgroundRoom2[i] = 10* Math.log10(sum);
                 }
                 saveFile("SPL_Background_Room2", SPLbackgroundRoom2);
+
+                double [] gainBackDouble = new double[1];
+                gainBackDouble[0] = gainBack;
+                saveFile("Gain Background Noise", gainBackDouble);
+
                 backgroundcheck = true;
                 Background=data.getDoubleExtra("dBA", 0);
                 measureText3.setText(dBformat(Background));
@@ -299,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private void saveFile(String number, double[] values ) {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
         String filename = String.format(number + ".txt");
-        File path = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_" + gain + "_" + df.format(new Date()));
+        File path = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_" + df.format(new Date()));
         if (!path.exists()) {
             Log.d("My oh my...", "The path doesn't exist, create one? : " + path.mkdirs());
         }
@@ -328,6 +348,13 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         }
         return true;
     }
+
+    public void getInfo (View view) {
+        FragmentManager fm = getSupportFragmentManager();
+        InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
+        infoFragment.show(fm, "fragment_info");
+    }
+
     private void onCheckPerm() {
         // The request code used in ActivityCompat.requestPermissions()
         // and returned in the Activity's onRequestPermissionsResult()
@@ -351,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         editor.putFloat("mRoom2", (float) SPLRoom2);
         editor.putFloat("reverb" , avg);
         editor.putInt("fromCheck",fromCheck);
-        editor.putInt("window", processing);
         editor.apply();
     }
 
@@ -359,8 +385,9 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
         roomName = preferences.getString("foldername", null);
-        mSampleRate = preferences.getInt("SampleRate", 8000);
+        //mSampleRate = preferences.getInt("SampleRate", 8000);
         gain = preferences.getFloat("mGainDif", 0);
+        gainBack = preferences.getFloat("mGainBackDif", 0);
         SPLRoom1 = preferences.getFloat("mRoom1", 0);
         SPLRoom2 = preferences.getFloat("mRoom2", 0);
         Room = preferences.getInt("ROOM",0);
@@ -372,10 +399,14 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         height = preferences.getInt("height", 0);
         mAudioSource = preferences.getInt("AudioSource", 6);
         processing = preferences.getInt("window", 1);
+        mAudioSourceBack = preferences.getInt("AudioSourceBack", 6);
+        processingBack = preferences.getInt("windowBack", 1);
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);
         calTextView.setText(Float.toString(gain));
+        calBackTextView = (TextView) findViewById(R.id.calibrateBackgroundText);
+        calBackTextView.setText(Float.toString(gainBack));
         measureText1 = (TextView) findViewById(R.id.measureText1);
         measureText1.setText("Not measured");
         measureText2 = (TextView) findViewById(R.id.measureText2);
@@ -417,6 +448,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         super.onResume();
         readPreferences();
         calTextView.setText(Float.toString(gain));
+        calBackTextView.setText(Float.toString(gainBack));
         Log.d(TAG, "onResume() called");
 
     }

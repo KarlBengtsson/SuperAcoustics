@@ -54,8 +54,8 @@ public class measuredBA extends AppCompatActivity {
     private TextView mdBFractionTextView;
     private BarLevelDrawable mBarLevel;
     private TextView mGainTextView;
+    private Button settingsButton;
     private PlotFFT plotFFT;
-    private Button SettingsButton;
     private final float[] dbFftTimeDisplay = new float[BLOCK_SIZE_FFT / 2];
     private final float[] dbFftATimeDisplay = new float[BLOCK_SIZE_FFT / 2];
 
@@ -86,6 +86,7 @@ public class measuredBA extends AppCompatActivity {
     private static final String TAG = "LevelMeterActivity";
     private AudioRecord recorder;
     private int Room;
+    private int Calibrate;
     private FileOutputStream fos;
     private FileOutputStream fosC;
 
@@ -116,6 +117,7 @@ public class measuredBA extends AppCompatActivity {
     private double filter;
     private double dbATimeDisplay; //Final Result
     private float gain = 0;
+    private float gainBack = 0;
     private File file;
     private double[] total;
 
@@ -134,6 +136,9 @@ public class measuredBA extends AppCompatActivity {
     private CountDownTimer timer;
     private int mAudioSource;
     private int processing;
+    private int mAudioSourceBack;
+    private int processingBack;
+
 
 
     /** Called when the activity is first created. */
@@ -148,13 +153,22 @@ public class measuredBA extends AppCompatActivity {
         // Read the layout and construct.
         setContentView(R.layout.level_meter_activity);
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        settingsButton = (Button) findViewById(R.id.SettingsButton);
+        Button SetButton = (Button) findViewById(R.id.setCalibrationButton);
+        if (Calibrate == 2) {
+            SetButton.setText("Set Calibration for Background Noise");
+        }
 
         // Get a handle that will be used in async thread post to update the
         // display.
         mdBTextView = (TextView)findViewById(R.id.dBTextView);
         mdBFractionTextView = (TextView)findViewById(R.id.dBFractionTextView);
-        mGainTextView = (TextView)findViewById(R.id.gain);
-        mGainTextView.setText(Double.toString(gain));
+        mGainTextView = (TextView) findViewById(R.id.gain);
+        if (Calibrate == 1) {
+            mGainTextView.setText(Double.toString(gain));
+        } else {
+            mGainTextView.setText(Double.toString(gainBack));
+        }
 
 
             // Setting the PLOTFFT layout
@@ -187,9 +201,16 @@ public class measuredBA extends AppCompatActivity {
                         if (onOffButton.isChecked()) {
                             onOffButton.setTextColor(getApplication().getResources().getColor(R.color.plot_red));
                             precalculateWeightedA();
-                            startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
+                            settingsButton.setEnabled(false);
+                            if (Calibrate == 1) {
+                                startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
+                            } else {
+                                startRecording((Float) gainBack, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
+                            }
+
                         } else {
                             stopRecording();
+                            settingsButton.setEnabled(true);
                             onOffButton.setTextColor(getApplication().getResources().getColor(R.color.app_black));
                         }
                     }
@@ -199,24 +220,6 @@ public class measuredBA extends AppCompatActivity {
         // Call for the method to activate the calibration buttons
         onClickLevelAdjustment();
 
-/*        // Settings button, launches the settings dialog.
-        Button settingsButton=(Button)findViewById(R.id.settingsButton);
-        Button.OnClickListener settingsBtnListener =
-                new Button.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        final ToggleButton onOffButton=(ToggleButton)findViewById(
-                                R.id.on_off_toggle_button);
-                        onOffButton.setChecked(false);
-                        //LevelMeterActivity2.this.micInput.stop();
-                        measuredBA.this.setPreferences();
-                        Intent settingsIntent = new Intent(measuredBA.this,
-                                Settings.class);
-                        measuredBA.this.startActivity(settingsIntent);
-                    }
-                };
-        settingsButton.setOnClickListener(settingsBtnListener);*/
 
         Button setCalButton=(Button)findViewById(R.id.setCalibrationButton);
         Button.OnClickListener setCalBtnListener =
@@ -231,6 +234,8 @@ public class measuredBA extends AppCompatActivity {
                     }
                 };
         setCalButton.setOnClickListener(setCalBtnListener);
+
+
         //-----------------------------------------------------------------------------------------
         } else {
             // Read the layout and construct.
@@ -241,7 +246,11 @@ public class measuredBA extends AppCompatActivity {
 
             //Retrieves the value set by the calibration
             mGainTextView = (TextView)findViewById(R.id.gain);
-            mGainTextView.setText(Float.toString(gain));
+            if (Calibrate == 1) {
+                mGainTextView.setText(Double.toString(gain));
+            } else {
+                mGainTextView.setText(Double.toString(gainBack));
+            }
 
             mBarLevel = (BarLevelDrawable)findViewById(R.id.bar_level_drawable_view);
             mdBTextView = (TextView)findViewById(R.id.dBTextView);
@@ -252,7 +261,6 @@ public class measuredBA extends AppCompatActivity {
             measuredSPL4 = (TextView) findViewById(R.id.measuredSPL4);
             measuredSPL5 = (TextView) findViewById(R.id.measuredSPL5);
             seconds = (TextView) findViewById(R.id.textseconds);
-            SettingsButton = (Button) findViewById(R.id.SettingsButton);
 
             // Defining a new File for saving later on
             //File dir = new File(path);
@@ -281,12 +289,17 @@ public class measuredBA extends AppCompatActivity {
                             if (onOffButton.isChecked()) {
                                 onOffButton.setTextColor(getApplication().getResources().getColor(R.color.plot_red));
                                 counter4++;
-                                SettingsButton.setEnabled(false);
-                                /*startButton.setEnabled(true);*/
+
                                 finishMeasure.setEnabled(false);
                                 readPreferences();
                                 precalculateWeightedA();
-                                startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
+
+                                if (Calibrate == 1) {
+                                    startRecording((Float) gain, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
+                                } else {
+                                    startRecording((Float) gainBack, (Integer) finalCountTimeDisplay, (Integer) finalCountTimeLog);
+                                }
+
                                 timer = new CountDownTimer(10000, 1000) {
                                     int time=10;
                                     public void onTick(long millisUntilFinished) {
@@ -398,6 +411,7 @@ public class measuredBA extends AppCompatActivity {
 
     }
 
+    //SettingsButton clicked in LevelMeterActivity
     public void settings (View view) {
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
@@ -507,9 +521,16 @@ public class measuredBA extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            gain += gainIncrement;
-            DecimalFormat df = new DecimalFormat("##.# dB");
-            mGainTextView.setText(df.format(gain));
+            if (Calibrate == 1) {
+                gain += gainIncrement;
+                DecimalFormat df = new DecimalFormat("##.# dB");
+                mGainTextView.setText(df.format(gain));
+            } else {
+                gainBack += gainIncrement;
+                DecimalFormat df = new DecimalFormat("##.# dB");
+                mGainTextView.setText(df.format(gainBack));
+            }
+
         }
     }
 
@@ -563,14 +584,18 @@ public class measuredBA extends AppCompatActivity {
         }
     }
 
-    //Todo Implement function to calculate avg SPL as in MeasureSPL class. Save to file. Plot data and FFT.
-    //Todo calculate SPL in different frequency bands
-
     private void startRecording(final float gain, final int finalCountTimeDisplay, final int finalCountTimeLog) {
 
-        recorder = new AudioRecord(mAudioSource,
-                RECORDER_SAMPLERATE, RECORDER_CHANNELS,
-                RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
+        if (Calibrate == 1) {
+            recorder = new AudioRecord(mAudioSource,
+                    RECORDER_SAMPLERATE, RECORDER_CHANNELS,
+                    RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
+        } else {
+            recorder = new AudioRecord(mAudioSourceBack,
+                    RECORDER_SAMPLERATE, RECORDER_CHANNELS,
+                    RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
+        }
+
 
         recorder.startRecording();
         isRecording = true;
@@ -644,7 +669,13 @@ public class measuredBA extends AppCompatActivity {
                             filter = normalizedRawData;
                             
                             double winValue = 0, a0, x, a1, a2, a3, a4;
-                            switch (processing) {
+                            int process = 0;
+                            if (Calibrate == 1) {
+                                process = processing;
+                            } else {
+                                process = processingBack;
+                            }
+                            switch (process) {
                                 case 1:
                                     // Hanning/Hamming window
                                     a0 = 0.5; //setting the value to 0.5 produces the regular "Hann" window
@@ -1083,11 +1114,15 @@ public class measuredBA extends AppCompatActivity {
                 MODE_PRIVATE);
         mSampleRate = preferences.getInt("SampleRate", 8000);
         gain = preferences.getFloat("mGainDif", 0);
+        gainBack = preferences.getFloat("mGainBackDif", 0);
         Room = preferences.getInt("ROOM" , 0);
+        Calibrate = preferences.getInt("CALIBRATE", 1);
         REPOSITORY_NAME = preferences.getString("foldername", "");
         path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LevelMeter/" + REPOSITORY_NAME;
         mAudioSource = preferences.getInt("AudioSource", 6);
         processing = preferences.getInt("window", 1);
+        mAudioSourceBack = preferences.getInt("AudioSourceBack", 6);
+        processingBack = preferences.getInt("windowBack", 1);
 
     }
 
@@ -1097,12 +1132,13 @@ public class measuredBA extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("SampleRate", mSampleRate);
         editor.putFloat("mGainDif", gain);
+        editor.putFloat("mGainBackDif", gainBack);
         editor.putInt("mCount", counter4);
         if (Room == 1) {
             editor.putFloat("mRoom1" , (float) dBAFinal);
             editor.putInt("ROOM",1);
         }
-        else {
+        else if (Room == 2){
             editor.putFloat("mRoom2" , (float) dBAFinal);
             editor.putInt("ROOM",2);
         }
@@ -1190,6 +1226,7 @@ public class measuredBA extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         stopRecording();
+        setPreferences();
         Log.d(TAG, "onPause() called");
     }
 

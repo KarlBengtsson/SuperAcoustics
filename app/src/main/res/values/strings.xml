@@ -18,7 +18,7 @@
     <string name="measure_spl_instructions">"To measure sound pressure level, you will need a steady sound source and a calibrated SLM, the calibration needs to be done prior to the measurement. Turn on the sound source and press OFF to monitor and measure SPL. "</string>
     <string name="start_measure">START</string>
     <string name="measure_info_text">Each measurement will take 10 seconds, the button will be automatically toggled off when a measurement is finished. Once 5 different locations for the microphone is measured, press the "FINISH" button.</string>
-    <string name="measured_spl">Average measured SPL (dB)</string>
+    <string name="measured_spl">Average measured SPL (dBA)</string>
     <string name="SPL">0.0</string>
     <string name="finish_button">FINISH</string>
     <string name="setCalibrationButton">Set Calibration</string>
@@ -102,7 +102,13 @@
     <string name="settings">Settings</string>
     <string name="on">On</string>
 
-    <string name="MeasureBackGroundButton">Measure Noise</string>
+    <string name="MeasureBackGroundButton">Measure Background Noise</string>
     <string name="resultBackgroundNoise">Background noise</string>
     <string name="Audio_source">Audio Source &amp; Windowing</string>
+    <string name="hello_blank_fragment">"SuperAcoustics is an application developed to measure the sound reduction index of a wall, floor, ceiling or other building component. \nIn order to complete succesful measurements, your android phone must first be calibrated with the use of professional acoustics equipment. \nBelow you will find recommendations on how to calibrate your smartphone for the best results. "</string>
+    <string name="calibration4">The idea with this calibration is that it only needs to be done before you do your first measurement with your phone. After that the settings you input are saved in your phone and there is no need to update it for future measurements. It is still possible to change the settings after initial calibration if you wish to do so.</string>
+    <string name="info2">To calibrate measurements for Sound Pressure Level, it is recommended to test measuring pink noise at varying noise levels alongside a sound level meter. Do this in order to find the combination of sensitivity correction, audio source and Windowing that gives you the best result.</string>
+    <string name="info3">To calibrate measurements for background noise, it is recommended to do a number of different measurements in various quiet rooms next to a sound level meter. Since the settings will not always be the same as they are for sound pressure level depending on your smartphone. These settings are saved seperately from that of the settings for sound pressure level.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

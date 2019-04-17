@@ -12,12 +12,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import java.io.File;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -64,6 +63,13 @@ public class WelcomeActivity extends AppCompatActivity {
                 };
         loadButton.setOnClickListener(loadListener);
     }
+
+    public void getInfo (View view) {
+        FragmentManager fm = getSupportFragmentManager();
+        InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
+        infoFragment.show(fm, "fragment_info");
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case 9999:

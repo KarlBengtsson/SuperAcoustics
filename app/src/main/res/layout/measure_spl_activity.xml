@@ -89,13 +89,10 @@
         android:paddingRight="10dp"
         android:text="@string/measure_spl_instructions" />
 
-    <Button
-        android:id="@+id/SettingsButton"
-        style="@android:style/Widget.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="settings"
-        android:text="Settings" />
+    <View
+        android:id="@+id/view5"
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 
     <view
         android:id="@+id/bar_level_drawable_view"
@@ -137,6 +134,12 @@
 
         </LinearLayout>
 
+        <View
+            android:id="@+id/view4"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_weight="1" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -146,6 +149,11 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/measure_info_text" />
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
         <Button
             android:id="@+id/finishButton"

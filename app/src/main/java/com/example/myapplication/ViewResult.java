@@ -8,8 +8,6 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.BreakIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -85,7 +82,6 @@ public class ViewResult extends AppCompatActivity {
         readPreferences();
         if (fromCheck == 1) {
             // Coming from welcomeActivity
-            readPreferences();
             roomTwoResult();
             roomOneResult();
             reverbResult();
@@ -94,11 +90,12 @@ public class ViewResult extends AppCompatActivity {
         else {
             // Coming from "View Results Button"
             DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-            path = String.format(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_" + gain + "_%s" ,df.format(new Date()));
+            path = String.format(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_%s" ,df.format(new Date()));
         }
         roomOneResult();
         roomTwoResult();
         reverbResult();
+        backGroundNoiseResult();
         calcResult();
     }
 

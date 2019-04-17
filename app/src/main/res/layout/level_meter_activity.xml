@@ -77,7 +77,16 @@
         style="@android:style/Widget.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/setCalibrationButton" />
+        android:text="Set Calibration for SPL"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/SettingsButton"
+        style="@android:style/Widget.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="settings"
+        android:text="Settings" />
 
     <TextView
         android:id="@+id/textView2"
