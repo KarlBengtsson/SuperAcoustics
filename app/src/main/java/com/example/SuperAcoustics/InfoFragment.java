@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.SuperAcoustics;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

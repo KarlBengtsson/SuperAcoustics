@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.SuperAcoustics;
 
 
 import java.io.ByteArrayOutputStream;

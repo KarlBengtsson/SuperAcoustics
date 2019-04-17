@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.SuperAcoustics;
 
 import android.content.ContentUris;
 import android.content.Context;

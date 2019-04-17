@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.SuperAcoustics;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;

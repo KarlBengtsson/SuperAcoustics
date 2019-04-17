@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.example.myapplication;
+package com.example.SuperAcoustics;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,13 +39,6 @@ import java.util.Locale;
 
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
-//Todo study and understand this implementation of FFT
-
-/**
- * Detta är ett försök till att mäta dBA istället för db. görs på samma sätt som i
- * openoise-meter appen
- *
- */
 public class measuredBA extends AppCompatActivity {
         //implements MicrophoneInputListener {
 

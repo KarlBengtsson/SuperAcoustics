@@ -1,6 +1,6 @@
 
 
-package com.example.myapplication;
+package com.example.SuperAcoustics;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

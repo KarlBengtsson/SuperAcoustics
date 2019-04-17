@@ -21,7 +21,7 @@
   *  See the file "COPYING" for the text of the license.
   */
  
- package com.example.myapplication;
+ package com.example.SuperAcoustics;
  
  
  public class FFT {

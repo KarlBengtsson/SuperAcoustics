@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.SuperAcoustics;
 
 /**1) implement the MicrophoneInputListener interface e.g.
  *     class MyAwesomeClass implements MicrophoneInputListener {...}

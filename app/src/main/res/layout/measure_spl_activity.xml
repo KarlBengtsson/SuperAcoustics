@@ -96,7 +96,7 @@
 
     <view
         android:id="@+id/bar_level_drawable_view"
-        class="com.example.myapplication.BarLevelDrawable"
+        class="com.example.SuperAcoustics.BarLevelDrawable"
         android:layout_width="fill_parent"
         android:layout_height="35dp"></view>
 

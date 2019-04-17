@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.myapplication"
+    package="com.example.SuperAcoustics"
     android:versionCode="1"
     android:versionName="1.0">
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".SplashActivity"
+            android:name="com.example.SuperAcoustics.SplashActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop">
             <intent-filter>
@@ -39,7 +39,7 @@
             android:parentActivityName=".WelcomeActivity">
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.SuperAcoustics.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:parentActivityName=".FileName">
@@ -47,39 +47,39 @@
         </activity>
 
         <activity
-            android:name=".measuredBA"
+            android:name="com.example.SuperAcoustics.measuredBA"
             android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.example.SuperAcoustics.MainActivity">
 
         </activity>
 
         <activity
-            android:name=".LevelMeterActivity"
+            android:name="com.example.SuperAcoustics.LevelMeterActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.example.SuperAcoustics.MainActivity">
 
         </activity>
 
         <activity
-            android:name=".Settings"
+            android:name="com.example.SuperAcoustics.Settings"
             android:screenOrientation="portrait"
-            android:parentActivityName=".measuredBA">
+            android:parentActivityName="com.example.SuperAcoustics.measuredBA">
         </activity>
         <activity
-            android:name=".MeasureSPL"
+            android:name="com.example.SuperAcoustics.MeasureSPL"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.example.SuperAcoustics.MainActivity">
         </activity>
         <activity
-            android:name=".ViewResult"
+            android:name="com.example.SuperAcoustics.ViewResult"
             android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.example.SuperAcoustics.MainActivity">
         </activity>
         <activity
-            android:name=".Plot"
+            android:name="com.example.SuperAcoustics.Plot"
             android:screenOrientation="landscape"
-            android:parentActivityName=".MeasureSPL">
+            android:parentActivityName="com.example.SuperAcoustics.MeasureSPL">
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.SuperAcoustics;
 
 /**
  * Created by stefmase on 16/04/2015.
