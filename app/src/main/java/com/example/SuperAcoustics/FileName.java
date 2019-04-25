@@ -27,8 +27,8 @@ public class FileName extends Activity {
     int splRoom1 = 0;
     int splRoom2 = 0;
     int Room = 0;
-    int volume = 0; int height = 0; int length = 0; int width = 0;
-    int area = 0;
+    double volume = 0; double height = 0; double length = 0; double width = 0;
+    double area = 0;
     int mAudioSource = 0;
     int mSampleRate = 0;
     private TextView nameTextView;
@@ -68,11 +68,11 @@ public class FileName extends Activity {
                             Intent intent;
                             intent = new Intent(FileName.this, MainActivity.class);
                             REPOSITORY_NAME = nameTextView.getText().toString();
-                            height = Integer.valueOf(heightTextView.getText().toString());
-                            length = Integer.valueOf(lengthTextView.getText().toString());
-                            width = Integer.valueOf(widthTextView.getText().toString());
+                            height = Double.valueOf(heightTextView.getText().toString());
+                            length = Double.valueOf(lengthTextView.getText().toString());
+                            width = Double.valueOf(widthTextView.getText().toString());
                             volume = height * length * width;
-                            area = Integer.valueOf(areaTextView.getText().toString());
+                            area = Double.valueOf(areaTextView.getText().toString());
                             FileName.this.setPreferences();
                             startActivity(intent);
                             finish();
@@ -92,11 +92,11 @@ public class FileName extends Activity {
         Room = preferences.getInt("ROOM", 0);
         FILE_NAME = preferences.getString("filename", "");
         REPOSITORY_NAME = preferences.getString("foldername", "");
-        volume = preferences.getInt("volume", 0);
-        area = preferences.getInt("area", 0);
-        length = preferences.getInt("length", 0);
-        width = preferences.getInt("width", 0);
-        height = preferences.getInt("height", 0);
+        volume = preferences.getFloat("volume", 0);
+        area = preferences.getFloat("area", 0);
+        length = preferences.getFloat("length", 0);
+        width = preferences.getFloat("width", 0);
+        height = preferences.getFloat("height", 0);
 
     }
 
@@ -107,11 +107,11 @@ public class FileName extends Activity {
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("foldername", REPOSITORY_NAME);
-        editor.putInt("height", height);
-        editor.putInt("length", length);
-        editor.putInt("width", width);
-        editor.putInt("volume", volume);
-        editor.putInt("area", area);
+        editor.putFloat("height", (float) height);
+        editor.putFloat("length", (float) length);
+        editor.putFloat("width", (float) width);
+        editor.putFloat("volume", (float) volume);
+        editor.putFloat("area", (float) area);
         editor.apply();
     }
 

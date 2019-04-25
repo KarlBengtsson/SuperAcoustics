@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private static final String TAG = "MainActivity";
     float gain = 0;
     float gainBack = 0;
-    int Room = 0; int volume = 0; int area = 0; int length = 0; int width = 0; int height = 0;
+    int Room = 0; float volume = 0; float length = 0; float width = 0; float height = 0;
     String roomName;
     int mAudioSource = 0;
     int mSampleRate = 0;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private boolean room1check;
     private boolean room2check;
     private boolean reverbcheck;
-    private int sArea;
+    private float sArea;
     private boolean backgroundcheck;
     private int processing;
     private int mAudioSourceBack;
@@ -316,7 +316,9 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         }
     }//onActivityResult
 
-    private void saveFile(String number, double[] values ) {
+
+
+    public void saveFile(String number, double[] values ) {
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
         String filename = String.format(number + ".txt");
         File path = new File(Environment.getExternalStorageDirectory() + File.separator + "SuperAcoustics" + File.separator + roomName + "_" + df.format(new Date()));
@@ -391,16 +393,15 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         SPLRoom1 = preferences.getFloat("mRoom1", 0);
         SPLRoom2 = preferences.getFloat("mRoom2", 0);
         Room = preferences.getInt("ROOM",0);
-        volume = preferences.getInt("volume", 0);
-        area = preferences.getInt("area", 0);
-        sArea = preferences.getInt("area", 0);
-        length = preferences.getInt("length", 0);
-        width = preferences.getInt("width", 0);
-        height = preferences.getInt("height", 0);
+        volume = preferences.getFloat("volume", 0);
+        sArea = preferences.getFloat("area", 0);
+        length = preferences.getFloat("length", 0);
+        width = preferences.getFloat("width", 0);
+        height = preferences.getFloat("height", 0);
         mAudioSource = preferences.getInt("AudioSource", 6);
         processing = preferences.getInt("window", 1);
         mAudioSourceBack = preferences.getInt("AudioSourceBack", 6);
-        processingBack = preferences.getInt("windowBack", 1);
+        processingBack = preferences.getInt("windowBack", 3);
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);

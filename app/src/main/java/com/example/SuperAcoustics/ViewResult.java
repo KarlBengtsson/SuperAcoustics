@@ -53,7 +53,7 @@ public class ViewResult extends AppCompatActivity {
     private float result2;
     private float reverb;
     private double area;
-    private double sArea;
+    private float sArea;
     private double volume;
     private String roomName;
     private File file;
@@ -201,8 +201,8 @@ public class ViewResult extends AppCompatActivity {
         gain = preferences.getFloat("mGainDif", 0);
         result1 = preferences.getFloat("mRoom1",0);
         result2 = preferences.getFloat("mRoom2",0);
-        volume = preferences.getInt("volume", 0);
-        sArea = preferences.getInt("area", 0);
+        volume = preferences.getFloat("volume", 0);
+        sArea = preferences.getFloat("area", 0);
         reverb = preferences.getFloat("reverb", 0);
         path = preferences.getString("loadpath",null);
         roomName = preferences.getString("foldername", null);

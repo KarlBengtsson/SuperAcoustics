@@ -143,7 +143,7 @@ public class Settings extends Activity {
         mAudioSource = preferences.getInt("AudioSource", 6);
         processing = preferences.getInt("window", 1);
         mAudioSourceBack = preferences.getInt("AudioSourceBack", 6);
-        processingBack = preferences.getInt("windowBack", 1);
+        processingBack = preferences.getInt("windowBack", 3);
         Calibrate = preferences.getInt("CALIBRATE", 1);
     }
 

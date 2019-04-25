@@ -7,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Fragment to view events associated with a recipe.
- */
 
 
 public class InfoFragment extends DialogFragment {
