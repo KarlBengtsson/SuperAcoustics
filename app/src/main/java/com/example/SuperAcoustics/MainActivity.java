@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         mAudioSource = preferences.getInt("AudioSource", 6);
         processing = preferences.getInt("window", 1);
         mAudioSourceBack = preferences.getInt("AudioSourceBack", 6);
-        processingBack = preferences.getInt("windowBack", 1);
+        processingBack = preferences.getInt("windowBack", 3);
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);
