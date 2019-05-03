@@ -258,8 +258,8 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
 
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
-                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10);
-                    SPLaverageRoom1[i] = 10* Math.log10(sum);
+                            + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10) + Math.pow(10, SPLmeasure5[i] / 10);
+                    SPLaverageRoom1[i] = 10* Math.log10(sum / 5);
                 }
                 saveFile("SPL_Room1", SPLaverageRoom1);
 
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
                             + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10) + Math.pow(10, SPLmeasure5[i] / 10);
-                    SPLaverageRoom2[i] = 10* Math.log10(sum);
+                    SPLaverageRoom2[i] = 10* Math.log10(sum / 5);
                 }
                 checkBackgroundNoise(SPLaverageRoom2, SPLbackgroundRoom2);
                 saveFile("SPL_Room2", SPLaverageRoom2);
@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
                 for (int i = 0; i<SPLmeasure1.length; i++) {
                     double sum = Math.pow(10, SPLmeasure1[i] / 10) + Math.pow(10, SPLmeasure2[i] / 10)
                             + Math.pow(10, SPLmeasure3[i] / 10) + Math.pow(10, SPLmeasure4[i] / 10) + Math.pow(10, SPLmeasure5[i] / 10);
-                    SPLbackgroundRoom2[i] = 10* Math.log10(sum);
+                    SPLbackgroundRoom2[i] = 10* Math.log10(sum / 5);
                 }
                 saveFile("SPL_Background_Room2", SPLbackgroundRoom2);
 

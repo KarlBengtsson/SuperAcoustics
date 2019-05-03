@@ -112,11 +112,11 @@ public class measuredBA extends AppCompatActivity {
     private double dbATimeDisplay; //Final Result
     private float gain = 0;
     private float gainBack = 0;
-    private File file;
-    private double[] total;
+
 
     private double[] measuredB = new double[THIRD_OCTAVE.length];
-    private double[] measuredB1 = new double[THIRD_OCTAVE.length];
+    private double[] measuredB1 = new double[THIRD_OCTAVE.length];  private File file;
+    private double[] total;
     private double[] measuredB2 = new double[THIRD_OCTAVE.length];
     private double[] measuredB3 = new double[THIRD_OCTAVE.length];
     private double[] measuredB4 = new double[THIRD_OCTAVE.length];
