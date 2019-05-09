@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     private void checkBackgroundNoise(double[] SPL, double[] Back) {
         for (int i = 0; i<SPL.length; i++) {
             double diff = SPL[i] - Back[i];
-            if (diff < 10 && diff > 6) {
+            if (diff < 15 && diff > 6) {
                 SPL[i] = 10 * Math.log10((Math.pow(10, SPL[i]/10)) - (Math.pow(10, Back[i]/10)));
             } else if (diff <= 6) {
                 SPL[i] -= 1.3;
@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         mAudioSource = preferences.getInt("AudioSource", 6);
         processing = preferences.getInt("window", 1);
         mAudioSourceBack = preferences.getInt("AudioSourceBack", 6);
-        processingBack = preferences.getInt("windowBack", 3);
+        processingBack = preferences.getInt("windowBack", 1);
     }
     private void initTextViews() {
         calTextView = (TextView) findViewById(R.id.calibrateText);

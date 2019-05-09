@@ -88,7 +88,6 @@ public class FileName extends Activity {
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
-        mSampleRate = preferences.getInt("SampleRate", 8000);
         Room = preferences.getInt("ROOM", 0);
         FILE_NAME = preferences.getString("filename", "");
         REPOSITORY_NAME = preferences.getString("foldername", "");

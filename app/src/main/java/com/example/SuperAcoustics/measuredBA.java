@@ -40,8 +40,6 @@ import java.util.Locale;
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 public class measuredBA extends AppCompatActivity {
-        //implements MicrophoneInputListener {
-
 
     //-------------------------------- Calibrate -----------------------------------------------------
     private TextView mdBTextView;
@@ -583,7 +581,6 @@ public class measuredBA extends AppCompatActivity {
                     RECORDER_AUDIO_ENCODING, BLOCK_SIZE * BYTES_PER_ELEMENT);
         }
 
-
         recorder.startRecording();
         isRecording = true;
 
@@ -686,15 +683,6 @@ public class measuredBA extends AppCompatActivity {
                                     winValue = a0 - a1*Math.cos(x) + a2 * Math.cos(2*x) - a3 * Math.cos(3*x) + a4 * Math.cos(4*x);
                                     break;
                             }
-                                    
-                            
-
-
-
-
-
-
-
 
 
                             // Real part
@@ -946,7 +934,6 @@ public class measuredBA extends AppCompatActivity {
                             }*/
                         }
 
-                        //Todo Räknas det här på rätt sätt??????
                         measeuredBsize++;
                         for (int i = 0; i < dbBand.length; i++) {
                             measuredB[i] += Math.pow(10, dbBand[i] / 10);
@@ -1099,7 +1086,6 @@ public class measuredBA extends AppCompatActivity {
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
-        mSampleRate = preferences.getInt("SampleRate", 8000);
         gain = preferences.getFloat("mGainDif", 0);
         gainBack = preferences.getFloat("mGainBackDif", 0);
         Room = preferences.getInt("ROOM" , 0);
@@ -1109,7 +1095,7 @@ public class measuredBA extends AppCompatActivity {
         mAudioSource = preferences.getInt("AudioSource", 6);
         processing = preferences.getInt("window", 1);
         mAudioSourceBack = preferences.getInt("AudioSourceBack", 6);
-        processingBack = preferences.getInt("windowBack", 3);
+        processingBack = preferences.getInt("windowBack", 1);
 
     }
 
@@ -1117,7 +1103,6 @@ public class measuredBA extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("SampleRate", mSampleRate);
         editor.putFloat("mGainDif", gain);
         editor.putFloat("mGainBackDif", gainBack);
         editor.putInt("mCount", counter4);

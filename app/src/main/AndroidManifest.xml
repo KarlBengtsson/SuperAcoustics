@@ -54,33 +54,17 @@
         </activity>
 
         <activity
-            android:name="com.example.SuperAcoustics.LevelMeterActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.example.SuperAcoustics.MainActivity">
-
-        </activity>
-
-        <activity
             android:name="com.example.SuperAcoustics.Settings"
             android:screenOrientation="portrait"
             android:parentActivityName="com.example.SuperAcoustics.measuredBA">
         </activity>
-        <activity
-            android:name="com.example.SuperAcoustics.MeasureSPL"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            android:parentActivityName="com.example.SuperAcoustics.MainActivity">
-        </activity>
+
         <activity
             android:name="com.example.SuperAcoustics.ViewResult"
             android:screenOrientation="portrait"
             android:parentActivityName="com.example.SuperAcoustics.MainActivity">
         </activity>
-        <activity
-            android:name="com.example.SuperAcoustics.Plot"
-            android:screenOrientation="landscape"
-            android:parentActivityName="com.example.SuperAcoustics.MeasureSPL">
-        </activity>
+
     </application>
 
 </manifest>
