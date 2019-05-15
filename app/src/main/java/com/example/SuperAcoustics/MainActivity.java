@@ -1,6 +1,7 @@
 package com.example.SuperAcoustics;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +13,13 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
     float gain = 0;
     float gainBack = 0;
     int Room = 0; float volume = 0; float length = 0; float width = 0; float height = 0;
-    String roomName;
+    private String roomName;
     int mAudioSource = 0;
     int mSampleRate = 0;
     private int indices[] = {9, 12, 15, 18, 21, 24};
@@ -90,7 +95,32 @@ public class MainActivity extends AppCompatActivity implements ReverbFragment.Re
         reverb = (Button) findViewById(R.id.reverbButton);
         initTextViews();
         onCheckPerm();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        updateToolBar();
+
+        ImageButton imageButton = (ImageButton) toolbar.findViewById(R.id.infoButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
+                infoFragment.show(fm, "fragment_info");
+            }
+        });
     }
+
+        @SuppressLint("NewApi")
+        private void updateToolBar() {
+            TextView title = (TextView) findViewById(R.id.toolbarTitle);
+            title.setText(roomName + " ");
+            title.setGravity(Gravity.CENTER_HORIZONTAL);
+            title.setGravity(Gravity.CENTER_VERTICAL);
+            title.setAutoSizeTextTypeUniformWithConfiguration(10, 26, 1, TypedValue.COMPLEX_UNIT_DIP);
+        }
 
     public void CalibrateSPL (View view) {
         Intent intent = new Intent(this, measuredBA.class);

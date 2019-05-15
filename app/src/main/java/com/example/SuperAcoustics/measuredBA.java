@@ -1,19 +1,6 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package com.example.SuperAcoustics;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,10 +10,15 @@ import android.media.AudioRecord;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -40,6 +32,9 @@ import java.util.Locale;
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 public class measuredBA extends AppCompatActivity {
+
+    private Toolbar toolbar;
+    private ImageButton imageButton;
 
     //-------------------------------- Calibrate -----------------------------------------------------
     private TextView mdBTextView;
@@ -130,7 +125,7 @@ public class measuredBA extends AppCompatActivity {
     private int processing;
     private int mAudioSourceBack;
     private int processingBack;
-
+    private String roomName;
 
 
     /** Called when the activity is first created. */
@@ -401,6 +396,30 @@ public class measuredBA extends AppCompatActivity {
 
         }
 
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        updateToolBar();
+        imageButton = (ImageButton) toolbar.findViewById(R.id.infoButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
+                infoFragment.show(fm, "fragment_info");
+            }
+        });
+
+    }
+
+    @SuppressLint("NewApi")
+    private void updateToolBar() {
+        TextView title = (TextView) findViewById(R.id.toolbarTitle);
+        title.setText(roomName + " ");
+        title.setGravity(Gravity.CENTER_HORIZONTAL);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setAutoSizeTextTypeUniformWithConfiguration(10, 26, 1, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     //SettingsButton clicked in LevelMeterActivity
@@ -1086,6 +1105,7 @@ public class measuredBA extends AppCompatActivity {
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",
                 MODE_PRIVATE);
+        roomName = preferences.getString("foldername", null);
         gain = preferences.getFloat("mGainDif", 0);
         gainBack = preferences.getFloat("mGainBackDif", 0);
         Room = preferences.getInt("ROOM" , 0);

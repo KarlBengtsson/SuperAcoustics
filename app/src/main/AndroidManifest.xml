@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.SuperAcoustics"
@@ -30,18 +31,21 @@
         <activity
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTop">
         </activity>
 
         <activity
             android:name=".FileName"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".WelcomeActivity">
         </activity>
         <activity
             android:name="com.example.SuperAcoustics.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".FileName">
 
         </activity>
@@ -49,6 +53,7 @@
         <activity
             android:name="com.example.SuperAcoustics.measuredBA"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName="com.example.SuperAcoustics.MainActivity">
 
         </activity>
@@ -56,12 +61,14 @@
         <activity
             android:name="com.example.SuperAcoustics.Settings"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName="com.example.SuperAcoustics.measuredBA">
         </activity>
 
         <activity
             android:name="com.example.SuperAcoustics.ViewResult"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName="com.example.SuperAcoustics.MainActivity">
         </activity>
 

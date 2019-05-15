@@ -2,15 +2,23 @@
 
 package com.example.SuperAcoustics;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
-public class Settings extends Activity {
+public class Settings extends AppCompatActivity {
 
     private int source;
     private int process;
@@ -61,6 +69,31 @@ public class Settings extends Activity {
                     }
                 };
         okButton.setOnClickListener(okBtnListener);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        updateToolBar();
+
+        ImageButton imageButton = (ImageButton) toolbar.findViewById(R.id.infoButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
+                infoFragment.show(fm, "fragment_info");
+            }
+        });
+    }
+
+    @SuppressLint("NewApi")
+    private void updateToolBar() {
+        TextView title = (TextView) findViewById(R.id.toolbarTitle);
+        title.setText("SuperAcoustics");
+        title.setGravity(Gravity.CENTER_HORIZONTAL);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setAutoSizeTextTypeUniformWithConfiguration(10, 26, 1, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     private void setProcessSelection(int process) {

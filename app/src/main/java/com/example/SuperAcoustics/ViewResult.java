@@ -1,11 +1,18 @@
 package com.example.SuperAcoustics;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -80,6 +87,23 @@ public class ViewResult extends AppCompatActivity {
         resultSRI = (TextView)findViewById(R.id.resultSRITextView);
         labelSRI = (TextView)findViewById(R.id.resultSRIITextView);
         readPreferences();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        updateToolBar();
+
+        ImageButton imageButton = (ImageButton) toolbar.findViewById(R.id.infoButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
+                infoFragment.show(fm, "fragment_info");
+            }
+        });
+
         if (fromCheck == 1) {
             // Coming from welcomeActivity
             roomTwoResult();
@@ -97,6 +121,15 @@ public class ViewResult extends AppCompatActivity {
         reverbResult();
         backGroundNoiseResult();
         calcResult();
+    }
+
+    @SuppressLint("NewApi")
+    private void updateToolBar() {
+        TextView title = (TextView) findViewById(R.id.toolbarTitle);
+        title.setText("Results: " + roomName);
+        title.setGravity(Gravity.CENTER_HORIZONTAL);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setAutoSizeTextTypeUniformWithConfiguration(10, 26, 1, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     private void roomOneResult() {

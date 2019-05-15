@@ -1,15 +1,22 @@
 package com.example.SuperAcoustics;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FileName extends Activity {
+public class FileName extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "Calibration";
     public static final String ROOM_MESSAGE = "Room";
     public String path = "";
@@ -81,9 +88,32 @@ public class FileName extends Activity {
                     }
                 };
         okButton.setOnClickListener(okListener);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        updateToolBar();
+
+        ImageButton imageButton = (ImageButton) toolbar.findViewById(R.id.infoButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
+                infoFragment.show(fm, "fragment_info");
+            }
+        });
     }
 
-
+    @SuppressLint("NewApi")
+    private void updateToolBar() {
+        TextView title = (TextView) findViewById(R.id.toolbarTitle);
+        title.setText("SuperAcoustics");
+        title.setGravity(Gravity.CENTER_HORIZONTAL);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setAutoSizeTextTypeUniformWithConfiguration(10, 26, 1, TypedValue.COMPLEX_UNIT_DIP);
+    }
 
     private void readPreferences() {
         SharedPreferences preferences = getSharedPreferences("LevelMeter",

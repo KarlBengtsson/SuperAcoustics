@@ -1,5 +1,6 @@
 package com.example.SuperAcoustics;
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +16,13 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -62,12 +68,29 @@ public class WelcomeActivity extends AppCompatActivity {
                     }
                 };
         loadButton.setOnClickListener(loadListener);
+
+        updateToolBar();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        ImageButton imageButton = (ImageButton) toolbar.findViewById(R.id.infoButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
+                infoFragment.show(fm, "fragment_info");
+            }
+        });
+
     }
 
-    public void getInfo (View view) {
-        FragmentManager fm = getSupportFragmentManager();
-        InfoFragment infoFragment = InfoFragment.newInstance("InfoFragment");
-        infoFragment.show(fm, "fragment_info");
+    @SuppressLint("NewApi")
+    private void updateToolBar() {
+        TextView title = (TextView) findViewById(R.id.toolbarTitle);
+        title.setText("SuperAcoustics");
+        title.setGravity(Gravity.CENTER_HORIZONTAL);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setAutoSizeTextTypeUniformWithConfiguration(10, 26, 1, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -95,6 +118,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("loadpath", path);
+        editor.putString("foldername", path);
         editor.putInt("fromCheck", fromCheck);
         editor.apply();
     }
