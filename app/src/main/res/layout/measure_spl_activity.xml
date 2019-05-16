@@ -75,7 +75,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:checked="false"
-            android:text="On" />
+            android:text="On"
+            android:textOff="START"
+            android:textOn="STOP" />
 
         <TextView
             android:id="@+id/textseconds"
